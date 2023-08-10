@@ -275,10 +275,10 @@ namespace ScorgedEarth
                     {
                         wall.SetTile(new Vector3Int(x, y + 1), null);
                         if (wall.GetTile(new Vector3Int(x, y - 1)) != null) d = (int)GetTileType(wall, x, y - 1);
+                        t = 0;
                     }
-                    tl = (TileBlockBase)wall.GetTile(new Vector3Int(x, y + 1));
                     TileBehaviourRule oldSideRule = null;
-                    if (tl != null && tile.Tag != tl.Tag && tl.BlockType == BlockType.TOP)
+                    if (tl != null && tile.Tag != tl.Tag && tl.BlockType == BlockType.SIDE)
                     {
                         oldSideRule = wallSideRule;
                         wallSideRule = Singleton_TileLibrary.Instance.ReturnWallSideRuleByTag(tl.Tag);
@@ -296,12 +296,26 @@ namespace ScorgedEarth
 
             if (mode == true)
             {
+                int m = 1;
                 TileBlockBase tl = (TileBlockBase)wall.GetTile(new Vector3Int(x, y - 1));
-                if (tile.BlockType == BlockType.FLOOR)
+                if (tile.BlockType == BlockType.TOP)
                 {
+                    TileBlockBase ml = (TileBlockBase)wall.GetTile(new Vector3Int(x, y + 1));
                     if (tl == null)
                     {
-                        wall.SetTile(new Vector3Int(x, y - 1), wallTopRule.TileGroups[0].Tiles[0]);
+                        wall.SetTile(new Vector3Int(x, y + 1), wallTopRule.TileGroups[0].Tiles[0]);
+                        m = 0;
+                    }
+                    if (tl != null && ml!= null && ml.BlockType == BlockType.SIDE && Singleton_SessionData.IsTop == false)
+                    {
+                        wall.SetTile(new Vector3Int(x, y + 1), wallTopRule.TileGroups[0].Tiles[0]);
+                        d = 0;
+                        t = c;
+                        m = 0;
+                    }
+                    if (tl != null && ml != null && ml.BlockType == BlockType.SIDE && Singleton_SessionData.IsTop == true)
+                    {
+                        m = 0;
                     }
                 }
 
@@ -316,22 +330,22 @@ namespace ScorgedEarth
                 if (tl == null)
                 {
                     if (wall.GetTile(new Vector3Int(x, y)) != null) t = (int)GetTileType(wall, x, y);
-                    if (wall.GetTile(new Vector3Int(x - 1, y - 1)) != null) l = (int)GetTileType(wall, x - 1, y - 1);
-                    if (wall.GetTile(new Vector3Int(x + 1, y - 1)) != null) r = (int)GetTileType(wall, x + 1, y - 1);
+                    if (wall.GetTile(new Vector3Int(x - 1, y - 1)) != null) l = (int)GetTileType(wall, x - 1, y - m);
+                    if (wall.GetTile(new Vector3Int(x + 1, y - 1)) != null) r = (int)GetTileType(wall, x + 1, y - m);
                     d = 0;
                 }
                 
 
                 //Нижние стены
-                if (t == c && l != 0 && r != 0 && d == 0) { wall.SetTile(new Vector3Int(x, y - 1), wallSideRule.TileGroups[0].Tiles[Random.Range(0, wallSideRule.TileGroups[0].Tiles.Length)]); }
-                else if (t == c && l != 0 && r == 0 && d == 0) { wall.SetTile(new Vector3Int(x, y - 1), wallSideRule.TileGroups[1].Tiles[Random.Range(0, wallSideRule.TileGroups[2].Tiles.Length)]); }
-                else if (t == c && l == 0 && r != 0 && d == 0) { wall.SetTile(new Vector3Int(x, y - 1), wallSideRule.TileGroups[2].Tiles[Random.Range(0, wallSideRule.TileGroups[1].Tiles.Length)]); }
-                else if (t == c && l == 0 && r == 0 && d == 0) { wall.SetTile(new Vector3Int(x, y - 1), wallSideRule.TileGroups[3].Tiles[Random.Range(0, wallSideRule.TileGroups[3].Tiles.Length)]); }
+                if (t == c && l != 0 && r != 0 && d == 0) { wall.SetTile(new Vector3Int(x, y - m), wallSideRule.TileGroups[0].Tiles[Random.Range(0, wallSideRule.TileGroups[0].Tiles.Length)]); }
+                else if (t == c && l != 0 && r == 0 && d == 0) { wall.SetTile(new Vector3Int(x, y - m), wallSideRule.TileGroups[1].Tiles[Random.Range(0, wallSideRule.TileGroups[2].Tiles.Length)]); }
+                else if (t == c && l == 0 && r != 0 && d == 0) { wall.SetTile(new Vector3Int(x, y - m), wallSideRule.TileGroups[2].Tiles[Random.Range(0, wallSideRule.TileGroups[1].Tiles.Length)]); }
+                else if (t == c && l == 0 && r == 0 && d == 0) { wall.SetTile(new Vector3Int(x, y - m), wallSideRule.TileGroups[3].Tiles[Random.Range(0, wallSideRule.TileGroups[3].Tiles.Length)]); }
 
             }
 
-            int md = 0;
-            if (mode) md = 1;
+            Singleton_SessionData.Instance.UpdateLastCoordinate(new Vector2Int(x,y));
+
             if (radius <= 0) radius = 1;
 
             for (int i = x - radius; i <= radius + x; i++)
@@ -344,7 +358,7 @@ namespace ScorgedEarth
             }
             for (int i = x - radius; i <= radius + x; i++)
             {
-                for (int j = y - radius - md; j <= radius + y; j++)
+                for (int j = y - radius; j <= radius + y; j++)
                 {
                     if (i == j && i == x && j == y && !mode) continue;
                     PlaceEditedWallsAltRule(i, j, wall, wallSideRule, wallTopRule,2);

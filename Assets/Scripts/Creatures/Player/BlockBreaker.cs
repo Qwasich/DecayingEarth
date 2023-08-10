@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
@@ -53,9 +54,10 @@ namespace ScorgedEarth
                 if (dist < 1) { Debug.Log("Position:" + dist); return; }
                 Vector3Int coordinate = m_WallsTilemap.WorldToCell(pos);
                 TileBlockBase tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
-                if (tile == null || tile.BlockType == BlockType.TOP) return;
+                if (tile != null && tile.BlockType == BlockType.TOP) return;
                 
                 m_WallsTilemap.SetTile(coordinate, m_WallTopRule.TileGroups[0].Tiles[0]);
+                if (tile == null) tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
                 Debug.Log(coordinate);
 
                 WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, m_WallFrontRule, m_WallTopRule, tile, m_Radius,true);

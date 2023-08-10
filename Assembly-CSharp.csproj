@@ -69,6 +69,7 @@
     <Compile Include="Assets\Scripts\Generation\Cave_Generator.cs" />
     <Compile Include="Assets\Scripts\Generation\TileGroup.cs" />
     <Compile Include="Assets\Scripts\Generation\Singleton_TileLibrary.cs" />
+    <Compile Include="Assets\Scripts\DataCollectors\Singleton_SessionData.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
