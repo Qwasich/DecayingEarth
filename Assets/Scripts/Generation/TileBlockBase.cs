@@ -48,7 +48,7 @@ namespace ScorgedEarth
         /// <summary>
         /// Предмет, выпадающий при уничтожении.
         /// </summary>
-        [SerializeField] private GameObject m_Loot;
+        [SerializeField] private ItemBase[] m_Loot;
 
         public override bool StartUp(Vector3Int position, ITilemap tilemap, GameObject go)
         {
@@ -62,7 +62,7 @@ namespace ScorgedEarth
         /// </summary>
         /// <param name="damage"></param>
         /// <returns></returns>
-        public int DealDamage(int damage)
+        public int DealDamage(int damage,Vector3Int pos)
         {
             //Debug.Log(m_RemainingDurability + " " + damage);
             if (m_IsIndestructible) return 2;
@@ -72,11 +72,25 @@ namespace ScorgedEarth
             
             if (m_RemainingDurability <= 0)
             {
-                if (m_Loot != null) Instantiate(m_Loot, this.transform.GetPosition(), transform.rotation);
+                if (m_Loot == null) return 0;
+                for (int i = 0; i < m_Loot.Length; i++)
+                {
+                    if (m_Loot[i] == null) continue;
+                    GameObject m = Instantiate(Singletone_PrefabLibrary.DummyItemPrefab);
+                    m.GetComponent<PhysicalItem>().InitiateItem(m_Loot[i]);
+                    m.transform.position = (Vector3)pos + new Vector3(0.5f, 0.5f);
+
+
+                }
                 m_RemainingDurability = m_MaxDurability;
                 return 0;
             }
             else return 1;
+        }
+
+        public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
+        {
+            base.GetTileData(position, tilemap, ref tileData);
         }
 
         public void Recover() => m_RemainingDurability = m_MaxDurability;

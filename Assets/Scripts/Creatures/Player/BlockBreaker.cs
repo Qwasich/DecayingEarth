@@ -36,7 +36,8 @@ namespace ScorgedEarth
                 TileBlockBase tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
 
                 if (tile == null) return;
-                int i = tile.DealDamage(m_Damage);
+                Singleton_SessionData.Instance.UpdateLastCoordinate((Vector2Int)coordinate);
+                int i = tile.DealDamage(m_Damage,coordinate);
                 if (i == 0)
                 {
                     m_WallsTilemap.SetTile(coordinate, null);
@@ -58,7 +59,7 @@ namespace ScorgedEarth
                 
                 m_WallsTilemap.SetTile(coordinate, m_WallTopRule.TileGroups[0].Tiles[0]);
                 if (tile == null) tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
-                Debug.Log(coordinate);
+                //Debug.Log(coordinate);
 
                 WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, m_WallFrontRule, m_WallTopRule, tile, m_Radius,true);
 

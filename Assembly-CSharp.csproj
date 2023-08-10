@@ -70,6 +70,11 @@
     <Compile Include="Assets\Scripts\Generation\TileGroup.cs" />
     <Compile Include="Assets\Scripts\Generation\Singleton_TileLibrary.cs" />
     <Compile Include="Assets\Scripts\DataCollectors\Singleton_SessionData.cs" />
+    <Compile Include="Assets\Scripts\Items\ItemBase.cs" />
+    <Compile Include="Assets\Scripts\Items\ItemMaterial.cs" />
+    <Compile Include="Assets\Scripts\Items\ItemBlock.cs" />
+    <Compile Include="Assets\Scripts\Items\PhysicalItem.cs" />
+    <Compile Include="Assets\Scripts\DataCollectors\Singletone_PrefabLibrary.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
