@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
 
 namespace ScorgedEarth
 {
@@ -13,6 +15,7 @@ namespace ScorgedEarth
         /// <param name="wall">Целевой Тайлмап</param>
         /// <param name="wallSideRule">Правило передних стен</param>
         /// <param name="wallTopRule">Правило верхних стен</param>
+        [Obsolete("Use Alt Rule instead. This metod wasn't updated, but still a great coding reference.")]
         public static void PlaceEditedWalls(int x, int y, Tilemap wall, TileBehaviourRule wallSideRule, TileBehaviourRule wallTopRule)
         {
             if (wall.GetTile(new Vector3Int(x, y, 0)) == null) return;
@@ -40,7 +43,6 @@ namespace ScorgedEarth
             if (lt != c && t != c && rt != c && l != c && r != c && ld != c && d != c && rd != c) wall.SetTile(new Vector3Int(x, y, 0), null);
             if (t != c && d != c) wall.SetTile(new Vector3Int(x, y, 0), null);
             
-
             //Нижние стены
             if (t == c && l == c && r == c && d != c) { wall.SetTile(new Vector3Int(x, y, 0), wallSideRule.TileGroups[0].Tiles[Random.Range(0, wallSideRule.TileGroups[0].Tiles.Length)]); return; }
             if (t == c && l == c && r != c && d != c) { wall.SetTile(new Vector3Int(x, y, 0), wallSideRule.TileGroups[1].Tiles[Random.Range(0, wallSideRule.TileGroups[1].Tiles.Length)]); return; }
@@ -98,7 +100,18 @@ namespace ScorgedEarth
         public static void PlaceEditedWallsAltRule(int x, int y, Tilemap wall, TileBehaviourRule wallSideRule, TileBehaviourRule wallTopRule, int mode = 0)
         {
             if (mode > 2 || mode < 0) { Debug.LogError("Alt Rule Generation mode set wrongly! Must use value between 0 and 2, inclusive."); return; }
-            if (wall.GetTile<TileBlockBase>(new Vector3Int(x, y, 0)) == null) return;
+            TileBlockBase tile = wall.GetTile<TileBlockBase>(new Vector3Int(x, y, 0));
+            if (tile == null) return;
+            if (tile.Tag == "")
+            {
+                Debug.LogError("Tile " + tile.name +" has no tag set, block generation failure"); 
+                return;
+            }
+            if (mode != 0)
+            {
+                wallSideRule = Singleton_TileLibrary.Instance.ReturnWallSideRuleByTag(tile.Tag);
+                wallTopRule = Singleton_TileLibrary.Instance.ReturnWallTopRuleByTag(tile.Tag);
+            }
             int c = 2;
 
             int lt = 0;
@@ -110,15 +123,22 @@ namespace ScorgedEarth
             int d = 0;
             int rd = 0;
 
-
-            if (wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y + 1)) != null) lt = (int)GetTileType(wall, x - 1, y + 1);
-            if (wall.GetTile<TileBlockBase>(new Vector3Int(x, y + 1)) != null) t = (int)GetTileType(wall, x, y + 1);
-            if (wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y + 1)) != null) rt = (int)GetTileType(wall, x + 1, y + 1);
-            if (wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y)) != null) l = (int)GetTileType(wall, x - 1, y);
-            if (wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y)) != null) r = (int)GetTileType(wall, x + 1, y);
-            if (wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y - 1)) != null) ld = (int)GetTileType(wall, x - 1, y - 1);
-            if (wall.GetTile<TileBlockBase>(new Vector3Int(x, y - 1)) != null) d = (int)GetTileType(wall, x, y - 1);
-            if (wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y - 1)) != null) rd = (int)GetTileType(wall, x + 1, y - 1);
+            tile = wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y + 1));
+            if (tile != null) lt = (int)tile.BlockType;
+            tile = wall.GetTile<TileBlockBase>(new Vector3Int(x, y + 1));
+            if (tile != null) t = (int)tile.BlockType;
+            tile = wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y + 1));
+            if (tile != null) rt = (int)tile.BlockType;
+            tile = wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y));
+            if (tile != null) l = (int)tile.BlockType;
+            tile = wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y));
+            if (tile != null) r = (int)tile.BlockType;
+            tile = wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y - 1));
+            if (tile != null) ld = (int)tile.BlockType;
+            tile = wall.GetTile<TileBlockBase>(new Vector3Int(x, y - 1));
+            if (tile != null) d = (int)tile.BlockType;
+            tile = wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y - 1));
+            if (tile != null) rd = (int)tile.BlockType;
 
             //доп проверка
             //if (lt == c && t == c && rt == c && l == c && r != c && ld != c && d != c && rd != c) wall.SetTile(new Vector3Int(x, y, 0), null);
@@ -179,6 +199,13 @@ namespace ScorgedEarth
             if (tile == null) return BlockType.FLOOR;
             return tile.BlockType;
         }
+
+        public static string GetTileTag(Tilemap target, int x, int y)
+        {
+            TileBlockBase tile = target.GetTile<TileBlockBase>(new Vector3Int(x, y));
+            return tile.Tag;
+        }
+
         /// <summary>
         /// Редактирует стены и подбирает нужные формы в зависимости от правил.
         /// </summary>
@@ -190,32 +217,32 @@ namespace ScorgedEarth
         /// <param name="starterType">Тип блока центрального тайла, вокруг которого ведется обновление. Используется если Mode = 0</param>
         /// <param name="radius">Радиус обновления блоков вокруг центрального тайла. Всегда равняется минимум 1.</param>
         /// <param name="mode">false - Режим разрушения, true - режим установки</param>
-        public static void EditWallsAroundPoint(int x, int y, Tilemap wall, TileBehaviourRule wallSideRule, TileBehaviourRule wallTopRule, BlockType starterType, int radius, bool mode = false)
+        public static void EditWallsAroundPoint(int x, int y, Tilemap wall, TileBehaviourRule wallSideRule, TileBehaviourRule wallTopRule, TileBlockBase tile, int radius, bool mode = false)
         {
             int c = 2;
 
-            int lt = 0;
+            //int lt = 0;
             int t = 0;
-            int rt = 0;
+            //int rt = 0;
             int l = 0;
             int r = 0;
-            int ld = 0;
+            //int ld = 0;
             int d = 0;
-            int rd = 0;
+            //int rd = 0;
 
-            if (wall.GetTile(new Vector3Int(x - 1, y + 1)) != null) lt = (int)GetTileType(wall, x - 1, y + 1);
+            //if (wall.GetTile(new Vector3Int(x - 1, y + 1)) != null) lt = (int)GetTileType(wall, x - 1, y + 1);
             if (wall.GetTile(new Vector3Int(x, y + 1)) != null) t = (int)GetTileType(wall, x, y + 1);
-            if (wall.GetTile(new Vector3Int(x + 1, y + 1)) != null) rt = (int)GetTileType(wall, x + 1, y + 1);
+            //if (wall.GetTile(new Vector3Int(x + 1, y + 1)) != null) rt = (int)GetTileType(wall, x + 1, y + 1);
             if (wall.GetTile(new Vector3Int(x - 1, y)) != null) l = (int)GetTileType(wall, x - 1, y);
             if (wall.GetTile(new Vector3Int(x + 1, y)) != null) r = (int)GetTileType(wall, x + 1, y);
-            if (wall.GetTile(new Vector3Int(x - 1, y - 1)) != null) ld = (int)GetTileType(wall, x - 1, y - 1);
+            //if (wall.GetTile(new Vector3Int(x - 1, y - 1)) != null) ld = (int)GetTileType(wall, x - 1, y - 1);
             if (wall.GetTile(new Vector3Int(x, y - 1)) != null) d = (int)GetTileType(wall, x, y - 1);
-            if (wall.GetTile(new Vector3Int(x + 1, y - 1)) != null) rd = (int)GetTileType(wall, x + 1, y - 1);
+            //if (wall.GetTile(new Vector3Int(x + 1, y - 1)) != null) rd = (int)GetTileType(wall, x + 1, y - 1);
 
             if (mode == false)
             {
 
-                if (starterType == BlockType.TOP)
+                if (tile.BlockType == BlockType.TOP)
                 {
                     TileBlockBase tl = (TileBlockBase)wall.GetTile(new Vector3Int(x, y - 1));
                     if (tl != null && tl.BlockType == BlockType.SIDE)
@@ -223,14 +250,25 @@ namespace ScorgedEarth
                         wall.SetTile(new Vector3Int(x, y - 1), null);
                         if (wall.GetTile(new Vector3Int(x, y - 1)) == null) d = 0;
                     }
+                    tl = (TileBlockBase)wall.GetTile(new Vector3Int(x, y + 1));
+                    TileBehaviourRule oldSideRule = null;
+                    if (tl != null && tile.Tag !=tl.Tag && tl.BlockType == BlockType.TOP)
+                    {
+                        oldSideRule = wallSideRule;
+                        wallSideRule = Singleton_TileLibrary.Instance.ReturnWallSideRuleByTag(tl.Tag);
+                        if (wallSideRule != null) { }
+                        else wallSideRule = oldSideRule;
+                    }
                     //Нижние стены
                     if (t == c && l != 0 && r != 0 && d != 1) { wall.SetTile(new Vector3Int(x, y), wallSideRule.TileGroups[0].Tiles[Random.Range(0, wallSideRule.TileGroups[0].Tiles.Length)]); }
                     else if (t == c && l != 0 && r == 0 && d != 1) { wall.SetTile(new Vector3Int(x, y), wallSideRule.TileGroups[1].Tiles[Random.Range(0, wallSideRule.TileGroups[2].Tiles.Length)]); }
                     else if (t == c && l == 0 && r != 0 && d != 1) { wall.SetTile(new Vector3Int(x, y), wallSideRule.TileGroups[2].Tiles[Random.Range(0, wallSideRule.TileGroups[1].Tiles.Length)]); }
                     else if (t == c && l == 0 && r == 0 && d != 1) { wall.SetTile(new Vector3Int(x, y), wallSideRule.TileGroups[3].Tiles[Random.Range(0, wallSideRule.TileGroups[3].Tiles.Length)]); }
+                    if (oldSideRule != null) wallSideRule = oldSideRule;
+
                 }
 
-                if (starterType == BlockType.SIDE)
+                if (tile.BlockType == BlockType.SIDE)
                 {
                     TileBlockBase tl = (TileBlockBase)wall.GetTile(new Vector3Int(x, y + 2));
                     if (tl == null || tl.BlockType == BlockType.SIDE)
@@ -238,10 +276,20 @@ namespace ScorgedEarth
                         wall.SetTile(new Vector3Int(x, y + 1), null);
                         if (wall.GetTile(new Vector3Int(x, y - 1)) != null) d = (int)GetTileType(wall, x, y - 1);
                     }
+                    tl = (TileBlockBase)wall.GetTile(new Vector3Int(x, y + 1));
+                    TileBehaviourRule oldSideRule = null;
+                    if (tl != null && tile.Tag != tl.Tag && tl.BlockType == BlockType.TOP)
+                    {
+                        oldSideRule = wallSideRule;
+                        wallSideRule = Singleton_TileLibrary.Instance.ReturnWallSideRuleByTag(tl.Tag);
+                        if (wallSideRule != null) { }
+                        else wallSideRule = oldSideRule;
+                    }
                     else if (t == c && l != 0 && r != 0 && d == 0) { wall.SetTile(new Vector3Int(x, y + 1), wallSideRule.TileGroups[0].Tiles[Random.Range(0, wallSideRule.TileGroups[0].Tiles.Length)]); }
                     else if (t == c && l != 0 && r == 0 && d == 0) { wall.SetTile(new Vector3Int(x, y + 1), wallSideRule.TileGroups[1].Tiles[Random.Range(0, wallSideRule.TileGroups[2].Tiles.Length)]); }
                     else if (t == c && l == 0 && r != 0 && d == 0) { wall.SetTile(new Vector3Int(x, y + 1), wallSideRule.TileGroups[2].Tiles[Random.Range(0, wallSideRule.TileGroups[1].Tiles.Length)]); }
                     else if (t == c && l == 0 && r == 0 && d == 0) { wall.SetTile(new Vector3Int(x, y + 1), wallSideRule.TileGroups[3].Tiles[Random.Range(0, wallSideRule.TileGroups[3].Tiles.Length)]); }
+                    if (oldSideRule != null) wallSideRule = oldSideRule;
                 }
                
             }
@@ -249,7 +297,7 @@ namespace ScorgedEarth
             if (mode == true)
             {
                 TileBlockBase tl = (TileBlockBase)wall.GetTile(new Vector3Int(x, y - 1));
-                if (starterType == BlockType.FLOOR)
+                if (tile.BlockType == BlockType.FLOOR)
                 {
                     if (tl == null)
                     {
@@ -257,7 +305,7 @@ namespace ScorgedEarth
                     }
                 }
 
-                if (starterType == BlockType.SIDE)
+                if (tile.BlockType == BlockType.SIDE)
                 {
                     if (tl == null)
                     {
@@ -291,7 +339,7 @@ namespace ScorgedEarth
                 for (int j = y - radius; j <= radius + y; j++)
                 {
                     if (i == j && i==x && j == y && !mode) continue;
-                    PlaceEditedWallsAltRule(i, j, wall, wallSideRule, wallTopRule, 1);
+                    PlaceEditedWallsAltRule(i, j, wall, wallSideRule, wallTopRule,1);
                 }
             }
             for (int i = x - radius; i <= radius + x; i++)
@@ -299,7 +347,7 @@ namespace ScorgedEarth
                 for (int j = y - radius - md; j <= radius + y; j++)
                 {
                     if (i == j && i == x && j == y && !mode) continue;
-                    PlaceEditedWallsAltRule(i, j, wall, wallSideRule, wallTopRule, 2);
+                    PlaceEditedWallsAltRule(i, j, wall, wallSideRule, wallTopRule,2);
                 }
             }
         }

@@ -23,6 +23,12 @@ namespace ScorgedEarth
         /// </summary>
         [SerializeField] private BlockType m_BlockType = BlockType.TOP;
         public BlockType BlockType => m_BlockType;
+
+        [SerializeField] private string m_Tag;
+        /// <summary>
+        /// Тэг блока
+        /// </summary>
+        public string Tag => m_Tag;
         /// <summary>
         /// Прочность блока.
         /// </summary>

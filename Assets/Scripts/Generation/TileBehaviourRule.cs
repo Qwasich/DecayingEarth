@@ -7,6 +7,7 @@ namespace ScorgedEarth
     public class TileBehaviourRule : ScriptableObject
     {
         public string GroupName;
+        public string Tag;
         public TileGroup[] TileGroups;
     }
 }

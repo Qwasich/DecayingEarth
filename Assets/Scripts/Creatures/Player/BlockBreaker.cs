@@ -38,9 +38,8 @@ namespace ScorgedEarth
                 int i = tile.DealDamage(m_Damage);
                 if (i == 0)
                 {
-                    BlockType type = tile.BlockType;
                     m_WallsTilemap.SetTile(coordinate, null);
-                    WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, m_WallFrontRule, m_WallTopRule, type, m_Radius, false);
+                    WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, m_WallFrontRule, m_WallTopRule, tile, m_Radius, false);
                     
                 }
                     
@@ -54,15 +53,12 @@ namespace ScorgedEarth
                 if (dist < 1) { Debug.Log("Position:" + dist); return; }
                 Vector3Int coordinate = m_WallsTilemap.WorldToCell(pos);
                 TileBlockBase tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
-                BlockType type;
-                if (tile == null) type = BlockType.FLOOR;
-                else type = tile.BlockType;
-                if (type == BlockType.TOP) return;
+                if (tile == null || tile.BlockType == BlockType.TOP) return;
                 
                 m_WallsTilemap.SetTile(coordinate, m_WallTopRule.TileGroups[0].Tiles[0]);
                 Debug.Log(coordinate);
 
-                WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, m_WallFrontRule, m_WallTopRule, type, m_Radius,true);
+                WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, m_WallFrontRule, m_WallTopRule, tile, m_Radius,true);
 
 
 
