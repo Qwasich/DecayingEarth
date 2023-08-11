@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{AD9C20CB-B3CE-A4BC-FFBC-64E447668996}</ProjectGuid>
+    <ProjectGuid>{0E740C93-B14E-2623-0010-2519A17990D6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -60,21 +60,22 @@
     <Compile Include="Assets\Scripts\Generation\TileGroup_Ore.cs" />
     <Compile Include="Assets\Scripts\Generation\TileBlockBase.cs" />
     <Compile Include="Assets\Scripts\Creatures\Player\Player.cs" />
+    <Compile Include="Assets\Scripts\Items\PhysicalItem.cs" />
+    <Compile Include="Assets\Scripts\Items\ItemMaterial.cs" />
     <Compile Include="Assets\Scripts\Creatures\Creature.cs" />
     <Compile Include="Assets\Scripts\Interaction\WorldShaper.cs" />
+    <Compile Include="Assets\Scripts\DataCollectors\Singletone_PrefabLibrary.cs" />
     <Compile Include="Assets\Scripts\Creatures\Player\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Generation\TileBehaviourRule.cs" />
+    <Compile Include="Assets\Scripts\Generation\Singleton_TileLibrary.cs" />
     <Compile Include="Assets\Scripts\Creatures\Player\BlockBreaker.cs" />
+    <Compile Include="Assets\Scripts\Items\ItemBlock.cs" />
+    <Compile Include="Assets\Scripts\Items\ItemBase.cs" />
     <Compile Include="Assets\Scripts\Generation\WorldGenerationRules.cs" />
     <Compile Include="Assets\Scripts\Generation\Cave_Generator.cs" />
     <Compile Include="Assets\Scripts\Generation\TileGroup.cs" />
-    <Compile Include="Assets\Scripts\Generation\Singleton_TileLibrary.cs" />
     <Compile Include="Assets\Scripts\DataCollectors\Singleton_SessionData.cs" />
-    <Compile Include="Assets\Scripts\Items\ItemBase.cs" />
-    <Compile Include="Assets\Scripts\Items\ItemMaterial.cs" />
-    <Compile Include="Assets\Scripts\Items\ItemBlock.cs" />
-    <Compile Include="Assets\Scripts\Items\PhysicalItem.cs" />
-    <Compile Include="Assets\Scripts\DataCollectors\Singletone_PrefabLibrary.cs" />
+    <Compile Include="Assets\Scripts\Items\Inventory.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

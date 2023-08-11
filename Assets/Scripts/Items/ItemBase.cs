@@ -19,6 +19,8 @@ namespace ScorgedEarth
         [Header("Item Basics")]
         public string Name;
         public Sprite Icon;
+        [SerializeField] private int m_MaxItemCount = 1;
+        public int MaxStackCount => m_MaxItemCount;
 
         protected virtual ItemType m_ItemType { get; }
         public ItemType  ItemType => m_ItemType;

@@ -13,6 +13,7 @@ namespace ScorgedEarth
         private TileBehaviourRule m_WallTopRule;
         [SerializeField] private int m_Damage;
         [SerializeField] private float m_MaximimDistance;
+        [SerializeField] private float m_MinimumDistance;
         [SerializeField] private int m_Radius = 0;
         TileBlockBase m_Tile;
 
@@ -52,7 +53,7 @@ namespace ScorgedEarth
                 Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 float dist = Vector2.Distance(transform.position, pos);
                 if (dist > m_MaximimDistance) { Debug.Log("Position:" + dist); return; }
-                if (dist < 1) { Debug.Log("Position:" + dist); return; }
+                if (dist < m_MinimumDistance) { Debug.Log("Position:" + dist); return; }
                 Vector3Int coordinate = m_WallsTilemap.WorldToCell(pos);
                 TileBlockBase tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
                 if (tile != null && tile.BlockType == BlockType.TOP) return;

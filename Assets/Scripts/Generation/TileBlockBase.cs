@@ -71,7 +71,7 @@ namespace ScorgedEarth
             m_RemainingDurability -= damage;
             
             if (m_RemainingDurability <= 0)
-            {
+            {/*
                 if (m_Loot == null) return 0;
                 for (int i = 0; i < m_Loot.Length; i++)
                 {
@@ -81,7 +81,7 @@ namespace ScorgedEarth
                     m.transform.position = (Vector3)pos + new Vector3(0.5f, 0.5f);
 
 
-                }
+                }*/
                 m_RemainingDurability = m_MaxDurability;
                 return 0;
             }
