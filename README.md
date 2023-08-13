@@ -1,4 +1,4 @@
-# Scorged Earth
+# Decaying Earth
 
 Фановский проект.
 
