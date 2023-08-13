@@ -20,7 +20,9 @@ namespace ScorgedEarth
     public interface ISaveableInventory
     {
         public void Save(out Vector2Int tag, out List<InvItem> itemList, out int invSize);
+        public void ManualSave(out string tag, out List<InvItem> itemList, out int invSize);
         public void Load(Vector2Int tag, List<InvItem> itemList, int invSize);
+        public void ManualLoad(string tag, List<InvItem> itemList, int invSize);
     }
 
     public class Inventory : MonoBehaviour , ISaveableInventory
@@ -32,6 +34,7 @@ namespace ScorgedEarth
         public List<InvItem> Items => m_Items;
 
         private Vector2Int m_TagCoordinate;
+        public Vector2Int TagCoordinate => m_TagCoordinate;
 
         [SerializeField] private int m_InventorySize = 36;
         /// <summary>
@@ -44,6 +47,17 @@ namespace ScorgedEarth
         /// Если true, инвентарь будет сохранен.
         /// </summary>
         public bool IsSaveable => m_IsSaveable;
+
+        /// <summary>
+        /// Если true - сохраняет по строчке тэга вместо координат.
+        /// </summary>
+        [SerializeField] private bool m_IsManual = false;
+        /// <summary>
+        /// Используется только при сохранении по строчке тэга. Полезно для объектов, заданных заранее (инвентарь игрока, например)
+        /// </summary>
+        [SerializeField] private string m_StringTag = "";
+        public string StringTag => m_StringTag;
+
 
         private void Awake()
         {
@@ -65,10 +79,21 @@ namespace ScorgedEarth
         /// <param name="invSize">Размер инвентаря</param>
         public void Save(out Vector2Int tag, out List<InvItem> itemList, out int invSize)
         {
+            if (m_IsManual) Debug.LogError("Warning! Attempt to save inventory by coordinate tag instead of manual on object: " + name);
             tag = m_TagCoordinate;
             itemList = m_Items;
             invSize = m_InventorySize;
         }
+
+        public void ManualSave(out string tag, out List<InvItem> itemList, out int invSize)
+        {
+            if (!m_IsManual) Debug.LogError("Warning! Attempt to save inventory by manual tag instead of coordinate tag on object: " + name);
+            if (m_StringTag == "") Debug.LogError("Warning! Attempt to save inventory by empty manual tag on object: " + name);
+            tag = m_StringTag;
+            itemList = m_Items;
+            invSize = m_InventorySize;
+        }
+
 
         /// <summary>
         /// загружает данные инвентаря. ОБЯЗАТЕЛЬНО проверьте IsSaveable прежде чем вызывать
@@ -78,11 +103,20 @@ namespace ScorgedEarth
         /// <param name="invSize">Размер инвентаря</param>
         public void Load(Vector2Int tag, List<InvItem> itemList, int invSize)
         {
+            if (m_IsManual) Debug.LogError("Warning! Attempt to load inventory by coordinate tag instead of manual on object: " + name);
             m_TagCoordinate = tag;
             m_Items = itemList;
             m_InventorySize = invSize;
         }
 
+        public void ManualLoad(string tag, List<InvItem> itemList, int invSize)
+        {
+            if (!m_IsManual) Debug.LogError("Warning! Attempt to load inventory by manual tag instead of coordinate tag on object: " + name);
+            if (m_StringTag == "") Debug.LogError("Warning! Attempt to save inventory by empty manual tag on object: " + name);
+            m_Items = itemList;
+            m_InventorySize = invSize;
+
+        }
 
         /// <summary>
         /// Увеличивает размер стака предмета в инвентаре на определенной позиции на определенное количество.
@@ -153,5 +187,9 @@ namespace ScorgedEarth
         /// </summary>
         /// <param name="invNumber">Номер слота инвентаря для изменения</param>
         public void RemoveItemCompletely(int invNumber) => m_Items[invNumber] = new InvItem(null,0);
+
+        
+
+        
     }
 }

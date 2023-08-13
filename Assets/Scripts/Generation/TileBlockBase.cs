@@ -62,7 +62,7 @@ namespace ScorgedEarth
         /// </summary>
         /// <param name="damage"></param>
         /// <returns></returns>
-        public int DealDamage(int damage,Vector3Int pos)
+        public int DealDamage(int damage,Vector3 pos)
         {
             //Debug.Log(m_RemainingDurability + " " + damage);
             if (m_IsIndestructible) return 2;
@@ -71,17 +71,15 @@ namespace ScorgedEarth
             m_RemainingDurability -= damage;
             
             if (m_RemainingDurability <= 0)
-            {/*
+            {
                 if (m_Loot == null) return 0;
                 for (int i = 0; i < m_Loot.Length; i++)
                 {
                     if (m_Loot[i] == null) continue;
                     GameObject m = Instantiate(Singletone_PrefabLibrary.DummyItemPrefab);
                     m.GetComponent<PhysicalItem>().InitiateItem(m_Loot[i]);
-                    m.transform.position = (Vector3)pos + new Vector3(0.5f, 0.5f);
-
-
-                }*/
+                    m.transform.position = pos + new Vector3(0.25f, 0.25f);
+                }
                 m_RemainingDurability = m_MaxDurability;
                 return 0;
             }

@@ -230,7 +230,9 @@ namespace ScorgedEarth
                 int orecount = ore.VeinSize;
                 int xrand = Random.Range(0, m_CaveXSize);
                 int yrand = Random.Range(0, m_CaveYSize);
-                if (wallmap.GetTile(new Vector3Int(xrand,yrand, 0)) == null) continue;
+                TileBlockBase tile = wallmap.GetTile<TileBlockBase>(new Vector3Int(xrand, yrand, 0));
+                if (tile == null) continue;
+                if (tile.BlockType != BlockType.TOP) continue;
                 oremap.SetTile(new Vector3Int(xrand, yrand, 0), ore.Tiles[Random.Range(0,ore.Tiles.Length)]);
                 orecount--;
                 while (orecount > 0)
@@ -251,11 +253,12 @@ namespace ScorgedEarth
                             case 'g': x = 0; y = -1; direction.Remove('g'); break;
                             case 'h': x = 1; y = -1; direction.Remove('h'); break;
                         }
-
                         x += xrand;
                         y += yrand;
 
-                        if (wallmap.GetTile(new Vector3Int(x, y, 0)) != null && oremap.GetTile(new Vector3Int(x, y, 0)) == null)
+                        tile = wallmap.GetTile<TileBlockBase>(new Vector3Int(x, y, 0));
+
+                        if (tile != null && tile.BlockType == BlockType.TOP && oremap.GetTile(new Vector3Int(x, y, 0)) == null)
                         {
                             oremap.SetTile(new Vector3Int(xrand, yrand, 0), ore.Tiles[Random.Range(0, ore.Tiles.Length)]);
                             orecount--;
