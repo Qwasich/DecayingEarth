@@ -6,8 +6,15 @@ namespace ScorgedEarth
     public class Singleton_SessionData : MonoSingleton<Singleton_SessionData>
     {
         private Vector2Int m_LastInteractionCoordinate = Vector2Int.zero;
+        /// <summary>
+        /// ѕоследн€€ координата, с которой происходило взаимодействие
+        /// </summary>
         public static Vector2Int LastCoordinate => Instance.m_LastInteractionCoordinate;
+
         private bool m_IsTop = false;
+        /// <summary>
+        /// √де нова€ координата находитс€ в плане высоты относительно предыдущей. ≈сли нова€ выше - возвращает true.
+        /// </summary>
         public static bool IsTop => Instance.m_IsTop;
 
 

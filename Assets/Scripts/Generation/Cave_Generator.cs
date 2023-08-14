@@ -65,6 +65,9 @@ namespace ScorgedEarth
         /// </summary>
         private int m_OreMultiplier;
 
+        private int m_XOffset;
+        private int m_YOffset;
+
 
         protected override void Awake()
         {
@@ -98,6 +101,8 @@ namespace ScorgedEarth
             if (tile == null) Debug.Log(BlockType.FLOOR);
             else Debug.Log(tile.BlockType);
 #endif
+            m_XOffset = Mathf.FloorToInt(m_CaveXSize / 2);
+            m_YOffset = Mathf.FloorToInt(m_CaveYSize / 2);
             if (m_FloorRule == null || m_WallFrontRule == null || m_WallTopRule == null || m_CaveXSize <= 0 || m_CaveYSize <= 0) { Debug.LogError("Error: Rules aren't set properly"); return; } 
             if (m_FloorTilemap == null || m_WallsTilemap == null || m_OresTilemap == null) { Debug.LogError("Error: Target tilemaps are not set"); return; } 
             if (m_MapFillPercent == 0 || m_MapFillPercent == 100) { Debug.Log("Warning: Map fill percent " + m_MapFillPercent +"!"); return; }
@@ -124,9 +129,9 @@ namespace ScorgedEarth
         /// <param name="floorRule">Правило укладки пола</param>
         private void GenerateFloor(Tilemap floor, TileBehaviourRule floorRule)
         {
-            for (int i = 0; i < m_CaveXSize; i++)
+            for (int i = 0 - m_XOffset; i < m_CaveXSize - m_XOffset; i++)
             {
-                for (int j = 0; j < m_CaveYSize; j++)
+                for (int j = 0 - m_YOffset; j < m_CaveYSize - m_YOffset; j++)
                 {
                     floor.SetTile(new Vector3Int(i, j, 0), floorRule.TileGroups[0].Tiles[Random.Range(0, floorRule.TileGroups[0].Tiles.Length)]);
                 }
@@ -140,12 +145,12 @@ namespace ScorgedEarth
         /// <param name="wallTopRule">Правило верхних стен</param>
         private void GenerateRandomWallPattern(Tilemap wall, TileBehaviourRule wallTopRule)
         {
-            for (int i = -1; i <= m_CaveXSize; i++)
+            for (int i = -1 - m_XOffset; i <= m_CaveXSize - m_XOffset; i++)
             {
 
-                for (int j = -1; j <= m_CaveYSize; j++)
+                for (int j = -1 - m_YOffset; j <= m_CaveYSize - m_YOffset; j++)
                 {
-                    if (i <= 0 || i >= m_CaveXSize - 1 || j <= 0 || j >= m_CaveYSize - 1)
+                    if (i <= 0 - m_XOffset || i >= m_CaveXSize - 1 - m_XOffset || j <= 0 - m_YOffset || j >= m_CaveYSize - 1 - m_YOffset)
                     {
                         wall.SetTile(new Vector3Int(i, j, 0), wallTopRule.TileGroups[0].Tiles[0]);
                         continue;
@@ -168,9 +173,9 @@ namespace ScorgedEarth
         /// <param name="wallTopRule">Правило верхних стен</param>
         private void CellAutomataIteration(Tilemap wall, TileBehaviourRule wallTopRule)
         {
-            for (int i = 1; i < m_CaveXSize - 1 ; i++)
+            for (int i = 1 - m_XOffset; i < m_CaveXSize - 1 - m_XOffset; i++)
             {
-                for (int j = 1; j < m_CaveYSize - 1; j++)
+                for (int j = 1 - m_YOffset; j < m_CaveYSize - 1 - m_YOffset; j++)
                 {
                     int counter = 0;
 
@@ -197,14 +202,14 @@ namespace ScorgedEarth
         /// <param name="wallTopRule">Правило верхних стен</param>
         private void PlaceEditedWalls(Tilemap wall, TileBehaviourRule wallSideRule, TileBehaviourRule wallTopRule)
         {
-            StartCoroutine(Cycle(m_CaveXSize, m_CaveYSize, wall, wallSideRule, wallTopRule));
+            StartCoroutine(Cycle(m_CaveXSize, m_CaveYSize, m_XOffset, m_YOffset, wall, wallSideRule, wallTopRule));
         }
 
-        IEnumerator Cycle(int CaveX, int CaveY, Tilemap wall, TileBehaviourRule wallSideRule, TileBehaviourRule wallTopRule)
+        IEnumerator Cycle(int CaveX, int CaveY, int xo, int yo, Tilemap wall, TileBehaviourRule wallSideRule, TileBehaviourRule wallTopRule)
         {
-            for (int i = 0; i < CaveX; i++)
+            for (int i = 0 - xo; i < CaveX - xo; i++)
             {
-                for (int j = 0; j < CaveY; j++)
+                for (int j = 0 - yo; j < CaveY - yo; j++)
                 {
                     WorldShaper.PlaceEditedWallsAltRule(i, j, wall, wallSideRule, wallTopRule);
                 }
@@ -228,8 +233,8 @@ namespace ScorgedEarth
             while (rarity > 0)
             {
                 int orecount = ore.VeinSize;
-                int xrand = Random.Range(0, m_CaveXSize);
-                int yrand = Random.Range(0, m_CaveYSize);
+                int xrand = Random.Range(0 - m_XOffset, m_CaveXSize - m_XOffset);
+                int yrand = Random.Range(0 - m_YOffset, m_CaveYSize - m_YOffset);
                 TileBlockBase tile = wallmap.GetTile<TileBlockBase>(new Vector3Int(xrand, yrand, 0));
                 if (tile == null) continue;
                 if (tile.BlockType != BlockType.TOP) continue;

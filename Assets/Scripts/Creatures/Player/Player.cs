@@ -13,6 +13,7 @@ namespace ScorgedEarth
         [SerializeField] private int m_SpeedMultiplier = 1;
 
         private Vector2 m_MovementVector;
+        public Vector2 MovementVector => m_MovementVector;
 
         private void Start()
         {

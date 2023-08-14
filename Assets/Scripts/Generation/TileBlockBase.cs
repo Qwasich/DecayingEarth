@@ -60,13 +60,14 @@ namespace ScorgedEarth
         /// <summary>
         /// Возвращает 0 если тайл уничтожен, 1 если повреждения прошли, 2 если блок неразрушим или слишком маленький урон.
         /// </summary>
-        /// <param name="damage"></param>
+        /// <param name="damage">Наносимый урон</param>
+        /// <param name="pos">Позиция справна предмета</param>
         /// <returns></returns>
         public int DealDamage(int damage,Vector3 pos)
         {
-            //Debug.Log(m_RemainingDurability + " " + damage);
             if (m_IsIndestructible) return 2;
             if (damage * 5 <= m_MaxDurability) return 2;
+            
 
             m_RemainingDurability -= damage;
             
@@ -86,10 +87,6 @@ namespace ScorgedEarth
             else return 1;
         }
 
-        public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
-        {
-            base.GetTileData(position, tilemap, ref tileData);
-        }
 
         public void Recover() => m_RemainingDurability = m_MaxDurability;
 

@@ -14,7 +14,6 @@ namespace ScorgedEarth
         private TileBehaviourRule m_WallTopRule;
         [SerializeField] private int m_Damage;
         [SerializeField] private float m_MaximimDistance;
-        [SerializeField] private float m_MinimumDistance;
         [SerializeField] private int m_Radius = 0;
 
         private void Start()
@@ -32,6 +31,7 @@ namespace ScorgedEarth
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
                 Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                
                 float dist = Vector2.Distance(transform.position, pos);
                 if (dist > m_MaximimDistance) { Debug.Log("Position:" + dist); return; }
                 Vector3Int coordinate = m_WallsTilemap.WorldToCell(pos);
@@ -60,9 +60,9 @@ namespace ScorgedEarth
             if (Input.GetKeyDown(KeyCode.Mouse1))
             {
                 Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                if (CheckRigidbody(pos) == true) return;
                 float dist = Vector2.Distance(transform.position, pos);
                 if (dist > m_MaximimDistance) { Debug.Log("Position:" + dist); return; }
-                if (dist < m_MinimumDistance) { Debug.Log("Position:" + dist); return; }
                 Vector3Int coordinate = m_WallsTilemap.WorldToCell(pos);
                 TileBlockBase tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
                 if (tile != null && tile.BlockType == BlockType.TOP) return;
@@ -74,6 +74,24 @@ namespace ScorgedEarth
                 WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, m_WallFrontRule, m_WallTopRule, tile, m_Radius,true);
             }
 
+        }
+
+        private bool CheckRigidbody(Vector2 pos)
+        {
+            RaycastHit2D[] hitdata;
+            hitdata = Physics2D.BoxCastAll(pos,new Vector2(0.25f, 0.25f),0, Vector3.forward);
+            foreach(RaycastHit2D rh in hitdata)
+            {
+                Rigidbody2D rb = rh.rigidbody;
+                if (rb != null)
+                {
+                    Debug.Log("rb is discovered on object: " + rb.name);
+                    return true;
+                }
+                
+            }
+
+            return false;
         }
     }
 }
