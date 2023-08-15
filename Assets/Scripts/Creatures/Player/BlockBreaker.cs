@@ -85,7 +85,7 @@ namespace ScorgedEarth
                 Rigidbody2D rb = rh.rigidbody;
                 if (rb != null)
                 {
-                    Debug.Log("rb is discovered on object: " + rb.name);
+                    //Debug.Log("rb is discovered on object: " + rb.name);
                     return true;
                 }
                 

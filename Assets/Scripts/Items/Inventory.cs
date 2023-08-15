@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine.EventSystems;
 
 namespace ScorgedEarth
 {
+    [Serializable]
     public struct InvItem
     {
         public ItemBase Item;
@@ -34,7 +36,7 @@ namespace ScorgedEarth
         public List<InvItem> Items => m_Items;
 
         private Vector2Int m_TagCoordinate;
-        public Vector2Int TagCoordinate => m_TagCoordinate;
+        [SerializeField] public Vector2Int TagCoordinate => m_TagCoordinate;
 
         [SerializeField] private int m_InventorySize = 36;
         /// <summary>
@@ -63,6 +65,11 @@ namespace ScorgedEarth
         {
             m_TagCoordinate = new Vector2Int(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y));
             m_Items = new List<InvItem>(m_InventorySize);
+
+            for (int i = 0; i < m_Items.Capacity; i++)
+            {
+                m_Items.Add(new InvItem(null, 0));
+            }
         }
 
         /// <summary>
@@ -123,27 +130,27 @@ namespace ScorgedEarth
         /// </summary>
         /// <param name="invNumber">Номер слота инвентаря для изменения</param>
         /// <param name="addAmount">Число предметов, добавляемое к стаку</param>
-        /// <param name="usedAmount">Если количество добавляемых предметов больше чем вместимость стака, возвращает количество использованых предметов</param>
+        /// <param name="notUsedAmount">Если количество добавляемых предметов больше чем вместимость стака, возвращает количество не использованных предметов</param>
         /// <returns>Возвращает True если изменение успешно; False - если нет.</returns>
-        public bool IncreaseItemCount(int invNumber, int addAmount, out int usedAmount)
+        public bool IncreaseItemCount(int invNumber, int addAmount, out int notUsedAmount)
         {
             if (m_Items[invNumber].Item == null || addAmount <= 0)
             {
-                usedAmount = 0;
+                notUsedAmount = 0;
                 return false;
             }
 
             int stack = m_Items[invNumber].StackCount + addAmount;
             if (stack > m_Items[invNumber].Item.MaxStackCount)
             {
-                usedAmount = stack - m_Items[invNumber].Item.MaxStackCount;
+                notUsedAmount = stack - m_Items[invNumber].Item.MaxStackCount;
             }
             else
             {
-                usedAmount = 0;
+                notUsedAmount = 0;
             }
 
-            m_Items[invNumber] = new InvItem(m_Items[invNumber].Item, stack - usedAmount);
+            m_Items[invNumber] = new InvItem(m_Items[invNumber].Item, stack - notUsedAmount);
 
             return true;
         }
@@ -156,7 +163,7 @@ namespace ScorgedEarth
         /// <returns>Возвращает True если изменение успешно; False - если нет.</returns>
         public bool DecreaseItemCount(int invNumber, int substractAmount)
         {
-            if (m_Items[invNumber].Item == null || substractAmount >= 0 || m_Items[invNumber].StackCount < substractAmount) return false;
+            if (m_Items[invNumber].Item == null || substractAmount <= 0 || m_Items[invNumber].StackCount < substractAmount) return false;
 
             int stack = m_Items[invNumber].StackCount - substractAmount;
 
@@ -187,8 +194,6 @@ namespace ScorgedEarth
         /// </summary>
         /// <param name="invNumber">Номер слота инвентаря для изменения</param>
         public void RemoveItemCompletely(int invNumber) => m_Items[invNumber] = new InvItem(null,0);
-
-        
 
         
     }
