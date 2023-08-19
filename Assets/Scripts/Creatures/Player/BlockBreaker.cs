@@ -40,7 +40,13 @@ namespace ScorgedEarth
                 TileBlockBase ore = null;
                 if (tile.BlockType == BlockType.TOP) ore = m_OresTilemap.GetTile<TileBlockBase>(coordinate);
                 else if (tile.BlockType == BlockType.SIDE) ore = m_OresTilemap.GetTile<TileBlockBase>(new Vector3Int(coordinate.x, coordinate.y + 1, coordinate.z));
-                Singleton_SessionData.Instance.UpdateLastCoordinate((Vector2Int)coordinate);
+
+                if (Singleton_SessionData.Instance.LastTileCoordinate != (Vector2Int)coordinate)
+                {
+                    tile.Recover();
+                    if (ore != null) ore.Recover();
+                }
+                Singleton_SessionData.Instance.UpdateLastTileCoordinate((Vector2Int)coordinate);
 
                 int i = 1;
                 if (ore == null) i = tile.DealDamage(m_Damage, m_WallsTilemap.CellToWorld(coordinate));

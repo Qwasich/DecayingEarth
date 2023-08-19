@@ -14,6 +14,15 @@ namespace ScorgedEarth
         Accessory
     }
 
+    public interface UseItem
+    {
+        /// <summary>
+        /// Использует предмет, в зависимости от нажатой клавиши мыши
+        /// </summary>
+        /// <param name="clickType">0 - левая, 1 - правая.</param>
+        public void UseItem(int clickType);
+    }
+
     public abstract class ItemBase : ScriptableObject
     {
         [Header("Item Basics")]

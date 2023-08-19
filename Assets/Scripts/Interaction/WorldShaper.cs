@@ -344,7 +344,7 @@ namespace ScorgedEarth
 
             }
 
-            Singleton_SessionData.Instance.UpdateLastCoordinate(new Vector2Int(x,y));
+            Singleton_SessionData.Instance.UpdateLastTileCoordinate(new Vector2Int(x,y));
 
             if (radius <= 0) radius = 1;
 

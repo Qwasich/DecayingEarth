@@ -68,6 +68,7 @@ namespace ScorgedEarth
             if (m_IsIndestructible) return 2;
             if (damage * 5 <= m_MaxDurability) return 2;
             
+            
 
             m_RemainingDurability -= damage;
             
