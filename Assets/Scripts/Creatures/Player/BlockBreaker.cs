@@ -58,7 +58,7 @@ namespace ScorgedEarth
                     else if (ore != null && tile.BlockType == BlockType.SIDE) m_OresTilemap.SetTile(new Vector3Int(coordinate.x, coordinate.y + 1, coordinate.z), null);
                     if (ore != null) tile.DealDamage(1000000, m_WallsTilemap.CellToWorld(coordinate));
                     m_WallsTilemap.SetTile(coordinate, null);
-                    WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, m_WallFrontRule, m_WallTopRule, tile, m_Radius, false);
+                    WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, tile, m_Radius, false);
                 }
                     
 
@@ -77,7 +77,7 @@ namespace ScorgedEarth
                 if (tile == null) tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
                 //Debug.Log(coordinate);
 
-                WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, m_WallFrontRule, m_WallTopRule, tile, m_Radius,true);
+                WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, tile, m_Radius,true);
             }
 
         }
@@ -85,13 +85,14 @@ namespace ScorgedEarth
         private bool CheckRigidbody(Vector2 pos)
         {
             RaycastHit2D[] hitdata;
-            hitdata = Physics2D.BoxCastAll(pos,new Vector2(0.25f, 0.25f),0, Vector3.forward);
+            hitdata = Physics2D.BoxCastAll(pos,new Vector2(0.75f, 0.75f),0, Vector3.forward);
             foreach(RaycastHit2D rh in hitdata)
             {
+                if (rh.collider.gameObject.name == "PickupHitbox") continue;
                 Rigidbody2D rb = rh.rigidbody;
                 if (rb != null)
                 {
-                    //Debug.Log("rb is discovered on object: " + rb.name);
+                    Debug.Log("rb is discovered on object: " + rb.name);
                     return true;
                 }
                 

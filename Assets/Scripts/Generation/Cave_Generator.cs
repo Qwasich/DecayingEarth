@@ -116,7 +116,7 @@ namespace ScorgedEarth
 
             for (int i = 0; i < m_NumberOfCAIterations; i++) CellAutomataIteration(m_WallsTilemap, m_WallTopRule);
 
-            PlaceEditedWalls(m_WallsTilemap, m_WallFrontRule, m_WallTopRule);
+            PlaceEditedWalls(m_WallsTilemap);
 
             if (m_Ores.Length > 0) for (int i = 0; i < m_Ores.Length; i++) GenerateOresByTypeCountAndSize(m_Ores[i], m_OresTilemap, m_WallsTilemap);
             else Debug.Log("Warning: No ores to generate!");
@@ -198,20 +198,18 @@ namespace ScorgedEarth
         /// Алгоритм покраски стен на выбранном тайлмапе по заданным правилам. Нужно правило передних стен и верхних.
         /// </summary>
         /// <param name="wall">Целевой Тайлмап</param>
-        /// <param name="wallSideRule">Правило передних стен</param>
-        /// <param name="wallTopRule">Правило верхних стен</param>
-        private void PlaceEditedWalls(Tilemap wall, TileBehaviourRule wallSideRule, TileBehaviourRule wallTopRule)
+        private void PlaceEditedWalls(Tilemap wall)
         {
-            StartCoroutine(Cycle(m_CaveXSize, m_CaveYSize, m_XOffset, m_YOffset, wall, wallSideRule, wallTopRule));
+            StartCoroutine(Cycle(m_CaveXSize, m_CaveYSize, m_XOffset, m_YOffset, wall));
         }
 
-        IEnumerator Cycle(int CaveX, int CaveY, int xo, int yo, Tilemap wall, TileBehaviourRule wallSideRule, TileBehaviourRule wallTopRule)
+        IEnumerator Cycle(int CaveX, int CaveY, int xo, int yo, Tilemap wall)
         {
             for (int i = 0 - xo; i < CaveX - xo; i++)
             {
                 for (int j = 0 - yo; j < CaveY - yo; j++)
                 {
-                    WorldShaper.PlaceEditedWallsAltRule(i, j, wall, wallSideRule, wallTopRule);
+                    WorldShaper.PlaceEditedWallsAltRule(i, j, wall);
                 }
             }
             yield return null;

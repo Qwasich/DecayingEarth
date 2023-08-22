@@ -94,10 +94,8 @@ namespace ScorgedEarth
         /// <param name="x">Координата X</param>
         /// <param name="y">Координата Y</param>
         /// <param name="wall">Целевой Тайлмап</param>
-        /// <param name="wallSideRule">Правило передних стен</param>
-        /// <param name="wallTopRule">Правило верхних стен</param>
         /// <param name="mode">0 - Полный, 1 - Только передние, 2 - Только верхние</param>
-        public static void PlaceEditedWallsAltRule(int x, int y, Tilemap wall, TileBehaviourRule wallSideRule, TileBehaviourRule wallTopRule, int mode = 0)
+        public static void PlaceEditedWallsAltRule(int x, int y, Tilemap wall, int mode = 0)
         {
             if (mode > 2 || mode < 0) { Debug.LogError("Alt Rule Generation mode set wrongly! Must use value between 0 and 2, inclusive."); return; }
             TileBlockBase tile = wall.GetTile<TileBlockBase>(new Vector3Int(x, y, 0));
@@ -107,11 +105,10 @@ namespace ScorgedEarth
                 Debug.LogError("Tile " + tile.name +" has no tag set, block generation failure"); 
                 return;
             }
-            if (mode != 0)
-            {
-                wallSideRule = Singleton_TileLibrary.Instance.ReturnWallSideRuleByTag(tile.Tag);
-                wallTopRule = Singleton_TileLibrary.Instance.ReturnWallTopRuleByTag(tile.Tag);
-            }
+
+            TileBehaviourRule wallSideRule = Singleton_TileLibrary.Instance.ReturnWallSideRuleByTag(tile.Tag);
+            TileBehaviourRule wallTopRule = Singleton_TileLibrary.Instance.ReturnWallTopRuleByTag(tile.Tag);
+
             int c = 2;
 
             int lt = 0;
@@ -212,13 +209,14 @@ namespace ScorgedEarth
         /// <param name="x">Координата X</param>
         /// <param name="y">Координата Y</param>
         /// <param name="wall">Целевой Тайлмап</param>
-        /// <param name="wallSideRule">Правило передних стен</param>
-        /// <param name="wallTopRule">Правило верхних стен</param>
-        /// <param name="starterType">Тип блока центрального тайла, вокруг которого ведется обновление. Используется если Mode = 0</param>
+        /// <param name="tile">Настройки разрушенного или поставленного тайла</param>
         /// <param name="radius">Радиус обновления блоков вокруг центрального тайла. Всегда равняется минимум 1.</param>
         /// <param name="mode">false - Режим разрушения, true - режим установки</param>
-        public static void EditWallsAroundPoint(int x, int y, Tilemap wall, TileBehaviourRule wallSideRule, TileBehaviourRule wallTopRule, TileBlockBase tile, int radius, bool mode = false)
+        public static void EditWallsAroundPoint(int x, int y, Tilemap wall, TileBlockBase tile, int radius, bool mode = false)
         {
+            TileBehaviourRule wallSideRule = Singleton_TileLibrary.Instance.ReturnWallSideRuleByTag(tile.Tag);
+            TileBehaviourRule wallTopRule = Singleton_TileLibrary.Instance.ReturnWallTopRuleByTag(tile.Tag);
+
             int c = 2;
 
             //int lt = 0;
@@ -353,7 +351,7 @@ namespace ScorgedEarth
                 for (int j = y - radius; j <= radius + y; j++)
                 {
                     if (i == j && i==x && j == y && !mode) continue;
-                    PlaceEditedWallsAltRule(i, j, wall, wallSideRule, wallTopRule,1);
+                    PlaceEditedWallsAltRule(i, j, wall, 1);
                 }
             }
             for (int i = x - radius; i <= radius + x; i++)
@@ -361,7 +359,7 @@ namespace ScorgedEarth
                 for (int j = y - radius; j <= radius + y; j++)
                 {
                     if (i == j && i == x && j == y && !mode) continue;
-                    PlaceEditedWallsAltRule(i, j, wall, wallSideRule, wallTopRule,2);
+                    PlaceEditedWallsAltRule(i, j, wall, 2);
                 }
             }
         }
