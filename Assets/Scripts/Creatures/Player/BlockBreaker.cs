@@ -23,64 +23,71 @@ namespace ScorgedEarth
             m_FloorTilemap = Cave_Generator.Instance.FloorTilemap;
             m_WallFrontRule = Cave_Generator.Instance.WallFrontRule;
             m_WallTopRule = Cave_Generator.Instance.WallTopRule;
+            Singleton_ControlSettings.Instance.OnLeftMouseButtonPressed += DamageBlock;
+            Singleton_ControlSettings.Instance.OnRightMouseButtonPressed += PlaceBlock;
+
         }
 
-
-        private void Update()
+        private void OnDestroy()
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0))
-            {
-                Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                
-                float dist = Vector2.Distance(transform.position, pos);
-                if (dist > m_MaximimDistance) { Debug.Log("Position:" + dist); return; }
-                Vector3Int coordinate = m_WallsTilemap.WorldToCell(pos);
-                TileBlockBase tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
-                if (tile == null) return;
-                TileBlockBase ore = null;
-                if (tile.BlockType == BlockType.TOP) ore = m_OresTilemap.GetTile<TileBlockBase>(coordinate);
-                else if (tile.BlockType == BlockType.SIDE) ore = m_OresTilemap.GetTile<TileBlockBase>(new Vector3Int(coordinate.x, coordinate.y + 1, coordinate.z));
-
-                if (Singleton_SessionData.Instance.LastTileCoordinate != (Vector2Int)coordinate)
-                {
-                    tile.Recover();
-                    if (ore != null) ore.Recover();
-                }
-                Singleton_SessionData.Instance.UpdateLastTileCoordinate((Vector2Int)coordinate);
-
-                int i = 1;
-                if (ore == null) i = tile.DealDamage(m_Damage, m_WallsTilemap.CellToWorld(coordinate));
-                else i = ore.DealDamage(m_Damage, m_WallsTilemap.CellToWorld(coordinate));
-
-                if (i == 0)
-                {
-                    if (ore != null && tile.BlockType == BlockType.TOP) m_OresTilemap.SetTile(coordinate, null);
-                    else if (ore != null && tile.BlockType == BlockType.SIDE) m_OresTilemap.SetTile(new Vector3Int(coordinate.x, coordinate.y + 1, coordinate.z), null);
-                    if (ore != null) tile.DealDamage(1000000, m_WallsTilemap.CellToWorld(coordinate));
-                    m_WallsTilemap.SetTile(coordinate, null);
-                    WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, tile, m_Radius, false);
-                }
-                    
-
-            }
-            if (Input.GetKeyDown(KeyCode.Mouse1))
-            {
-                Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                if (CheckRigidbody(pos) == true) return;
-                float dist = Vector2.Distance(transform.position, pos);
-                if (dist > m_MaximimDistance) { Debug.Log("Position:" + dist); return; }
-                Vector3Int coordinate = m_WallsTilemap.WorldToCell(pos);
-                TileBlockBase tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
-                if (tile != null && tile.BlockType == BlockType.TOP) return;
-                
-                m_WallsTilemap.SetTile(coordinate, m_WallTopRule.TileGroups[0].Tiles[0]);
-                if (tile == null) tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
-                //Debug.Log(coordinate);
-
-                WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, tile, m_Radius,true);
-            }
-
+            Singleton_ControlSettings.Instance.OnLeftMouseButtonPressed -= DamageBlock;
+            Singleton_ControlSettings.Instance.OnRightMouseButtonPressed -= PlaceBlock;
         }
+
+
+
+        public void DamageBlock()
+        {
+            Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            float dist = Vector2.Distance(transform.position, pos);
+            if (dist > m_MaximimDistance) { Debug.Log("Position:" + dist); return; }
+            Vector3Int coordinate = m_WallsTilemap.WorldToCell(pos);
+            TileBlockBase tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
+            if (tile == null) return;
+            TileBlockBase ore = null;
+            if (tile.BlockType == BlockType.TOP) ore = m_OresTilemap.GetTile<TileBlockBase>(coordinate);
+            else if (tile.BlockType == BlockType.SIDE) ore = m_OresTilemap.GetTile<TileBlockBase>(new Vector3Int(coordinate.x, coordinate.y + 1, coordinate.z));
+
+            if (Singleton_SessionData.Instance.LastTileCoordinate != (Vector2Int)coordinate)
+            {
+                tile.Recover();
+                if (ore != null) ore.Recover();
+            }
+            Singleton_SessionData.Instance.UpdateLastTileCoordinate((Vector2Int)coordinate);
+
+            int i = 1;
+            if (ore == null) i = tile.DealDamage(m_Damage, m_WallsTilemap.CellToWorld(coordinate));
+            else i = ore.DealDamage(m_Damage, m_WallsTilemap.CellToWorld(coordinate));
+
+            if (i == 0)
+            {
+                if (ore != null && tile.BlockType == BlockType.TOP) m_OresTilemap.SetTile(coordinate, null);
+                else if (ore != null && tile.BlockType == BlockType.SIDE) m_OresTilemap.SetTile(new Vector3Int(coordinate.x, coordinate.y + 1, coordinate.z), null);
+                if (ore != null) tile.DealDamage(1000000, m_WallsTilemap.CellToWorld(coordinate));
+                m_WallsTilemap.SetTile(coordinate, null);
+                WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, tile, m_Radius, false);
+            }
+        }
+
+        public void PlaceBlock()
+        {
+            Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            if (CheckRigidbody(pos) == true) return;
+            float dist = Vector2.Distance(transform.position, pos);
+            if (dist > m_MaximimDistance) { Debug.Log("Position:" + dist); return; }
+            Vector3Int coordinate = m_WallsTilemap.WorldToCell(pos);
+            TileBlockBase tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
+            if (tile != null && tile.BlockType == BlockType.TOP) return;
+
+            m_WallsTilemap.SetTile(coordinate, m_WallTopRule.TileGroups[0].Tiles[0]);
+            if (tile == null) tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
+            //Debug.Log(coordinate);
+
+            WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, tile, m_Radius, true);
+        }
+
+
 
         private bool CheckRigidbody(Vector2 pos)
         {

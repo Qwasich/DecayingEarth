@@ -36,7 +36,10 @@ namespace ScorgedEarth
         }
 
         // Левая - 0, Правая - 1
-        public void OnPointerClick(PointerEventData eventData) => m_Ivp.MakeActionDependingOnClickType((int)eventData.button, m_Id);
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            m_Ivp.MakeActionDependingOnClickType((int)eventData.button, m_Id);
+        }
 
         /// <summary>
         /// Инициализирует кнопку

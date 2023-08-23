@@ -84,6 +84,7 @@
     <Compile Include="Assets\Scripts\Generation\TileGroup.cs" />
     <Compile Include="Assets\Scripts\DataCollectors\Singleton_SessionData.cs" />
     <Compile Include="Assets\Scripts\UI\InvUIHandler.cs" />
+    <Compile Include="Assets\Scripts\Settings\Singleton_ControlSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
