@@ -68,7 +68,7 @@ namespace ScorgedEarth
         /// <param name="bId">Номер ячейки инвентаря.</param>
         public void MakeActionDependingOnClickType(int clickType, int bId)
         {
-            if (m_Inventory == null) return;
+            if (m_Inventory == null || Singleton_SessionData.Instance.IsInventoryHidden) return;
             if (mIh.HandItem.Item == null && m_Inventory.Items[bId].Item == null) return;
             if (m_Inventory.Items.Count <= bId)
             {
@@ -89,7 +89,7 @@ namespace ScorgedEarth
                 if (mIh.HandItem.Item != null && m_Inventory.Items[bId].Item == null)
                 {
                     m_Inventory.AddNewItem(bId, mIh.HandItem);
-                    mIh.DropItem();
+                    mIh.RemoveItem();
                     m_ButtonArray[bId].UpdateButtonGraphics();
                     return;
                 }
@@ -100,7 +100,7 @@ namespace ScorgedEarth
                     {
                         InvItem it = m_Inventory.Items[bId];
                         m_Inventory.AddNewItem(bId, mIh.HandItem);
-                        mIh.DropItem();
+                        mIh.RemoveItem();
                         mIh.GrabItem(it);
                         m_ButtonArray[bId].UpdateButtonGraphics();
                         return;
@@ -108,7 +108,7 @@ namespace ScorgedEarth
                     else
                     {
                         m_Inventory.IncreaseItemCount(bId, mIh.HandItem.StackCount, out int count);
-                        mIh.DropItem();
+                        mIh.RemoveItem();
                         if (count != 0) mIh.GrabItem(new InvItem(m_Inventory.Items[bId].Item, count));
                         m_ButtonArray[bId].UpdateButtonGraphics();
                         return;

@@ -304,14 +304,14 @@ namespace ScorgedEarth
                         wall.SetTile(new Vector3Int(x, y + 1), wallTopRule.TileGroups[0].Tiles[0]);
                         m = 0;
                     }
-                    if (tl != null && ml!= null && ml.BlockType == BlockType.SIDE && Singleton_SessionData.IsTop == false)
+                    if (tl != null && ml!= null && ml.BlockType == BlockType.SIDE && Singleton_SessionData.Instance.IsTop == false)
                     {
                         wall.SetTile(new Vector3Int(x, y + 1), wallTopRule.TileGroups[0].Tiles[0]);
                         d = 0;
                         t = c;
                         m = 0;
                     }
-                    if (tl != null && ml != null && ml.BlockType == BlockType.SIDE && Singleton_SessionData.IsTop == true)
+                    if (tl != null && ml != null && ml.BlockType == BlockType.SIDE && Singleton_SessionData.Instance.IsTop == true)
                     {
                         m = 0;
                     }

@@ -78,7 +78,7 @@ namespace ScorgedEarth
                 for (int i = 0; i < m_Loot.Length; i++)
                 {
                     if (m_Loot[i] == null) continue;
-                    GameObject m = Instantiate(Singleton_PrefabLibrary.DummyItemPrefab);
+                    GameObject m = Instantiate(Singleton_PrefabLibrary.Instance.DummyItemPrefab);
                     m.GetComponent<PhysicalItem>().InitiateItem(m_Loot[i]);
                     m.transform.position = pos + new Vector3(0.25f, 0.25f);
                 }

@@ -5,6 +5,7 @@ namespace ScorgedEarth
     [RequireComponent(typeof(Player))]
     public class PlayerController : MonoBehaviour
     {
+
         private Player m_Player;
 
         private float m_VerticalAxis;
@@ -17,11 +18,13 @@ namespace ScorgedEarth
 
         private void Update()
         {
-            UpdateAxis();
+            UpdateMoveAxis();
             UpdatePlayer();
+
+
         }
 
-        private void UpdateAxis()
+        private void UpdateMoveAxis()
         {
             m_VerticalAxis = Input.GetAxis("Vertical");
             m_HorizontalAxis = Input.GetAxis("Horizontal");

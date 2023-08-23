@@ -37,12 +37,34 @@ namespace ScorgedEarth
         /// Убирает предмет из руки.
         /// </summary>
         /// <returns>Возвращает False если комманда неуспешна.</returns>
-        public bool DropItem()
+        public bool RemoveItem()
         {
             if( m_HandItem.Item == null)
             {
                 return false;
             }
+            m_HandItem = new InvItem();
+            m_MouseObject.SetActive(false);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Роняет предмет на землю, создавая новый объект из префаба
+        /// </summary>
+        /// <returns>Возвращает False если комманда неуспешна.</returns>
+        public bool DropItem()
+        {
+            if (m_HandItem.Item == null)
+            {
+                return false;
+            }
+
+            Vector3 pos = Camera.main.transform.position;
+            GameObject item = Instantiate(Singleton_PrefabLibrary.Instance.DummyItemPrefab,pos,Quaternion.identity);
+            PhysicalItem pi = item.GetComponent<PhysicalItem>();
+            pi.InitiateItem(m_HandItem.Item, m_HandItem.StackCount, false);
+
             m_HandItem = new InvItem();
             m_MouseObject.SetActive(false);
 

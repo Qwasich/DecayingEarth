@@ -11,12 +11,12 @@ namespace ScorgedEarth
         /// <summary>
         /// Стандартный префаб предмета.
         /// </summary>
-        public static GameObject DummyItemPrefab => Instance.m_DummyItemPrefab;
+        public GameObject DummyItemPrefab => Instance.m_DummyItemPrefab;
 
         [SerializeField] private Sprite m_EmptySprite;
         /// <summary>
         /// Стандартный пустой спрайт (Null устанавливает белый квадрат)
         /// </summary>
-        public static Sprite EmptySprite => Instance.m_EmptySprite;
+        public Sprite EmptySprite => Instance.m_EmptySprite;
     }
 }

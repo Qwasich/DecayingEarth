@@ -15,7 +15,10 @@ namespace ScorgedEarth
         /// <summary>
         /// Где новая координата находится в плане высоты относительно предыдущей. Если новая выше - возвращает true.
         /// </summary>
-        public static bool IsTop => Instance.m_IsTop;
+        public bool IsTop => Instance.m_IsTop;
+
+        private bool m_IsInventoryHidden = true;
+        public bool IsInventoryHidden => Instance.m_IsInventoryHidden;
 
 
         /// <summary>
@@ -29,6 +32,13 @@ namespace ScorgedEarth
             if (lastcoordinate.y > m_LastTileInteractionCoordinate.y) m_IsTop = true;
              m_LastTileInteractionCoordinate = lastcoordinate;
         }
+
+        /// <summary>
+        /// Обновляет видимую булю видимости инвентаря
+        /// </summary>
+        /// <param name="v">Значение видимости</param>
+        /// <returns></returns>
+        public bool UpdateInventoryVisibility(bool v) => m_IsInventoryHidden = v;
 
     }
 }

@@ -28,6 +28,6 @@ namespace ScorgedEarth
             
         }
 
-        public void GetAxisParameters(float x, float y) => m_MovementVector = new Vector2(x,y);
+        public void GetAxisParameters(float x, float y) => m_MovementVector = new Vector2(x, y);
     }
 }
