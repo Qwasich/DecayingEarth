@@ -20,6 +20,10 @@ namespace ScorgedEarth
         private bool m_IsInventoryHidden = true;
         public bool IsInventoryHidden => Instance.m_IsInventoryHidden;
 
+        private bool m_IsLastClickWasOnCanvas = false;
+        public bool IsLastClickWasOnCanvas => m_IsLastClickWasOnCanvas;
+
+
 
         /// <summary>
         /// Обновить последнюю координату взаимодействия.
@@ -37,8 +41,14 @@ namespace ScorgedEarth
         /// Обновляет видимую булю видимости инвентаря
         /// </summary>
         /// <param name="v">Значение видимости</param>
-        /// <returns></returns>
-        public bool UpdateInventoryVisibility(bool v) => m_IsInventoryHidden = v;
+        public void UpdateInventoryVisibility(bool v) => m_IsInventoryHidden = v;
+
+        /// <summary>
+        /// Обновляет было ли последнее нажатие было по инвентарю или нет
+        /// </summary>
+        /// <param name="v">Значение</param>
+        public void UpdateLastClick(bool v) => m_IsLastClickWasOnCanvas = v;
+
 
     }
 }

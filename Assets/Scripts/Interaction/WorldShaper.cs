@@ -95,7 +95,8 @@ namespace ScorgedEarth
         /// <param name="y">Координата Y</param>
         /// <param name="wall">Целевой Тайлмап</param>
         /// <param name="mode">0 - Полный, 1 - Только передние, 2 - Только верхние</param>
-        public static void PlaceEditedWallsAltRule(int x, int y, Tilemap wall, int mode = 0)
+        /// <param name="cavegen">Если указан - будет брать правила тайлов оттуда а не из библиотеки. ОБЯЗАТЕЛЬНО ДЛЯ ГЕНЕРАЦИИ В РЕДАКТОРЕ.</param>
+        public static void PlaceEditedWallsAltRule(int x, int y, Tilemap wall, int mode = 0, Cave_Generator cavegen = null)
         {
             if (mode > 2 || mode < 0) { Debug.LogError("Alt Rule Generation mode set wrongly! Must use value between 0 and 2, inclusive."); return; }
             TileBlockBase tile = wall.GetTile<TileBlockBase>(new Vector3Int(x, y, 0));
@@ -106,9 +107,19 @@ namespace ScorgedEarth
                 return;
             }
 
-            TileBehaviourRule wallSideRule = Singleton_TileLibrary.Instance.ReturnWallSideRuleByTag(tile.Tag);
-            TileBehaviourRule wallTopRule = Singleton_TileLibrary.Instance.ReturnWallTopRuleByTag(tile.Tag);
-
+            TileBehaviourRule wallSideRule;
+            TileBehaviourRule wallTopRule;
+            if (cavegen != null)
+            {
+                wallSideRule = cavegen.WallFrontRule;
+                wallTopRule = cavegen.WallTopRule;
+            }
+            else
+            {
+                wallSideRule = Singleton_TileLibrary.Instance.ReturnWallSideRuleByTag(tile.Tag);
+                wallTopRule = Singleton_TileLibrary.Instance.ReturnWallTopRuleByTag(tile.Tag);
+            }
+            
             int c = 2;
 
             int lt = 0;

@@ -22,7 +22,6 @@ namespace ScorgedEarth
 
         private void ChangeInventory()
         {
-            
             m_InventoryUI?.SetActive(m_State);
             m_State = !m_State;
             Singleton_SessionData.Instance.UpdateInventoryVisibility(m_State);

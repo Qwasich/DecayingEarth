@@ -38,6 +38,8 @@ namespace ScorgedEarth
 
         public void DamageBlock()
         {
+            if (Singleton_SessionData.Instance.IsLastClickWasOnCanvas) return;
+
             Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
             float dist = Vector2.Distance(transform.position, pos);
@@ -72,6 +74,8 @@ namespace ScorgedEarth
 
         public void PlaceBlock()
         {
+            if (Singleton_SessionData.Instance.IsLastClickWasOnCanvas) return;
+
             Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             if (CheckRigidbody(pos) == true) return;
             float dist = Vector2.Distance(transform.position, pos);

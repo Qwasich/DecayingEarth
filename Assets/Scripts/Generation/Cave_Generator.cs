@@ -205,11 +205,16 @@ namespace ScorgedEarth
 
         IEnumerator Cycle(int CaveX, int CaveY, int xo, int yo, Tilemap wall)
         {
+            Cave_Generator cg = null;
+
+#if UNITY_EDITOR
+            cg = this;
+#endif
             for (int i = 0 - xo; i < CaveX - xo; i++)
             {
                 for (int j = 0 - yo; j < CaveY - yo; j++)
                 {
-                    WorldShaper.PlaceEditedWallsAltRule(i, j, wall);
+                    WorldShaper.PlaceEditedWallsAltRule(i, j, wall, 0, cg);
                 }
             }
             yield return null;
