@@ -1,13 +1,12 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Security.Cryptography;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace ScorgedEarth
 {
     public class InvEntryPoint : MonoBehaviour
     {
+        public UnityAction ReadyToUpdate;
+
         [SerializeField] private Inventory m_Inventory;
         /// <summary>
         /// Инвертарь, прикрепленный ко входной точке.
@@ -15,6 +14,7 @@ namespace ScorgedEarth
         public Inventory Inventory => m_Inventory;
 
         [SerializeField] private InvButton[] m_ButtonArray;
+        public InvButton[] ButtonArray => m_ButtonArray;
 
         private Singleton_MouseItemHolder mIh => Singleton_MouseItemHolder.Instance; 
 
@@ -25,6 +25,7 @@ namespace ScorgedEarth
                 m_ButtonArray[i].Initiate(i, this);
                 m_ButtonArray[i].UpdateButtonGraphics();
             }
+            ReadyToUpdate?.Invoke();
         }
 
         /// <summary>
@@ -83,6 +84,7 @@ namespace ScorgedEarth
                     mIh.GrabItem(m_Inventory.Items[bId]);
                     m_Inventory.RemoveItemCompletely(bId);
                     m_ButtonArray[bId].UpdateButtonGraphics();
+                    ReadyToUpdate?.Invoke();
                     return;
                 }
 
@@ -91,6 +93,7 @@ namespace ScorgedEarth
                     m_Inventory.AddNewItem(bId, mIh.HandItem);
                     mIh.RemoveItem();
                     m_ButtonArray[bId].UpdateButtonGraphics();
+                    ReadyToUpdate?.Invoke();
                     return;
                 }
 
@@ -103,6 +106,7 @@ namespace ScorgedEarth
                         mIh.RemoveItem();
                         mIh.GrabItem(it);
                         m_ButtonArray[bId].UpdateButtonGraphics();
+                        ReadyToUpdate?.Invoke();
                         return;
                     }
                     else
@@ -111,6 +115,7 @@ namespace ScorgedEarth
                         mIh.RemoveItem();
                         if (count != 0) mIh.GrabItem(new InvItem(m_Inventory.Items[bId].Item, count));
                         m_ButtonArray[bId].UpdateButtonGraphics();
+                        ReadyToUpdate?.Invoke();
                         return;
                     }
                 }
@@ -123,6 +128,7 @@ namespace ScorgedEarth
                     mIh.GrabItem(new InvItem(m_Inventory.Items[bId].Item, 1));
                     m_Inventory.DecreaseItemCount(bId, 1);
                     m_ButtonArray[bId].UpdateButtonGraphics();
+                    ReadyToUpdate?.Invoke();
                     return;
                 }
 
@@ -131,6 +137,7 @@ namespace ScorgedEarth
                     m_Inventory.AddNewItem(bId, new InvItem(mIh.HandItem.Item,1));
                     mIh.DecreaseHandItemByNumber(1);
                     m_ButtonArray[bId].UpdateButtonGraphics();
+                    ReadyToUpdate?.Invoke();
                     return;
                 }
 
@@ -140,6 +147,7 @@ namespace ScorgedEarth
                     m_Inventory.DecreaseItemCount(bId,1);
                     mIh.IncreaseHandItemByOne();
                     m_ButtonArray[bId].UpdateButtonGraphics();
+                    ReadyToUpdate?.Invoke();
                     return;
                 }
             }
@@ -173,6 +181,7 @@ namespace ScorgedEarth
                 //Debug.Log("Created NewI tem");
                 m_Inventory.AddNewItem(firstEmpty, new InvItem(pItem.HandledItem.Item, count));
                 m_ButtonArray[firstEmpty].UpdateButtonGraphics();
+                ReadyToUpdate?.Invoke();
             }
 
             pItem.SetItemCount(count);
