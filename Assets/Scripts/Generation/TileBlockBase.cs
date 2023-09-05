@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 using UnityEditor;
 #endif
 
-namespace ScorgedEarth
+namespace ScourgedEarth
 {
     public enum BlockType
     {

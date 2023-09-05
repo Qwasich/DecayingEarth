@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace ScorgedEarth
+namespace ScourgedEarth
 {
     [CreateAssetMenu]
     public class TileBehaviourRule : ScriptableObject

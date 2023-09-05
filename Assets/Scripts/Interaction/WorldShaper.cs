@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
 
-namespace ScorgedEarth
+namespace ScourgedEarth
 {
     public static class WorldShaper
     {

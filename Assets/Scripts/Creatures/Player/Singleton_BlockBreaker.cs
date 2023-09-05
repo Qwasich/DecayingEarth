@@ -1,20 +1,16 @@
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
+using Utility;
 
-namespace ScorgedEarth
+namespace ScourgedEarth
 {
-    public class BlockBreaker : MonoBehaviour
+    public class Singleton_BlockBreaker : MonoSingleton<Singleton_BlockBreaker>
     {
         private Tilemap m_WallsTilemap;
         private Tilemap m_OresTilemap;
         private Tilemap m_FloorTilemap;
         private TileBehaviourRule m_WallFrontRule;
         private TileBehaviourRule m_WallTopRule;
-        [SerializeField] private int m_Damage;
-        [SerializeField] private float m_MaximimDistance;
-        [SerializeField] private int m_Radius = 0;
 
         private void Start()
         {
@@ -23,27 +19,23 @@ namespace ScorgedEarth
             m_FloorTilemap = Cave_Generator.Instance.FloorTilemap;
             m_WallFrontRule = Cave_Generator.Instance.WallFrontRule;
             m_WallTopRule = Cave_Generator.Instance.WallTopRule;
-            Singleton_ControlSettings.Instance.OnLeftMouseButtonPressed += DamageBlock;
-            Singleton_ControlSettings.Instance.OnRightMouseButtonPressed += PlaceBlock;
-
-        }
-
-        private void OnDestroy()
-        {
-            Singleton_ControlSettings.Instance.OnLeftMouseButtonPressed -= DamageBlock;
-            Singleton_ControlSettings.Instance.OnRightMouseButtonPressed -= PlaceBlock;
         }
 
 
-
-        public void DamageBlock()
+        /// <summary>
+        /// Повреждает блок
+        /// </summary>
+        /// <param name="damage">Урон, наносимый блоку</param>
+        /// <param name="maxDistance">Максимальная дистанция от игрока для нанесения урона</param>
+        /// <param name="radius">Радиус редактирования стен</param>
+        public void DamageWallBlock(int damage, float maxDistance = 3, int radius = 1)
         {
             if (Singleton_SessionData.Instance.IsLastClickWasOnCanvas) return;
 
             Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-            float dist = Vector2.Distance(transform.position, pos);
-            if (dist > m_MaximimDistance) { Debug.Log("Position:" + dist); return; }
+            float dist = Vector2.Distance(Camera.main.transform.position, pos);
+            if (dist > maxDistance) { Debug.Log("Position:" + dist); return; }
             Vector3Int coordinate = m_WallsTilemap.WorldToCell(pos);
             TileBlockBase tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
             if (tile == null) return;
@@ -59,8 +51,8 @@ namespace ScorgedEarth
             Singleton_SessionData.Instance.UpdateLastTileCoordinate((Vector2Int)coordinate);
 
             int i = 1;
-            if (ore == null) i = tile.DealDamage(m_Damage, m_WallsTilemap.CellToWorld(coordinate));
-            else i = ore.DealDamage(m_Damage, m_WallsTilemap.CellToWorld(coordinate));
+            if (ore == null) i = tile.DealDamage(damage, m_WallsTilemap.CellToWorld(coordinate));
+            else i = ore.DealDamage(damage, m_WallsTilemap.CellToWorld(coordinate));
 
             if (i == 0)
             {
@@ -68,27 +60,33 @@ namespace ScorgedEarth
                 else if (ore != null && tile.BlockType == BlockType.SIDE) m_OresTilemap.SetTile(new Vector3Int(coordinate.x, coordinate.y + 1, coordinate.z), null);
                 if (ore != null) tile.DealDamage(1000000, m_WallsTilemap.CellToWorld(coordinate));
                 m_WallsTilemap.SetTile(coordinate, null);
-                WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, tile, m_Radius, false);
+                WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, tile, radius, false);
             }
         }
 
-        public void PlaceBlock()
+        /// <summary>
+        /// Ставит блок, указаный в предмете
+        /// </summary>
+        /// <param name="itemTile">Устанавливаемый тайл</param>
+        /// <param name="maxDistance">Максимальная дистанция от игрока для нанесения урона</param>
+        /// <param name="radius">Радиус редактирования стен</param>
+        public void PlaceWallBlock(TileBlockBase itemTile, int maxDistance = 3, int radius = 1)
         {
             if (Singleton_SessionData.Instance.IsLastClickWasOnCanvas) return;
 
             Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             if (CheckRigidbody(pos) == true) return;
-            float dist = Vector2.Distance(transform.position, pos);
-            if (dist > m_MaximimDistance) { Debug.Log("Position:" + dist); return; }
+            float dist = Vector2.Distance(Camera.main.transform.position, pos);
+            if (dist > maxDistance) { Debug.Log("Position:" + dist); return; }
             Vector3Int coordinate = m_WallsTilemap.WorldToCell(pos);
             TileBlockBase tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
             if (tile != null && tile.BlockType == BlockType.TOP) return;
 
-            m_WallsTilemap.SetTile(coordinate, m_WallTopRule.TileGroups[0].Tiles[0]);
+            m_WallsTilemap.SetTile(coordinate, itemTile);
             if (tile == null) tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
             //Debug.Log(coordinate);
 
-            WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, tile, m_Radius, true);
+            WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, tile, radius, true);
         }
 
 

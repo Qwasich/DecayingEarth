@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEditor.Progress;
 
-namespace ScorgedEarth
+namespace ScourgedEarth
 {
     [RequireComponent(typeof(Sprite))]
     public class PhysicalItem : MonoBehaviour
     {
         [SerializeField] private SpriteRenderer m_ItemSprite;
         [SerializeField] private float m_PickupDelay;
+        [SerializeField] private Collider2D m_Collider;
         private float m_Time;
         private InvItem m_HandledItem;
         public InvItem HandledItem => m_HandledItem;
@@ -22,7 +23,11 @@ namespace ScorgedEarth
             if (m_IsPickableUp) return;
 
             m_Time -= Time.deltaTime;
-            if (m_Time <= 0) m_IsPickableUp = true;
+            if (m_Time <= 0)
+            {
+                m_IsPickableUp = true;
+                m_Collider.enabled = true;
+            }
         }
 
         /// <summary>
@@ -40,6 +45,7 @@ namespace ScorgedEarth
             m_ItemSprite.sprite = m_HandledItem.Item.Icon;
 
             if (pick) return;
+            m_Collider.enabled = false;
             m_IsPickableUp = false;
             m_Time = m_PickupDelay;
         }

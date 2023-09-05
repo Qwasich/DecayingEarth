@@ -1,7 +1,7 @@
 using UnityEngine;
 using Utility;
 
-namespace ScorgedEarth
+namespace ScourgedEarth
 {
     public class Singleton_SessionData : MonoSingleton<Singleton_SessionData>
     {

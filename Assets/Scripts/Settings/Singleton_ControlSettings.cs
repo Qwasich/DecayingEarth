@@ -1,8 +1,11 @@
+using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using Utility;
 
-namespace ScorgedEarth
+namespace ScourgedEarth
 {
     public class Singleton_ControlSettings : MonoSingleton<Singleton_ControlSettings>
     {
@@ -63,18 +66,18 @@ namespace ScorgedEarth
 
         private bool IsClickOnCanvas()
         {
-            Ray2D ray = new Ray2D(Input.mousePosition, transform.forward);
-            RaycastHit2D[] hit;
-            hit = Physics2D.RaycastAll(ray.origin, transform.forward);
+            PointerEventData pointer = new PointerEventData(EventSystem.current) { position = Input.mousePosition };
+            List<RaycastResult> rr = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointer, rr);
 
-            foreach(RaycastHit2D rh in hit)
+            foreach(RaycastResult rhr in rr)
             {
                 CanvasRenderer cr;
-                cr = rh.transform.gameObject.GetComponent<CanvasRenderer>();
+                cr = rhr.gameObject.GetComponent<CanvasRenderer>();
                 if (cr != null) return true;
             }
-
             return false;
+
         }
         
         /// <summary>

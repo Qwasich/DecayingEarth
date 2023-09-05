@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ScorgedEarth
+namespace ScourgedEarth
 {
     [RequireComponent(typeof(Rigidbody2D))]
     public class Player : Creature
@@ -24,8 +24,6 @@ namespace ScorgedEarth
         {
             if (Mathf.Abs(m_MovementVector.x) > 0.1 || Mathf.Abs(m_MovementVector.y) > 0.1) m_Rigidbody.velocity = new Vector2(0, 0);
             m_Rigidbody.velocity = new Vector2(m_MovementVector.x, m_MovementVector.y) * Time.fixedDeltaTime * m_SpeedMultiplier;
-
-            
         }
 
         public void GetAxisParameters(float x, float y) => m_MovementVector = new Vector2(x, y);

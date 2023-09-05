@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ScorgedEarth
+namespace ScourgedEarth
 {
     public class InvUIHandler : MonoBehaviour
     {
@@ -25,6 +25,8 @@ namespace ScorgedEarth
             m_InventoryUI?.SetActive(m_State);
             m_State = !m_State;
             Singleton_SessionData.Instance.UpdateInventoryVisibility(m_State);
+
+            if (m_State) Singleton_MouseItemHolder.Instance.DropItem();
         }
     }
 }

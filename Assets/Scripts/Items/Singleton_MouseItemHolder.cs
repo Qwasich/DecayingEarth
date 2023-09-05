@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Utility;
 
-namespace ScorgedEarth
+namespace ScourgedEarth
 {
     public class Singleton_MouseItemHolder : MonoSingleton<Singleton_MouseItemHolder>
     {
@@ -60,7 +60,7 @@ namespace ScorgedEarth
                 return false;
             }
 
-            Vector3 pos = Camera.main.transform.position;
+            Vector2 pos = Camera.main.transform.position;
             GameObject item = Instantiate(Singleton_PrefabLibrary.Instance.DummyItemPrefab,pos,Quaternion.identity);
             PhysicalItem pi = item.GetComponent<PhysicalItem>();
             pi.InitiateItem(m_HandItem.Item, m_HandItem.StackCount, false);
@@ -109,12 +109,13 @@ namespace ScorgedEarth
         /// <summary>
         /// Обновляет изображение и текст, прикрепленные к руке.
         /// </summary>
-        private void UpdateHandVisual()
+        public void UpdateHandVisual()
         {
             if (m_Icon != null) m_Icon.sprite = m_HandItem.Item.Icon;
             if (m_Text != null && m_HandItem.StackCount > 1) m_Text.text = m_HandItem.StackCount.ToString();
             if (m_Text != null && m_HandItem.StackCount <= 1) m_Text.text = "";
         }
+
 
     }
 }

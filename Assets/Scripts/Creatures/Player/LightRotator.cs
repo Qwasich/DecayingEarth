@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ScorgedEarth
+namespace ScourgedEarth
 {
     public class LightRotator : MonoBehaviour
     {

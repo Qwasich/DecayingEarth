@@ -1,10 +1,9 @@
 using UnityEngine;
 
-namespace ScorgedEarth
+namespace ScourgedEarth
 {
     public class PlayerPickUp : MonoBehaviour
     {
-        [SerializeField] private CircleCollider2D m_PickupCollider;
         [SerializeField] private InvEntryPoint m_PlayerInventory;
 
         private void OnTriggerEnter2D(Collider2D collision)

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ScorgedEarth
+namespace ScourgedEarth
 {
     public abstract class Creature : MonoBehaviour
     {

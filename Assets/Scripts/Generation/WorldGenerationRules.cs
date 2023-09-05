@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ScorgedEarth
+namespace ScourgedEarth
 {
     [CreateAssetMenu]
     public class WorldGenerationRules : ScriptableObject

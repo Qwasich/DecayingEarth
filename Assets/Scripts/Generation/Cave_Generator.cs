@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using Utility;
 
-namespace ScorgedEarth
+namespace ScourgedEarth
 {
     public class Cave_Generator : MonoSingleton<Cave_Generator>
     {

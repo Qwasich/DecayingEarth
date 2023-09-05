@@ -1,13 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ScorgedEarth
+namespace ScourgedEarth
 {
     public class Hotbar : MonoBehaviour
     {
         [SerializeField] private InvEntryPoint m_InventoryPoint;
         [SerializeField] private Text m_CurrentItemText;
-        [SerializeField] private int m_HotbarSize = 9;
 
         private int m_ActiveCell = 0;
         /// <summary>
@@ -29,22 +28,35 @@ namespace ScorgedEarth
             Singleton_ControlSettings.Instance.HotbarButtonPressedByIndex -= UpdateButtonByIndex;
         }
 
+        /// <summary>
+        /// ќбновить €чейку хотбара, дела€ ее выделенной (и убирает выделение с предыдущей €чейки)
+        /// </summary>
         private void UpdateHotbarCell()
         {
             m_InventoryPoint.ButtonArray[m_ActiveCell].UnHighlightButton();
             m_ActiveCell = m_RequestCell;
             m_InventoryPoint.ButtonArray[m_ActiveCell].HighlightButton();
-            if(m_CurrentItemText != null)
-            {
-                if (m_InventoryPoint.Inventory.Items[m_ActiveCell].Item == null) m_CurrentItemText.text = "Inventory";
-                if (m_InventoryPoint.Inventory.Items[m_ActiveCell].Item != null) m_CurrentItemText.text = m_InventoryPoint.Inventory.Items[m_ActiveCell].Item.Name;
-            }
+            UpdateTextCurrentCell();
+
+
         }
 
         private void UpdateButtonByIndex(int i)
         {
             m_RequestCell = i;
             UpdateHotbarCell();
+        }
+
+        /// <summary>
+        /// ќбновл€ет текст инвентар€
+        /// </summary>
+        public void UpdateTextCurrentCell()
+        {
+            if (m_CurrentItemText != null)
+            {
+                if (m_InventoryPoint.Inventory.Items[m_ActiveCell].Item == null) m_CurrentItemText.text = "Inventory";
+                if (m_InventoryPoint.Inventory.Items[m_ActiveCell].Item != null) m_CurrentItemText.text = m_InventoryPoint.Inventory.Items[m_ActiveCell].Item.Name;
+            }
         }
 
 

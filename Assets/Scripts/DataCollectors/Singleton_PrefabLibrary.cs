@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Utility;
 
-namespace ScorgedEarth
+namespace ScourgedEarth
 {
     public class Singleton_PrefabLibrary : MonoSingleton<Singleton_PrefabLibrary>
     {
