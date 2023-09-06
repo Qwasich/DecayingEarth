@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ScourgedEarth
+namespace DecayingEarth
 {
     public class Hotbar : MonoBehaviour
     {

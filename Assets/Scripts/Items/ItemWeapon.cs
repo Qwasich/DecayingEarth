@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ScourgedEarth
+namespace DecayingEarth
 {
     [CreateAssetMenu]
     public class ItemWeapon : ItemBase, UseItem

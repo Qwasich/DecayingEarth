@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace ScourgedEarth
+namespace DecayingEarth
 {
     [CreateAssetMenu]
     public class TileGroup : ScriptableObject

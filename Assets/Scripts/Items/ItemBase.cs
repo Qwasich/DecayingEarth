@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ScourgedEarth
+namespace DecayingEarth
 {
     public enum ItemType
     {

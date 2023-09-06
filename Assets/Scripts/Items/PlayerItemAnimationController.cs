@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace ScourgedEarth
+namespace DecayingEarth
 {
     public class PlayerItemAnimationController : MonoBehaviour
     {

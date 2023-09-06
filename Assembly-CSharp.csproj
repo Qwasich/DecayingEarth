@@ -57,12 +57,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Items\ItemWeapon.cs" />
+    <Compile Include="Assets\Scripts\DebugScrpits\SpawnItem.cs" />
     <Compile Include="Assets\Scripts\Settings\Singleton_ControlSettings.cs" />
     <Compile Include="Assets\Scripts\Misc\MonoSingleton.cs" />
     <Compile Include="Assets\Scripts\Generation\TileGroup_Ore.cs" />
     <Compile Include="Assets\Scripts\Generation\TileBlockBase.cs" />
     <Compile Include="Assets\Scripts\Creatures\Player\Player.cs" />
     <Compile Include="Assets\Scripts\Items\PlayerPickUp.cs" />
+    <Compile Include="Assets\Scripts\Items\PlayerItemUser.cs" />
     <Compile Include="Assets\Scripts\Items\PhysicalItem.cs" />
     <Compile Include="Assets\Scripts\Items\ItemMaterial.cs" />
     <Compile Include="Assets\Scripts\UI\InvButton.cs" />
@@ -82,15 +84,13 @@
     <Compile Include="Assets\Scripts\Items\DestructionTimer.cs" />
     <Compile Include="Assets\Scripts\Items\ItemBase.cs" />
     <Compile Include="Assets\Scripts\Generation\WorldGenerationRules.cs" />
+    <Compile Include="Assets\Scripts\Items\PlayerItemAnimationController.cs" />
     <Compile Include="Assets\Scripts\UI\InvUIHandler.cs" />
+    <Compile Include="Assets\Scripts\Items\ItemTool.cs" />
     <Compile Include="Assets\Scripts\Generation\Cave_Generator.cs" />
     <Compile Include="Assets\Scripts\Generation\TileGroup.cs" />
     <Compile Include="Assets\Scripts\Items\Hotbar.cs" />
     <Compile Include="Assets\Scripts\DataCollectors\Singleton_SessionData.cs" />
-    <Compile Include="Assets\Scripts\Items\ItemTool.cs" />
-    <Compile Include="Assets\Scripts\Items\PlayerItemUser.cs" />
-    <Compile Include="Assets\Scripts\DebugScrpits\SpawnItem.cs" />
-    <Compile Include="Assets\Scripts\Items\PlayerItemAnimationController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEditor.Progress;
 
-namespace ScourgedEarth
+namespace DecayingEarth
 {
     [RequireComponent(typeof(Sprite))]
     public class PhysicalItem : MonoBehaviour

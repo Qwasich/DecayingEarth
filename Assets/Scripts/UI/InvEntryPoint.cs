@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace ScourgedEarth
+namespace DecayingEarth
 {
     public class InvEntryPoint : MonoBehaviour
     {

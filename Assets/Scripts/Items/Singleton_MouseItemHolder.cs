@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Utility;
 
-namespace ScourgedEarth
+namespace DecayingEarth
 {
     public class Singleton_MouseItemHolder : MonoSingleton<Singleton_MouseItemHolder>
     {

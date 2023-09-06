@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace ScourgedEarth
+namespace DecayingEarth
 {
     [CreateAssetMenu]
     public class ItemMaterial : ItemBase, UseItem

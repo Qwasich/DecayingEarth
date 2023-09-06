@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Utility;
 
-namespace ScourgedEarth
+namespace DecayingEarth
 {
     public class Singleton_TileLibrary : MonoSingleton<Singleton_TileLibrary>
     {

@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using Utility;
 
-namespace ScourgedEarth
+namespace DecayingEarth
 {
     public class Singleton_ControlSettings : MonoSingleton<Singleton_ControlSettings>
     {

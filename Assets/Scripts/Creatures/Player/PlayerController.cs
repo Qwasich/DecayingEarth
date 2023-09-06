@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ScourgedEarth
+namespace DecayingEarth
 {
     [RequireComponent(typeof(Player))]
     public class PlayerController : MonoBehaviour

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ScourgedEarth
+namespace DecayingEarth
 {
     [RequireComponent(typeof(Rigidbody2D))]
     public class Player : Creature

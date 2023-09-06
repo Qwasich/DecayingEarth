@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace ScourgedEarth
+namespace DecayingEarth
 {
     [Serializable]
     public struct InvItem
