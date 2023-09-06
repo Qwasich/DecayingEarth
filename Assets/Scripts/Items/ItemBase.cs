@@ -26,7 +26,7 @@ namespace DecayingEarth
     {
         Swing,
         Pierce,
-        Static,
+        Hold,
         Empty
     }
 
@@ -64,5 +64,26 @@ namespace DecayingEarth
         public string Tooltip => m_Tooltip;
 
         [SerializeField] protected int StackDecreaseAfterUse = 0;
+
+
+        [SerializeField] protected HoldType m_HoldType = HoldType.Empty;
+        /// <summary>
+        /// “ип, как держитьс€ оружие при использовании - махать или держать перед собой
+        /// </summary>
+        public HoldType HoldType => m_HoldType;
+
+        [SerializeField] protected float m_SwingAngle = 110f;
+
+        /// <summary>
+        /// ≈сли Hold Type = Swing, обозначает угол размаха.
+        /// </summary>
+        public float SwingAngle => m_SwingAngle;
+
+        [SerializeField] protected float m_ManaPerUse = 0;
+
+        /// <summary>
+        ///  оличество маны, требуемое дл€ использовани€ предмета.
+        /// </summary>
+        public float ManaPerUse => m_ManaPerUse;
     }
 }

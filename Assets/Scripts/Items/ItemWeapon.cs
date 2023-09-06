@@ -17,22 +17,17 @@ namespace DecayingEarth
         /// </summary>
         public DamageType DamageType => m_DamageType;
 
-        [SerializeField] protected int m_SwingDamage = 1;
+        [SerializeField] protected int m_DealtDamage = 1;
         /// <summary>
         /// Наносинсый телом оружия урон при попадании.
         /// </summary>
-        public int SwingDamage => m_SwingDamage;    
+        public int DealtDamage => m_DealtDamage;    
         [SerializeField] protected bool m_DoesWeaponSpriteDealsDamage = true;
         /// <summary>
         /// Если True, тело спрайта будет наносить урон при столкновении
         /// </summary>
         public bool DoesWeaponSpriteDealsDamage => m_DoesWeaponSpriteDealsDamage;
 
-        [SerializeField] protected HoldType m_HoldType = HoldType.Swing;
-        /// <summary>
-        /// Тип, как держиться оружие при использовании - махать или держать перед собой
-        /// </summary>
-        public HoldType HoldType => m_HoldType;
 
         [SerializeField] protected int m_Knockback = 1;
         /// <summary>

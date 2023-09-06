@@ -14,11 +14,6 @@ namespace DecayingEarth
         /// </summary>
         public int MiningDamage => m_MiningDamage;
 
-        [SerializeField] private float m_MiningSpeed = 1f;
-        /// <summary>
-        /// Раз в какое время (в секундах) кирка наносит урон тайлу.
-        /// </summary>
-        public float MiningSpeed => m_MiningSpeed;
 
         [SerializeField] private float m_MaxDistance = 3f;
         /// <summary>

@@ -10,7 +10,9 @@ namespace DecayingEarth
     public class Singleton_ControlSettings : MonoSingleton<Singleton_ControlSettings>
     {
         public event UnityAction OnLeftMouseButtonPressed;
+        public event UnityAction OnLeftMouseButtonHold;
         public event UnityAction OnRightMouseButtonPressed;
+        public event UnityAction OnRightMouseButtonHold;
         public event UnityAction InvButtonPressed;
         public event UnityAction PauseMenuButtonPressed;
         public event UnityAction<int> HotbarButtonPressedByIndex;
@@ -20,7 +22,9 @@ namespace DecayingEarth
         private bool m_HBPressed = false;
 
         private bool MouseLeft => Input.GetMouseButtonDown(0);
+        private bool MouseLeftHold => Input.GetMouseButton(0);
         private bool MouseRight => Input.GetMouseButtonDown(1);
+        private bool MouseRightHold => Input.GetMouseButton(1);
         private float Inventory => Input.GetAxis("Inventory Open");
         private float Cancel => Input.GetAxis("Cancel");
 
@@ -42,10 +46,18 @@ namespace DecayingEarth
                 if(Singleton_SessionData.Instance != null) Singleton_SessionData.Instance.UpdateLastClick(IsClickOnCanvas());
                 OnLeftMouseButtonPressed?.Invoke();
             }
+            if (MouseLeftHold)
+            {
+                OnLeftMouseButtonHold?.Invoke();
+            }
             if (MouseRight)
             {
                 if (Singleton_SessionData.Instance != null) Singleton_SessionData.Instance.UpdateLastClick(IsClickOnCanvas());
                 OnRightMouseButtonPressed?.Invoke();
+            }
+            if (MouseRightHold)
+            {
+                OnRightMouseButtonHold?.Invoke();
             }
             if (Inventory >= 0.1 && !m_IBPressed)
             {

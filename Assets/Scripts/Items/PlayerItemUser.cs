@@ -6,6 +6,7 @@ namespace DecayingEarth
     {
         [SerializeField] private Hotbar m_Hotbar;
         [SerializeField] private InvEntryPoint m_PlayerInventory;
+        [SerializeField] private PlayerItemAnimationController m_AnimationController;
 
         private float m_LastItemTimer = 0;
         /// <summary>
@@ -17,14 +18,14 @@ namespace DecayingEarth
 
         private void Start()
         {
-            Singleton_ControlSettings.Instance.OnLeftMouseButtonPressed += TryToUseItemLeftMouseButton;
-            Singleton_ControlSettings.Instance.OnRightMouseButtonPressed += TryToUseItemRightMouseButton;
+            Singleton_ControlSettings.Instance.OnLeftMouseButtonHold += TryToUseItemLeftMouseButton;
+            Singleton_ControlSettings.Instance.OnRightMouseButtonHold += TryToUseItemRightMouseButton;
         }
 
         private void OnDestroy()
         {
-            Singleton_ControlSettings.Instance.OnLeftMouseButtonPressed -= TryToUseItemLeftMouseButton;
-            Singleton_ControlSettings.Instance.OnRightMouseButtonPressed -= TryToUseItemRightMouseButton;
+            Singleton_ControlSettings.Instance.OnLeftMouseButtonHold -= TryToUseItemLeftMouseButton;
+            Singleton_ControlSettings.Instance.OnRightMouseButtonHold -= TryToUseItemRightMouseButton;
         }
 
         private void Update()
@@ -39,13 +40,14 @@ namespace DecayingEarth
         {
             if (Singleton_SessionData.Instance.IsLastClickWasOnCanvas)return;
             if (!AreUsedItemsTheSame()) m_LastItemTimer = 0;
-            if (m_LastItemTimer > 0) return;
+            if (m_LastItemTimer > 0 || m_AnimationController.IsCoroutineRunning) return;
             if (Singleton_SessionData.Instance.IsInventoryHidden == false && Singleton_MouseItemHolder.Instance.HandItem.Item != null)
             {
                 var item = Singleton_MouseItemHolder.Instance.HandItem.Item;
                 int d = (item as UseItem).UseItem(0);
                 m_LastItemTimer = item.UseTimer;
                 m_LastUsedItem = item;
+                if (item.HoldType != HoldType.Empty) m_AnimationController.PlayAnimation(item.UseTimer, item.HoldType, item.Icon, item.SwingAngle);
                 Singleton_MouseItemHolder.Instance.DecreaseHandItemByNumber(d);
                 Singleton_MouseItemHolder.Instance.UpdateHandVisual();
             }
@@ -58,6 +60,7 @@ namespace DecayingEarth
                     int d = (item as UseItem).UseItem(0);
                     m_LastItemTimer = item.UseTimer;
                     m_LastUsedItem = item;
+                    if (item.HoldType != HoldType.Empty) m_AnimationController.PlayAnimation(item.UseTimer, item.HoldType, item.Icon, item.SwingAngle);
                     m_PlayerInventory.Inventory.DecreaseItemCount(hb, d);
                     m_PlayerInventory.UpdateButton(hb);
                     m_Hotbar.UpdateTextCurrentCell();
@@ -75,7 +78,7 @@ namespace DecayingEarth
             else
             {
                 if (!AreUsedItemsTheSame()) m_LastItemTimer = 0;
-                if (m_LastItemTimer > 0) return;
+                if (m_LastItemTimer > 0 || m_AnimationController.IsCoroutineRunning) return;
                 int hb = m_Hotbar.ActiveCell;
                 if (m_PlayerInventory.Inventory.Items[hb].Item != null)
                 {
@@ -83,6 +86,7 @@ namespace DecayingEarth
                     int d = (item as UseItem).UseItem(1);
                     m_LastItemTimer = item.UseTimer;
                     m_LastUsedItem = item;
+                    if (item.HoldType != HoldType.Empty) m_AnimationController.PlayAnimation(item.UseTimer, item.HoldType, item.Icon, item.SwingAngle);
                     m_PlayerInventory.Inventory.DecreaseItemCount(hb, d);
                     m_PlayerInventory.UpdateButton(hb);
                     m_Hotbar.UpdateTextCurrentCell();
