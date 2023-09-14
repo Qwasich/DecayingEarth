@@ -1,6 +1,9 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Utility;
+using UnityEngine.TerrainUtils;
+using System;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -63,7 +66,7 @@ namespace DecayingEarth
         /// <param name="damage">Наносимый урон</param>
         /// <param name="pos">Позиция справна предмета</param>
         /// <returns></returns>
-        public int DealDamage(int damage,Vector3 pos)
+        public virtual int DealDamage(int damage,Vector3 pos)
         {
             if (m_IsIndestructible) return 2;
             if (damage * 5 <= m_MaxDurability) return 2;
@@ -88,8 +91,23 @@ namespace DecayingEarth
             else return 1;
         }
 
-
+        /// <summary>
+        /// Восстанавливает здоровье тайла полностью
+        /// </summary>
         public void Recover() => m_RemainingDurability = m_MaxDurability;
+
+
+        /// <summary>
+        /// Устанавливает здоровье тайла на определенное значение, должно быть больше нуля. 
+        /// Если значение больше максимального здоровья тайла - устанавливает максимальное.
+        /// </summary>
+        /// <param name="dur">Значение здоровья</param>
+        public void SetRemainingDurability(int dur)
+        {
+            if (!m_IsIndestructible || dur < 1) return;
+            if (dur <= m_MaxDurability) m_RemainingDurability = dur;
+            else m_RemainingDurability = m_MaxDurability;
+        }
 
 #if UNITY_EDITOR
         [MenuItem("Assets/Create/2D/Custom Tiles/Block Tile")]

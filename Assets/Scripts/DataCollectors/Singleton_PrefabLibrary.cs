@@ -11,12 +11,19 @@ namespace DecayingEarth
         /// <summary>
         /// Стандартный префаб предмета.
         /// </summary>
-        public GameObject DummyItemPrefab => Instance.m_DummyItemPrefab;
+        public GameObject DummyItemPrefab => m_DummyItemPrefab;
 
         [SerializeField] private Sprite m_EmptySprite;
         /// <summary>
         /// Стандартный пустой спрайт (Null устанавливает белый квадрат)
         /// </summary>
-        public Sprite EmptySprite => Instance.m_EmptySprite;
+        public Sprite EmptySprite => m_EmptySprite;
+
+        [SerializeField] private GameObject m_CubeParticles;
+
+        /// <summary>
+        /// Стандартная система частиц для разрушаемых блоков
+        /// </summary>
+        public GameObject CubeParticles => m_CubeParticles;
     }
 }

@@ -68,7 +68,7 @@ namespace DecayingEarth
 
         private void ResetSprite()
         {
-            if (Input.GetMouseButton(0) || Input.GetMouseButton(1)) return;
+            //if (Input.GetMouseButton(0) || Input.GetMouseButton(1)) return;
             m_Sprite.sprite = Singleton_PrefabLibrary.Instance.EmptySprite;
         }
 

@@ -85,5 +85,7 @@ namespace DecayingEarth
         /// Количество маны, требуемое для использования предмета.
         /// </summary>
         public float ManaPerUse => m_ManaPerUse;
+
+
     }
 }

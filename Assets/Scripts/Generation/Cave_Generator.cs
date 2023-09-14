@@ -18,13 +18,10 @@ namespace DecayingEarth
         /// Ссылки на целевые тайлмапы - пол, стены и руды.
         /// </summary>
         [SerializeField] private Tilemap m_FloorTilemap;
-        public Tilemap FloorTilemap => m_FloorTilemap;
         
         [SerializeField] private Tilemap m_WallsTilemap;
-        public Tilemap WallsTilemap => m_WallsTilemap;
         
         [SerializeField] private Tilemap m_OresTilemap;
-        public Tilemap OresTilemap => m_OresTilemap;
 
         private TileBehaviourRule m_FloorRule;
         public TileBehaviourRule FloorRule => m_FloorRule;
@@ -50,10 +47,12 @@ namespace DecayingEarth
         /// </summary>
         private int m_NumberOfCAIterations;
 
+        
+        [SerializeField] private int m_Seed;
         /// <summary>
         /// Семя генерации. Если пустое - выбирается случайное.
         /// </summary>
-        [SerializeField] private int m_Seed;
+        public int Seed => m_Seed;
 
         /// <summary>
         /// Список генерируемых руд.

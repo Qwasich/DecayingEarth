@@ -69,9 +69,12 @@
     <Compile Include="Assets\Scripts\Items\ItemMaterial.cs" />
     <Compile Include="Assets\Scripts\UI\InvButton.cs" />
     <Compile Include="Assets\Scripts\Creatures\Player\LightRotator.cs" />
+    <Compile Include="Assets\Scripts\Misc\BlockParticleManipulator.cs" />
     <Compile Include="Assets\Scripts\Creatures\Creature.cs" />
+    <Compile Include="Assets\Scripts\Misc\UsefulBits.cs" />
     <Compile Include="Assets\Scripts\Items\ItemWobble.cs" />
     <Compile Include="Assets\Scripts\Interaction\WorldShaper.cs" />
+    <Compile Include="Assets\Scripts\DataCollectors\Singletone_GridLibrary.cs" />
     <Compile Include="Assets\Scripts\Items\Singleton_MouseItemHolder.cs" />
     <Compile Include="Assets\Scripts\DataCollectors\Singleton_PrefabLibrary.cs" />
     <Compile Include="Assets\Scripts\Creatures\Player\PlayerController.cs" />

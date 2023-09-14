@@ -1,24 +1,25 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Utility;
+using static UnityEditor.PlayerSettings;
 
 namespace DecayingEarth
 {
     public class Singleton_BlockBreaker : MonoSingleton<Singleton_BlockBreaker>
     {
+        [SerializeField] private float m_BlockShakeTime = 1f;
+        [SerializeField] private float m_BlockShakeIntensity = 1f;
+        [SerializeField] private float m_BlockShakesPerSecond = 8f;
+
         private Tilemap m_WallsTilemap;
         private Tilemap m_OresTilemap;
         private Tilemap m_FloorTilemap;
-        private TileBehaviourRule m_WallFrontRule;
-        private TileBehaviourRule m_WallTopRule;
 
         private void Start()
         {
-            m_WallsTilemap = Cave_Generator.Instance.WallsTilemap;
-            m_OresTilemap = Cave_Generator.Instance.OresTilemap;
-            m_FloorTilemap = Cave_Generator.Instance.FloorTilemap;
-            m_WallFrontRule = Cave_Generator.Instance.WallFrontRule;
-            m_WallTopRule = Cave_Generator.Instance.WallTopRule;
+            m_WallsTilemap = Singletone_GridLibrary.Instance.WallsTilemap;
+            m_OresTilemap = Singletone_GridLibrary.Instance.OresTilemap;
+            m_FloorTilemap = Singletone_GridLibrary.Instance.FloorTilemap;
         }
 
 
@@ -36,13 +37,43 @@ namespace DecayingEarth
             Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
             float dist = Vector2.Distance(Camera.main.transform.position, pos);
-            if (dist > maxDistance) { Debug.Log("Position:" + dist); return false; }
+            if (dist > maxDistance) return false; 
+            TileBlockBase addTile = null;
+            Vector3Int addCoord = Vector3Int.zero;
+            Vector3Int oreCoord = Vector3Int.zero;
+
             Vector3Int coordinate = m_WallsTilemap.WorldToCell(pos);
             TileBlockBase tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
             if (tile == null) return false;
             TileBlockBase ore = null;
-            if (tile.BlockType == BlockType.TOP) ore = m_OresTilemap.GetTile<TileBlockBase>(coordinate);
-            else if (tile.BlockType == BlockType.SIDE) ore = m_OresTilemap.GetTile<TileBlockBase>(new Vector3Int(coordinate.x, coordinate.y + 1, coordinate.z));
+            if (tile.BlockType == BlockType.TOP)
+            {
+                ore = m_OresTilemap.GetTile<TileBlockBase>(coordinate);
+                oreCoord = new Vector3Int(coordinate.x, coordinate.y, coordinate.z);
+
+                TileBlockBase til = m_WallsTilemap.GetTile<TileBlockBase>(new Vector3Int(coordinate.x, coordinate.y - 1, coordinate.z));
+                if (til.BlockType == BlockType.SIDE)
+                {
+                    addTile = til;
+                    addCoord = new Vector3Int(coordinate.x, coordinate.y - 1, coordinate.z);
+                    
+                }
+            }
+            else if (tile.BlockType == BlockType.SIDE)
+            {
+                ore = m_OresTilemap.GetTile<TileBlockBase>(new Vector3Int(coordinate.x, coordinate.y + 1, coordinate.z));
+                oreCoord = new Vector3Int(coordinate.x, coordinate.y + 1, coordinate.z);
+
+                TileBlockBase til = m_WallsTilemap.GetTile<TileBlockBase>(new Vector3Int(coordinate.x, coordinate.y + 1, coordinate.z));
+                if (til.BlockType == BlockType.TOP)
+                {
+                    addTile = til;
+                    addCoord = new Vector3Int(coordinate.x, coordinate.y + 1, coordinate.z);
+                    
+                }
+            }
+
+
 
             if (Singleton_SessionData.Instance.LastTileCoordinate != (Vector2Int)coordinate)
             {
@@ -53,15 +84,34 @@ namespace DecayingEarth
 
             int i = 1;
             if (ore == null) i = tile.DealDamage(damage, m_WallsTilemap.CellToWorld(coordinate));
-            else i = ore.DealDamage(damage, m_WallsTilemap.CellToWorld(coordinate));
+            else i = ore.DealDamage(damage, m_WallsTilemap.CellToWorld(oreCoord));
 
             if (i == 0)
             {
-                if (ore != null && tile.BlockType == BlockType.TOP) m_OresTilemap.SetTile(coordinate, null);
-                else if (ore != null && tile.BlockType == BlockType.SIDE) m_OresTilemap.SetTile(new Vector3Int(coordinate.x, coordinate.y + 1, coordinate.z), null);
-                if (ore != null) tile.DealDamage(1000000, m_WallsTilemap.CellToWorld(coordinate));
+                StopAllCoroutines();
+
+                if (tile != null) UsefulBits.FixTilePosition(coordinate, m_WallsTilemap, tile);
+                if (ore != null) UsefulBits.FixTilePosition(oreCoord, m_OresTilemap, ore);
+                if (addTile != null) UsefulBits.FixTilePosition(addCoord, m_WallsTilemap, addTile);
+
+                if (ore != null)
+                {
+                    m_OresTilemap.SetTile(oreCoord, null);
+                    tile.DealDamage(1000000, m_WallsTilemap.CellToWorld(addCoord));
+                }
+                if (addTile != null) ParticleSpawner(m_WallsTilemap.CellToWorld(addCoord), addTile);
+                ParticleSpawner(m_WallsTilemap.CellToWorld(coordinate), tile);
                 m_WallsTilemap.SetTile(coordinate, null);
                 WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, tile, radius, false);
+            }
+
+            else
+            {
+                int rdseed = Random.Range(0, 500);
+                if (tile != null) StartCoroutine(UsefulBits.TileShaker(coordinate, m_WallsTilemap, tile, m_BlockShakeTime, m_BlockShakeIntensity, m_BlockShakesPerSecond,rdseed));
+                if (ore != null) StartCoroutine(UsefulBits.TileShaker(oreCoord, m_OresTilemap, ore, m_BlockShakeTime, m_BlockShakeIntensity, m_BlockShakesPerSecond,rdseed));
+                if (addTile != null) StartCoroutine(UsefulBits.TileShaker(addCoord, m_WallsTilemap, addTile, m_BlockShakeTime, m_BlockShakeIntensity, m_BlockShakesPerSecond,rdseed));
+
             }
 
             return true;
@@ -114,6 +164,16 @@ namespace DecayingEarth
             }
 
             return false;
+        }
+
+        private void ParticleSpawner(Vector3 coord, TileBlockBase tile)
+        {
+            Color c = Color.white;
+            c = UsefulBits.GetAverageSpriteColor(tile.sprite);
+
+            GameObject p = Instantiate(Singleton_PrefabLibrary.Instance.CubeParticles);
+            p.GetComponent<BlockParticleManipulator>().ChangeParticleColorsAndSprite(c, tile.sprite);
+            p.transform.position = coord + new Vector3(0.25f, 0.25f);
         }
     }
 }
