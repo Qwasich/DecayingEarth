@@ -97,7 +97,7 @@ namespace DecayingEarth
                 if (ore != null)
                 {
                     m_OresTilemap.SetTile(oreCoord, null);
-                    tile.DealDamage(1000000, m_WallsTilemap.CellToWorld(addCoord));
+                    tile.DealDamage(1000000, m_WallsTilemap.CellToWorld(oreCoord));
                 }
                 if (addTile != null) ParticleSpawner(m_WallsTilemap.CellToWorld(addCoord), addTile);
                 ParticleSpawner(m_WallsTilemap.CellToWorld(coordinate), tile);

@@ -10,9 +10,9 @@ namespace DecayingEarth
         [Header("Generation Rules")]
         public string m_WorldName;
         [Header("Main World Tiles")]
-        public TileBehaviourRule m_FloorRule;
-        public TileBehaviourRule m_WallFrontRule;
-        public TileBehaviourRule m_WallTopRule;
+        public TileBehaviourRule[] m_FloorRule;
+        public TileBehaviourRule[] m_WallFrontRule;
+        public TileBehaviourRule[] m_WallTopRule;
 
         /// <summary>
         /// X размер генерируемой пещеры

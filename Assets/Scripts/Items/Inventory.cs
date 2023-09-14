@@ -136,7 +136,7 @@ namespace DecayingEarth
         {
             if (m_Items[invNumber].Item == null || addAmount <= 0)
             {
-                notUsedAmount = 0;
+                notUsedAmount = addAmount;
                 return false;
             }
 

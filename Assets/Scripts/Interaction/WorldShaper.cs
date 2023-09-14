@@ -107,12 +107,33 @@ namespace DecayingEarth
                 return;
             }
 
-            TileBehaviourRule wallSideRule;
-            TileBehaviourRule wallTopRule;
+            TileBehaviourRule wallSideRule = null;
+            TileBehaviourRule wallTopRule = null;
             if (cavegen != null)
             {
-                wallSideRule = cavegen.WallFrontRule;
-                wallTopRule = cavegen.WallTopRule;
+                for (int i = 0; i < cavegen.wallSideRule.Length; i++)
+                {
+                    if (tile.Tag == cavegen.wallSideRule[i].Tag)
+                    {
+                        wallSideRule = cavegen.wallSideRule[i];
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < cavegen.WallTopRule.Length; i++)
+                {
+                    if (tile.Tag == cavegen.WallTopRule[i].Tag)
+                    {
+                        wallTopRule = cavegen.WallTopRule[i];
+                        break;
+                    }
+
+                }
+
+                if (wallTopRule == null || wallSideRule == null)
+                {
+                    Debug.LogError("Proper Top Tile Rule isn't set for the tile tag " + tile.Tag + " on the latest used world generation settings."); return;
+                }
             }
             else
             {

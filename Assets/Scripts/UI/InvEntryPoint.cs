@@ -160,8 +160,8 @@ namespace DecayingEarth
         {
             if (pItem.IsPickableUp == false) return;
             //Debug.Log("Reached picking up");
-            int count = pItem.HandledItem.StackCount;
-
+            int oldcount = pItem.HandledItem.StackCount;
+            int count = oldcount;
             int firstEmpty = -1;
 
             for (int i = 0; i < Inventory.Items.Count; i++)
@@ -170,9 +170,11 @@ namespace DecayingEarth
 
                 if (m_Inventory.Items[i].Item == pItem.HandledItem.Item)
                 {
+                    if (m_Inventory.Items[i].Item.MaxStackCount == m_Inventory.Items[i].StackCount) continue;
                     //Debug.Log("found Item To Edit");
-                    m_Inventory.IncreaseItemCount(i, count, out count);
-                    if (m_ButtonArray[i].gameObject.activeSelf == true) m_ButtonArray[i].UpdateButtonGraphics();
+                    bool upd = false;
+                    if (m_Inventory.IncreaseItemCount(i, count, out count)) upd = true;
+                    if (upd && m_ButtonArray[i].gameObject.activeSelf == true) m_ButtonArray[i].UpdateButtonGraphics();
                     if (count == 0) break;
                 }
             }
@@ -182,8 +184,9 @@ namespace DecayingEarth
                 m_Inventory.AddNewItem(firstEmpty, new InvItem(pItem.HandledItem.Item, count));
                 m_ButtonArray[firstEmpty].UpdateButtonGraphics();
                 ReadyToUpdate?.Invoke();
+                count = 0;
             }
-
+            if (firstEmpty == -1 && count == oldcount) return;
             pItem.SetItemCount(count);
 
         }

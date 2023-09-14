@@ -23,14 +23,14 @@ namespace DecayingEarth
         
         [SerializeField] private Tilemap m_OresTilemap;
 
-        private TileBehaviourRule m_FloorRule;
-        public TileBehaviourRule FloorRule => m_FloorRule;
+        private TileBehaviourRule[] m_FloorRule;
+        public TileBehaviourRule[] FloorRule => m_FloorRule;
 
-        private TileBehaviourRule m_WallFrontRule;
-        public TileBehaviourRule WallFrontRule => m_WallFrontRule;
+        private TileBehaviourRule[] m_WallFrontRule;
+        public TileBehaviourRule[] wallSideRule => m_WallFrontRule;
 
-        private TileBehaviourRule m_WallTopRule;
-        public TileBehaviourRule WallTopRule => m_WallTopRule;
+        private TileBehaviourRule[] m_WallTopRule;
+        public TileBehaviourRule[] WallTopRule => m_WallTopRule;
 
         /// <summary>
         /// Генерация мира по-правилам. Если не в редакторе - игнорируется.
@@ -110,10 +110,10 @@ namespace DecayingEarth
             m_FloorTilemap.ClearAllTiles();
             m_WallsTilemap.ClearAllTiles();
             m_OresTilemap.ClearAllTiles();
-            GenerateFloor(m_FloorTilemap, m_FloorRule);
-            GenerateRandomWallPattern(m_WallsTilemap, m_WallTopRule);
+            GenerateFloor(m_FloorTilemap, m_FloorRule[0]);
+            GenerateRandomWallPattern(m_WallsTilemap, m_WallTopRule[0]);
 
-            for (int i = 0; i < m_NumberOfCAIterations; i++) CellAutomataIteration(m_WallsTilemap, m_WallTopRule);
+            for (int i = 0; i < m_NumberOfCAIterations; i++) CellAutomataIteration(m_WallsTilemap, m_WallTopRule[0]);
 
             PlaceEditedWalls(m_WallsTilemap);
 

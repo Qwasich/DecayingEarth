@@ -65,7 +65,7 @@ namespace DecayingEarth
         public void SetItemCount(int count)
         {
             m_HandledItem = new InvItem(m_HandledItem.Item, count);
-            if (m_HandledItem.StackCount - count == 0)
+            if (m_HandledItem.StackCount == 0)
             {
                 Destroy(gameObject);
                 return;
