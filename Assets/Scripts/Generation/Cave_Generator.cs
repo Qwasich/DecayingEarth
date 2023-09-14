@@ -27,7 +27,7 @@ namespace DecayingEarth
         public TileBehaviourRule[] FloorRule => m_FloorRule;
 
         private TileBehaviourRule[] m_WallFrontRule;
-        public TileBehaviourRule[] wallSideRule => m_WallFrontRule;
+        public TileBehaviourRule[] WallFrontRule => m_WallFrontRule;
 
         private TileBehaviourRule[] m_WallTopRule;
         public TileBehaviourRule[] WallTopRule => m_WallTopRule;
@@ -96,9 +96,6 @@ namespace DecayingEarth
 
 #if UNITY_EDITOR
             SetWorldGenerationSettings(m_WorldRule);
-            TileBlockBase tile = m_WallsTilemap.GetTile<TileBlockBase>(new Vector3Int(4, 4));
-            if (tile == null) Debug.Log(BlockType.FLOOR);
-            else Debug.Log(tile.BlockType);
 #endif
             m_XOffset = Mathf.FloorToInt(m_CaveXSize / 2);
             m_YOffset = Mathf.FloorToInt(m_CaveYSize / 2);
@@ -151,18 +148,64 @@ namespace DecayingEarth
                 {
                     if (i <= 0 - m_XOffset || i >= m_CaveXSize - 1 - m_XOffset || j <= 0 - m_YOffset || j >= m_CaveYSize - 1 - m_YOffset)
                     {
-                        wall.SetTile(new Vector3Int(i, j, 0), wallTopRule.TileGroups[0].Tiles[0]);
+                        wall.SetTile(new Vector3Int(i, j, 0), GetTopWallRuleByTag("BorderBlock").TileGroups[0].Tiles[0]);
                         continue;
                     }
 
                     int x = Random.Range(0, 100);
                     if (x < m_MapFillPercent)
                     {
-                        wall.SetTile(new Vector3Int(i, j, 0), wallTopRule.TileGroups[0].Tiles[0]);
+                        wall.SetTile(new Vector3Int(i, j, 0), GetTopWallRuleByTag("StoneRaw").TileGroups[0].Tiles[0]);
                     }
                     else continue;
                 }
             }
+        }
+
+        /// <summary>
+        /// Возвращает правило по тэгу
+        /// </summary>
+        /// <param name="tag">Тэг поиска</param>
+        /// <returns>Правило передней стены</returns>
+        private TileBehaviourRule GetFrontWallRuleByTag(string tag)
+        {
+            for (int i = 0; i< m_WallFrontRule.Length; i++)
+            {
+                if (tag == m_WallFrontRule[i].Tag) return m_WallFrontRule[i];
+            }
+
+            Debug.LogError("Tag side isn't found, returning default");
+            return m_WallFrontRule[0];
+        }
+        /// <summary>
+        /// Возвращает правило по тэгу
+        /// </summary>
+        /// <param name="tag">Тэг поиска</param>
+        /// <returns>Правило верхней стены</returns>
+        private TileBehaviourRule GetTopWallRuleByTag(string tag)
+        {
+            for (int i = 0; i < m_WallTopRule.Length; i++)
+            {
+                if (tag == m_WallTopRule[i].Tag) return m_WallTopRule[i];
+            }
+
+            Debug.LogError("Tag top isn't found, returning default");
+            return m_WallTopRule[0];
+        }
+        /// <summary>
+        /// Возвращает правило по тэгу
+        /// </summary>
+        /// <param name="tag">Тэг поиска</param>
+        /// <returns>Правило пола</returns>
+        private TileBehaviourRule GetFloorRuleByTag(string tag)
+        {
+            for (int i = 0; i < m_FloorRule.Length; i++)
+            {
+                if (tag == m_FloorRule[i].Tag) return m_FloorRule[i];
+            }
+
+            Debug.LogError("Tag floor isn't found, returning default");
+            return m_FloorRule[0];
         }
 
         /// <summary>

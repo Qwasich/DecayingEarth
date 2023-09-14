@@ -111,11 +111,11 @@ namespace DecayingEarth
             TileBehaviourRule wallTopRule = null;
             if (cavegen != null)
             {
-                for (int i = 0; i < cavegen.wallSideRule.Length; i++)
+                for (int i = 0; i < cavegen.WallFrontRule.Length; i++)
                 {
-                    if (tile.Tag == cavegen.wallSideRule[i].Tag)
+                    if (tile.Tag == cavegen.WallFrontRule[i].Tag)
                     {
-                        wallSideRule = cavegen.wallSideRule[i];
+                        wallSideRule = cavegen.WallFrontRule[i];
                         break;
                     }
                 }

@@ -102,7 +102,17 @@ namespace DecayingEarth
                 if (addTile != null) ParticleSpawner(m_WallsTilemap.CellToWorld(addCoord), addTile);
                 ParticleSpawner(m_WallsTilemap.CellToWorld(coordinate), tile);
                 m_WallsTilemap.SetTile(coordinate, null);
-                WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, tile, radius, false);
+
+                if (tile.BlockType == BlockType.TOP) WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, tile, radius, false);
+                if (tile.BlockType == BlockType.SIDE)
+                {
+                    TileBlockBase adder = m_WallsTilemap.GetTile<TileBlockBase>(new Vector3Int(coordinate.x, coordinate.y + 2, coordinate.z));
+
+                    if (adder == null || adder.BlockType == BlockType.SIDE) WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, tile, radius, false);
+                    else WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y + 1, m_WallsTilemap, adder, radius, false);
+
+
+                }
             }
 
             else
@@ -136,8 +146,20 @@ namespace DecayingEarth
             TileBlockBase tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
             if (tile != null && tile.BlockType == BlockType.TOP) return false;
 
+            TileBehaviourRule wallSideRule = Singleton_TileLibrary.Instance.ReturnWallSideRuleByTag(itemTile.Tag);
             m_WallsTilemap.SetTile(coordinate, itemTile);
-            if (tile == null) tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
+
+            if (tile == null)
+            {
+                tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
+            }
+            else
+            {
+                tile = (TileBlockBase)wallSideRule.TileGroups[0].Tiles[0];
+            }
+            
+            
+            
             //Debug.Log(coordinate);
 
             WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, tile, radius, true);
