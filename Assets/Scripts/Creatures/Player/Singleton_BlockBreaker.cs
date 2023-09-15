@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Utility;
-using static UnityEditor.PlayerSettings;
+using Random = UnityEngine.Random;
 
 namespace DecayingEarth
 {
@@ -45,6 +45,30 @@ namespace DecayingEarth
             Vector3Int coordinate = m_WallsTilemap.WorldToCell(pos);
             TileBlockBase tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
             if (tile == null) return false;
+
+            if (tile.IsALightSource)
+            {
+                Collider2D col = CheckTriggerCollider(m_WallsTilemap.CellToWorld(coordinate) + new Vector3(0.25f, 0.25f));
+
+                if (col != null && tile.RemainingDurability == 1) Destroy(col.transform.root.gameObject);
+            }
+
+            if (tile.InvokeRule == false)
+            {
+                int j = 1;
+                j = tile.DealDamage(damage, m_WallsTilemap.CellToWorld(coordinate));
+
+                if (j == 0)
+                {
+                    StopAllCoroutines();
+                    m_WallsTilemap.SetTile(coordinate, null);
+                }
+
+                return true;
+            }
+
+            
+
             TileBlockBase ore = null;
             if (tile.BlockType == BlockType.TOP)
             {
@@ -108,7 +132,7 @@ namespace DecayingEarth
                 {
                     TileBlockBase adder = m_WallsTilemap.GetTile<TileBlockBase>(new Vector3Int(coordinate.x, coordinate.y + 2, coordinate.z));
 
-                    if (adder == null || adder.BlockType == BlockType.SIDE) WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, tile, radius, false);
+                    if (adder == null || adder.BlockType == BlockType.SIDE || adder.InvokeRule == false) WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, tile, radius, false);
                     else WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y + 1, m_WallsTilemap, adder, radius, false);
 
 
@@ -139,12 +163,31 @@ namespace DecayingEarth
             if (Singleton_SessionData.Instance.IsLastClickWasOnCanvas) return false;
 
             Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            if (CheckRigidbody(pos) == true) return false;
+            if (!itemTile.IgnoreRigidbody && CheckRigidbody(pos) == true) return false;
             float dist = Vector2.Distance(Camera.main.transform.position, pos);
             if (dist > maxDistance) { Debug.Log("Position:" + dist); return false; }
             Vector3Int coordinate = m_WallsTilemap.WorldToCell(pos);
             TileBlockBase tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
-            if (tile != null && tile.BlockType == BlockType.TOP) return false;
+            if (tile != null && (tile.BlockType == BlockType.TOP || itemTile.InvokeRule == false)) return false;
+
+            if (itemTile.IsALightSource)
+            {
+                
+                GameObject ls = Instantiate(Singleton_PrefabLibrary.Instance.LightSourcePrefab);
+                ls.transform.position = m_WallsTilemap.CellToWorld(coordinate) + new Vector3(0.25f, 0.25f, -1.34f);
+                Light light = ls.GetComponent<Light>();
+                light.type = LightType.Spot;
+                light.spotAngle = itemTile.SpotAngle;
+                light.color = itemTile.LightColor;
+                light.intensity = itemTile.LightIntensity;
+                light.range = itemTile.LightRange;
+            }
+
+            if (itemTile.InvokeRule == false)
+            {
+                m_WallsTilemap.SetTile(coordinate, itemTile);
+                return true;
+            }
 
             TileBehaviourRule wallSideRule = Singleton_TileLibrary.Instance.ReturnWallSideRuleByTag(itemTile.Tag);
             m_WallsTilemap.SetTile(coordinate, itemTile);
@@ -179,13 +222,34 @@ namespace DecayingEarth
                 Rigidbody2D rb = rh.rigidbody;
                 if (rb != null)
                 {
-                    Debug.Log("rb is discovered on object: " + rb.name);
                     return true;
                 }
                 
             }
 
             return false;
+        }
+
+        private Collider2D CheckTriggerCollider(Vector3 pos)
+        {
+            RaycastHit2D[] hitdata;
+            hitdata = Physics2D.BoxCastAll(pos, new Vector2(0.2f, 0.2f), 0, new Vector3 (0,0, -1.34f));
+            foreach (RaycastHit2D rh in hitdata)
+            {
+                if (rh.collider.gameObject.name != "LightCollider")
+                {
+                    Debug.Log(rh.collider.gameObject.name);
+                    continue;
+                }
+                Collider2D cl = rh.collider;
+                if (cl != null)
+                {
+                    return cl;
+                }
+
+            }
+
+            return null;
         }
 
         private void ParticleSpawner(Vector3 coord, TileBlockBase tile)

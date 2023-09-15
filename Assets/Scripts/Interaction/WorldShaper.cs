@@ -96,11 +96,12 @@ namespace DecayingEarth
         /// <param name="wall">Целевой Тайлмап</param>
         /// <param name="mode">0 - Полный, 1 - Только передние, 2 - Только верхние</param>
         /// <param name="cavegen">Если указан - будет брать правила тайлов оттуда а не из библиотеки. ОБЯЗАТЕЛЬНО ДЛЯ ГЕНЕРАЦИИ В РЕДАКТОРЕ.</param>
-        public static void PlaceEditedWallsAltRule(int x, int y, Tilemap wall, int mode = 0, Cave_Generator cavegen = null)
+        public static void PlaceEditedWallsAltRule(int x, int y, Tilemap wall, int mode = 0, Singletone_CaveGenerator cavegen = null)
         {
             if (mode > 2 || mode < 0) { Debug.LogError("Alt Rule Generation mode set wrongly! Must use value between 0 and 2, inclusive."); return; }
             TileBlockBase tile = wall.GetTile<TileBlockBase>(new Vector3Int(x, y, 0));
             if (tile == null) return;
+            if (!tile.InvokeRule) return;
             if (tile.Tag == "")
             {
                 Debug.LogError("Tile " + tile.name +" has no tag set, block generation failure"); 
@@ -153,21 +154,21 @@ namespace DecayingEarth
             int rd = 0;
 
             tile = wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y + 1));
-            if (tile != null) lt = (int)tile.BlockType;
+            if (tile != null && tile.InvokeRule) lt = (int)tile.BlockType;
             tile = wall.GetTile<TileBlockBase>(new Vector3Int(x, y + 1));
-            if (tile != null) t = (int)tile.BlockType;
+            if (tile != null && tile.InvokeRule) t = (int)tile.BlockType;
             tile = wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y + 1));
-            if (tile != null) rt = (int)tile.BlockType;
+            if (tile != null && tile.InvokeRule) rt = (int)tile.BlockType;
             tile = wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y));
-            if (tile != null) l = (int)tile.BlockType;
+            if (tile != null && tile.InvokeRule) l = (int)tile.BlockType;
             tile = wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y));
-            if (tile != null) r = (int)tile.BlockType;
+            if (tile != null && tile.InvokeRule) r = (int)tile.BlockType;
             tile = wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y - 1));
-            if (tile != null) ld = (int)tile.BlockType;
+            if (tile != null && tile.InvokeRule) ld = (int)tile.BlockType;
             tile = wall.GetTile<TileBlockBase>(new Vector3Int(x, y - 1));
-            if (tile != null) d = (int)tile.BlockType;
+            if (tile != null && tile.InvokeRule) d = (int)tile.BlockType;
             tile = wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y - 1));
-            if (tile != null) rd = (int)tile.BlockType;
+            if (tile != null && tile.InvokeRule) rd = (int)tile.BlockType;
 
             //доп проверка
             //if (lt == c && t == c && rt == c && l == c && r != c && ld != c && d != c && rd != c) wall.SetTile(new Vector3Int(x, y, 0), null);
@@ -251,49 +252,68 @@ namespace DecayingEarth
 
             int c = 2;
 
-            //int lt = 0;
+            int lt = 0;
             int t = 0;
-            //int rt = 0;
+            int rt = 0;
             int l = 0;
             int r = 0;
-            //int ld = 0;
+            int ld = 0;
             int d = 0;
-            //int rd = 0;
+            int rd = 0;
 
-            //if (wall.GetTile(new Vector3Int(x - 1, y + 1)) != null) lt = (int)GetTileType(wall, x - 1, y + 1);
-            if (wall.GetTile(new Vector3Int(x, y + 1)) != null) t = (int)GetTileType(wall, x, y + 1);
-            //if (wall.GetTile(new Vector3Int(x + 1, y + 1)) != null) rt = (int)GetTileType(wall, x + 1, y + 1);
-            if (wall.GetTile(new Vector3Int(x - 1, y)) != null) l = (int)GetTileType(wall, x - 1, y);
-            if (wall.GetTile(new Vector3Int(x + 1, y)) != null) r = (int)GetTileType(wall, x + 1, y);
-            //if (wall.GetTile(new Vector3Int(x - 1, y - 1)) != null) ld = (int)GetTileType(wall, x - 1, y - 1);
-            if (wall.GetTile(new Vector3Int(x, y - 1)) != null) d = (int)GetTileType(wall, x, y - 1);
-            //if (wall.GetTile(new Vector3Int(x + 1, y - 1)) != null) rd = (int)GetTileType(wall, x + 1, y - 1);
+            TileBlockBase checkTile = null;
+
+
+            checkTile = wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y + 1));
+            if (checkTile != null && tile.InvokeRule) lt = (int)tile.BlockType;
+            checkTile = wall.GetTile<TileBlockBase>(new Vector3Int(x, y + 1));
+            if (checkTile != null && tile.InvokeRule) t = (int)tile.BlockType;
+            checkTile = wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y + 1));
+            if (checkTile != null && tile.InvokeRule) rt = (int)tile.BlockType;
+            checkTile = wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y));
+            if (checkTile != null && tile.InvokeRule) l = (int)tile.BlockType;
+            checkTile = wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y));
+            if (checkTile != null && tile.InvokeRule) r = (int)tile.BlockType;
+            checkTile = wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y - 1));
+            if (checkTile != null && tile.InvokeRule) ld = (int)tile.BlockType;
+            checkTile = wall.GetTile<TileBlockBase>(new Vector3Int(x, y - 1));
+            if (checkTile != null && tile.InvokeRule) d = (int)tile.BlockType;
+            checkTile = wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y - 1));
+            if (checkTile != null && tile.InvokeRule) rd = (int)tile.BlockType;
 
             if (mode == false)
             {
 
                 if (tile.BlockType == BlockType.TOP)
                 {
-                    TileBlockBase tl = (TileBlockBase)wall.GetTile(new Vector3Int(x, y - 1));
-                    if (tl != null && tl.BlockType == BlockType.SIDE)
+                    bool check = true;
+
+                    TileBlockBase bottomTile = (TileBlockBase)wall.GetTile(new Vector3Int(x, y - 1));
+                    TileBlockBase topTile = (TileBlockBase)wall.GetTile(new Vector3Int(x, y + 1));
+                    if (bottomTile != null && bottomTile.BlockType == BlockType.SIDE)
                     {
                         wall.SetTile(new Vector3Int(x, y - 1), null);
                         if (wall.GetTile(new Vector3Int(x, y - 1)) == null) d = 0;
                     }
-                    tl = (TileBlockBase)wall.GetTile(new Vector3Int(x, y + 1));
-                    TileBehaviourRule oldSideRule = null;
-                    if (tl != null && tile.Tag !=tl.Tag && tl.BlockType == BlockType.TOP)
+                                        TileBehaviourRule oldSideRule = null;
+                    if (topTile != null && tile.Tag != topTile.Tag && topTile.BlockType == BlockType.TOP)
                     {
                         oldSideRule = wallSideRule;
-                        wallSideRule = Singleton_TileLibrary.Instance.ReturnWallSideRuleByTag(tl.Tag);
+                        wallSideRule = Singleton_TileLibrary.Instance.ReturnWallSideRuleByTag(topTile.Tag);
                         if (wallSideRule != null) { }
                         else wallSideRule = oldSideRule;
                     }
+
+                    if (topTile != null && topTile.BlockType == BlockType.SIDE)
+                    {
+                        wall.SetTile(new Vector3Int(x, y), null);
+                        check = false;
+                    }
                     //Нижние стены
-                    if (t == c && l != 0 && r != 0 && d != 1) { wall.SetTile(new Vector3Int(x, y), wallSideRule.TileGroups[0].Tiles[Random.Range(0, wallSideRule.TileGroups[0].Tiles.Length)]); }
-                    else if (t == c && l != 0 && r == 0 && d != 1) { wall.SetTile(new Vector3Int(x, y), wallSideRule.TileGroups[1].Tiles[Random.Range(0, wallSideRule.TileGroups[2].Tiles.Length)]); }
-                    else if (t == c && l == 0 && r != 0 && d != 1) { wall.SetTile(new Vector3Int(x, y), wallSideRule.TileGroups[2].Tiles[Random.Range(0, wallSideRule.TileGroups[1].Tiles.Length)]); }
-                    else if (t == c && l == 0 && r == 0 && d != 1) { wall.SetTile(new Vector3Int(x, y), wallSideRule.TileGroups[3].Tiles[Random.Range(0, wallSideRule.TileGroups[3].Tiles.Length)]); }
+                    if (check && t == c && l != 0 && r != 0 && d != 1) { wall.SetTile(new Vector3Int(x, y), wallSideRule.TileGroups[0].Tiles[Random.Range(0, wallSideRule.TileGroups[0].Tiles.Length)]); }
+                    else if (check && t == c && l != 0 && r == 0 && d != 1) { wall.SetTile(new Vector3Int(x, y), wallSideRule.TileGroups[1].Tiles[Random.Range(0, wallSideRule.TileGroups[2].Tiles.Length)]); }
+                    else if (check && t == c && l == 0 && r != 0 && d != 1) { wall.SetTile(new Vector3Int(x, y), wallSideRule.TileGroups[2].Tiles[Random.Range(0, wallSideRule.TileGroups[1].Tiles.Length)]); }
+                    else if (check && t == c && l == 0 && r == 0 && d != 1) { wall.SetTile(new Vector3Int(x, y), wallSideRule.TileGroups[3].Tiles[Random.Range(0, wallSideRule.TileGroups[3].Tiles.Length)]); }
                     if (oldSideRule != null) wallSideRule = oldSideRule;
 
                 }
@@ -327,23 +347,34 @@ namespace DecayingEarth
             if (mode == true)
             {
                 int m = 1;
-                TileBlockBase tl = (TileBlockBase)wall.GetTile(new Vector3Int(x, y - 1));
+                TileBlockBase bottomTile = (TileBlockBase)wall.GetTile(new Vector3Int(x, y - 1));
                 if (tile.BlockType == BlockType.TOP)
                 {
-                    TileBlockBase ml = (TileBlockBase)wall.GetTile(new Vector3Int(x, y + 1));
-                    if (tl == null)
+                    TileBlockBase topTile = (TileBlockBase)wall.GetTile(new Vector3Int(x, y + 1));
+                    if ((bottomTile == null && topTile == null) || (bottomTile == null && topTile != null && topTile.InvokeRule == true && topTile.BlockType == BlockType.SIDE) ||
+                        (bottomTile != null && bottomTile.InvokeRule == false && topTile == null) || (bottomTile != null && bottomTile.InvokeRule == false && topTile != null && topTile.InvokeRule == true && topTile.BlockType == BlockType.SIDE))
                     {
                         wall.SetTile(new Vector3Int(x, y + 1), wallTopRule.TileGroups[0].Tiles[0]);
                         m = 0;
                     }
-                    if (tl != null && ml!= null && ml.BlockType == BlockType.SIDE && Singleton_SessionData.Instance.IsTop == false)
+
+
+                    if (bottomTile == null && topTile != null && topTile.InvokeRule == false)
+                    {
+                        wall.SetTile(new Vector3Int(x, y), wallTopRule.TileGroups[0].Tiles[0]);
+                        wall.SetTile(new Vector3Int(x, y - 1), wallTopRule.TileGroups[0].Tiles[0]);
+                        //m = 0;
+                    }
+
+
+                    if (bottomTile != null && topTile!= null && topTile.BlockType == BlockType.SIDE && Singleton_SessionData.Instance.IsTop == false)
                     {
                         wall.SetTile(new Vector3Int(x, y + 1), wallTopRule.TileGroups[0].Tiles[0]);
                         d = 0;
                         t = c;
                         m = 0;
                     }
-                    if (tl != null && ml != null && ml.BlockType == BlockType.SIDE && Singleton_SessionData.Instance.IsTop == true)
+                    if (bottomTile != null && topTile != null && topTile.BlockType == BlockType.SIDE && Singleton_SessionData.Instance.IsTop == true)
                     {
                         m = 0;
                     }
@@ -351,13 +382,13 @@ namespace DecayingEarth
 
                 if (tile.BlockType == BlockType.SIDE)
                 {
-                    if (tl == null)
+                    if (bottomTile == null)
                     {
                         wall.SetTile(new Vector3Int(x, y - 1), wallTopRule.TileGroups[0].Tiles[0]);
                     }
                 }
-
-                if (tl == null)
+                bottomTile = (TileBlockBase)wall.GetTile(new Vector3Int(x, y - 1));
+                if (bottomTile == null)
                 {
                     if (wall.GetTile(new Vector3Int(x, y)) != null) t = (int)GetTileType(wall, x, y);
                     if (wall.GetTile(new Vector3Int(x - 1, y - 1)) != null) l = (int)GetTileType(wall, x - 1, y - m);

@@ -20,10 +20,17 @@ namespace DecayingEarth
         public Sprite EmptySprite => m_EmptySprite;
 
         [SerializeField] private GameObject m_CubeParticles;
-
         /// <summary>
         /// Стандартная система частиц для разрушаемых блоков
         /// </summary>
         public GameObject CubeParticles => m_CubeParticles;
+
+        [SerializeField] private GameObject m_LightSourcePrefab;
+        /// <summary>
+        /// Базовый префаб источника света
+        /// </summary>
+        public GameObject LightSourcePrefab => m_LightSourcePrefab;
+
+
     }
 }

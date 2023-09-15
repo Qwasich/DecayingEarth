@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.WSA;
 using Utility;
+using static Unity.Burst.Intrinsics.X86;
 
 namespace DecayingEarth
 {
-    public class Cave_Generator : MonoSingleton<Cave_Generator>
+    public class Singletone_CaveGenerator : MonoSingleton<Singletone_CaveGenerator>
     {
         /// <summary>
         /// X и Y размер генерируемой пещеры
@@ -112,6 +114,14 @@ namespace DecayingEarth
 
             for (int i = 0; i < m_NumberOfCAIterations; i++) CellAutomataIteration(m_WallsTilemap, m_WallTopRule[0]);
 
+            for (int i = 1; i < m_WallTopRule.Length; i++)
+            {
+                if (m_WallTopRule[i].Tag == "BorderBlock") continue;
+                GenerateBlocksByPerlinNoise(Random.Range(0, 100), m_WallsTilemap, m_WallTopRule[i], 0.65f);
+            }
+
+            CheckForWallGenerationErrors(m_WallsTilemap);
+
             PlaceEditedWalls(m_WallsTilemap);
 
             if (m_Ores.Length > 0) for (int i = 0; i < m_Ores.Length; i++) GenerateOresByTypeCountAndSize(m_Ores[i], m_OresTilemap, m_WallsTilemap);
@@ -141,12 +151,12 @@ namespace DecayingEarth
         /// <param name="wallTopRule">Правило верхних стен</param>
         private void GenerateRandomWallPattern(Tilemap wall, TileBehaviourRule wallTopRule)
         {
-            for (int i = -1 - m_XOffset; i <= m_CaveXSize - m_XOffset; i++)
+            for (int i = -2 - m_XOffset; i < 2 + m_CaveXSize - m_XOffset; i++)
             {
 
-                for (int j = -1 - m_YOffset; j <= m_CaveYSize - m_YOffset; j++)
+                for (int j = -2 - m_YOffset; j < 2 + m_CaveYSize - m_YOffset; j++)
                 {
-                    if (i <= 0 - m_XOffset || i >= m_CaveXSize - 1 - m_XOffset || j <= 0 - m_YOffset || j >= m_CaveYSize - 1 - m_YOffset)
+                    if (i <= 0 - m_XOffset || i >= m_CaveXSize - 2 - m_XOffset || j <= 0 - m_YOffset || j >= m_CaveYSize - 2 - m_YOffset)
                     {
                         wall.SetTile(new Vector3Int(i, j, 0), GetTopWallRuleByTag("BorderBlock").TileGroups[0].Tiles[0]);
                         continue;
@@ -247,7 +257,7 @@ namespace DecayingEarth
 
         IEnumerator Cycle(int CaveX, int CaveY, int xo, int yo, Tilemap wall)
         {
-            Cave_Generator cg = null;
+            Singletone_CaveGenerator cg = null;
 
 #if UNITY_EDITOR
             cg = this;
@@ -308,7 +318,7 @@ namespace DecayingEarth
 
                         tile = wallmap.GetTile<TileBlockBase>(new Vector3Int(x, y, 0));
 
-                        if (tile != null && tile.BlockType == BlockType.TOP && oremap.GetTile(new Vector3Int(x, y, 0)) == null)
+                        if (tile != null && tile.BlockType == BlockType.TOP && tile.Tag != "BorderBlock" && oremap.GetTile(new Vector3Int(x, y, 0)) == null)
                         {
                             oremap.SetTile(new Vector3Int(xrand, yrand, 0), ore.Tiles[Random.Range(0, ore.Tiles.Length)]);
                             orecount--;
@@ -323,7 +333,68 @@ namespace DecayingEarth
             }
         }
 
-        
+        /// <summary>
+        /// Ставит блоки по шуму Перлина
+        /// </summary>
+        /// <param name="seed">Семя генерации шума, от него будет идти рассчет</param>
+        /// <param name="wallmap">Целевой тайлмап</param>
+        /// <param name="wallTopRule">Правило тайлов, которые мы хотим поставить</param>
+        /// <param name="treshold">Чуствительность к шуму, от 0.1 до 1 включительно. Если значение шума превышает - будет поставлен блок.</param>
+        private void GenerateBlocksByPerlinNoise(float seed, Tilemap wallmap, TileBehaviourRule wallTopRule, float treshold)
+        {
+            if (treshold > 1) treshold = 1;
+            if (treshold < 0.1) treshold = 0.1f;
+
+            seed *= treshold;
+            StartCoroutine(PerlinPlacer(m_CaveXSize, m_CaveYSize, m_XOffset, m_YOffset, wallmap, (TileBlockBase)wallTopRule.TileGroups[0].Tiles[0],seed, treshold));
+        }
+
+        IEnumerator PerlinPlacer(int CaveX, int CaveY, int xo, int yo, Tilemap wallmap, TileBlockBase tile, float seed, float treshold)
+        {
+            float modx = 1f / CaveX;
+            float mody = 1f / CaveY;
+
+            float mods = 1f / seed;
+
+
+            for (int i = 1 - xo; i < CaveX - xo - 1; i++)
+            {
+                for (int j = 1 - yo; j < CaveY - yo - 1; j++)
+                {
+                    TileBlockBase tiles = wallmap.GetTile<TileBlockBase>(new Vector3Int(i, j, 0));
+                    if (tiles == null) continue;
+                    float p = Mathf.PerlinNoise((i * modx + mods) * (treshold / (modx * 10)), (j * mody + mods) * (treshold / (mody * 10)));
+                    if (p >= treshold) wallmap.SetTile(new Vector3Int(i, j, 0), tile);
+
+
+                }
+            }
+            yield return null;
+        }
+
+        /// <summary>
+        /// Проверяет стены, перед превращением их в боковые. Нужно, чтобы исправить неприятный баг, где стены со стороны по какой-то причине могут отличаться от стен сверху.
+        /// </summary>
+        /// <param name="tilemap">Целевой тайлмап</param>
+        private void CheckForWallGenerationErrors(Tilemap tilemap)
+        {
+            for (int i = 1 - m_XOffset; i < m_CaveXSize - m_XOffset - 1; i++)
+            {
+                for (int j = 1 - m_YOffset; j < m_CaveYSize - m_YOffset - 1; j++)
+                {
+                    TileBlockBase tile = tilemap.GetTile<TileBlockBase>(new Vector3Int(i, j, 0));
+                    if (tile == null) continue;
+                    TileBlockBase toptile = tilemap.GetTile<TileBlockBase>(new Vector3Int(i, j + 1, 0));
+                    if (toptile == null) continue;
+                    TileBlockBase bottomtile = tilemap.GetTile<TileBlockBase>(new Vector3Int(i, j - 1, 0));
+
+                    if (bottomtile == null && toptile.Tag != tile.Tag) tilemap.SetTile(new Vector3Int(i, j, 0), toptile);
+                }
+            }
+
+                   
+
+        }
 
     }
 }
