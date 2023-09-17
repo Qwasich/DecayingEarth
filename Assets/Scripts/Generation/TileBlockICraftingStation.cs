@@ -10,9 +10,9 @@ using UnityEditor;
 
 namespace DecayingEarth
 {
-    public class TileBlockInteractable : TileBlockBase
+    public class TileBlockICraftingStation : TileBlockBase
     {
-
+        
         
 
         
@@ -21,13 +21,13 @@ namespace DecayingEarth
 
 
 #if UNITY_EDITOR
-        [MenuItem("Assets/Create/2D/Custom Tiles/Interactable Block Tile")]
+        [MenuItem("Assets/Create/2D/Custom Tiles/Crafting Station Block Tile")]
         new public static void CreateCustomTile()
         {
             string path = EditorUtility.SaveFilePanelInProject("Save Block Tile", "New Block Tile", "asset", "Save Block Tile", "Assets/Sprites");
             if (path == "") return;
 
-            AssetDatabase.CreateAsset(CreateInstance<TileBlockInteractable>(), path);
+            AssetDatabase.CreateAsset(CreateInstance<TileBlockICraftingStation>(), path);
         }
 #endif
     }

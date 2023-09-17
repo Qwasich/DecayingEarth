@@ -31,6 +31,12 @@ namespace DecayingEarth
         /// </summary>
         public GameObject LightSourcePrefab => m_LightSourcePrefab;
 
+        [SerializeField] private TileBlockBase m_FillerTile;
+        /// <summary>
+        /// Невидимый тайл, используемый для заполнения многоблочных объектов. Костыль, честно, т.к. времени писать нормальное решение нет.
+        /// </summary>
+        public TileBlockBase FillerTile => m_FillerTile;
+
 
     }
 }

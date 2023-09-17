@@ -20,7 +20,7 @@ namespace DecayingEarth
             {
                 if (m_TileBlock != null)
                 {
-                    bool b = Singleton_BlockBreaker.Instance.PlaceWallBlock(m_TileBlock,m_Distance);
+                    bool b = Singleton_BlockEditor.Instance.PlaceWallBlock(m_TileBlock,m_Distance);
                     if (!b) return 0;
                 }
                 else

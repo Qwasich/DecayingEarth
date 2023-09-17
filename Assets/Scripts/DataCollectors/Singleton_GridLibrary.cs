@@ -4,7 +4,7 @@ using Utility;
 
 namespace DecayingEarth
 {
-    public class Singletone_GridLibrary : MonoSingleton<Singletone_GridLibrary>
+    public class Singleton_GridLibrary : MonoSingleton<Singleton_GridLibrary>
     {
         [SerializeField] private Tilemap m_WallsTilemap;
         [SerializeField] private Tilemap m_FloorTilemap;

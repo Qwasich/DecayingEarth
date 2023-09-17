@@ -27,8 +27,11 @@ namespace DecayingEarth
 
             if (clickType == 0)
             {
-                Singleton_BlockBreaker.Instance.DamageWallBlock(m_MiningDamage, m_MaxDistance);
-                return StackDecreaseAfterUse;
+                bool b = Singleton_BlockEditor.Instance.DamageWallBlock(m_MiningDamage, m_MaxDistance);
+
+                if (b) return StackDecreaseAfterUse;
+                else return 0;
+
             }
 
 

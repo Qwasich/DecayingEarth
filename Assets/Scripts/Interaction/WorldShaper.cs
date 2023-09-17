@@ -265,21 +265,21 @@ namespace DecayingEarth
 
 
             checkTile = wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y + 1));
-            if (checkTile != null && tile.InvokeRule) lt = (int)tile.BlockType;
+            if (checkTile != null && checkTile.InvokeRule) lt = (int)checkTile.BlockType;
             checkTile = wall.GetTile<TileBlockBase>(new Vector3Int(x, y + 1));
-            if (checkTile != null && tile.InvokeRule) t = (int)tile.BlockType;
+            if (checkTile != null && checkTile.InvokeRule) t = (int)checkTile.BlockType;
             checkTile = wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y + 1));
-            if (checkTile != null && tile.InvokeRule) rt = (int)tile.BlockType;
+            if (checkTile != null && checkTile.InvokeRule) rt = (int)checkTile.BlockType;
             checkTile = wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y));
-            if (checkTile != null && tile.InvokeRule) l = (int)tile.BlockType;
+            if (checkTile != null && checkTile.InvokeRule) l = (int)checkTile.BlockType;
             checkTile = wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y));
-            if (checkTile != null && tile.InvokeRule) r = (int)tile.BlockType;
+            if (checkTile != null && checkTile.InvokeRule) r = (int)checkTile.BlockType;
             checkTile = wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y - 1));
-            if (checkTile != null && tile.InvokeRule) ld = (int)tile.BlockType;
+            if (checkTile != null && checkTile.InvokeRule) ld = (int)checkTile.BlockType;
             checkTile = wall.GetTile<TileBlockBase>(new Vector3Int(x, y - 1));
-            if (checkTile != null && tile.InvokeRule) d = (int)tile.BlockType;
+            if (checkTile != null && checkTile.InvokeRule) d = (int)checkTile.BlockType;
             checkTile = wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y - 1));
-            if (checkTile != null && tile.InvokeRule) rd = (int)tile.BlockType;
+            if (checkTile != null && checkTile.InvokeRule) rd = (int)checkTile.BlockType;
 
             if (mode == false)
             {
@@ -290,6 +290,7 @@ namespace DecayingEarth
 
                     TileBlockBase bottomTile = (TileBlockBase)wall.GetTile(new Vector3Int(x, y - 1));
                     TileBlockBase topTile = (TileBlockBase)wall.GetTile(new Vector3Int(x, y + 1));
+
                     if (bottomTile != null && bottomTile.BlockType == BlockType.SIDE)
                     {
                         wall.SetTile(new Vector3Int(x, y - 1), null);
