@@ -18,6 +18,7 @@ namespace DecayingEarth
 
         private void Update()
         {
+            
             UpdateMoveAxis();
             UpdatePlayer();
 

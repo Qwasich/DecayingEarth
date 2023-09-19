@@ -27,19 +27,38 @@ namespace DecayingEarth
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            //Сделать так, чтоб показывался Tooltip предмета
+            var de = m_Ivp.Inventory.Items[Id].Item;
+
+            if (de == null || Singleton_SessionData.Instance.IsInventoryHidden) return;
+
+            string description =de.Name + "\n\n";
+
+            if (de.StackDecreaseAfterUse > 0) description += "Consumable\n\n";
+
+            if (de.ItemType == ItemType.Weapon) description += (de as ItemWeapon).DealtDamage.ToString() + " " + (de as ItemWeapon).DamageType.ToString() + " damage\n";
+            if (de.ItemType == ItemType.Tool) description += (de as ItemTool).DealtDamage.ToString() + " " + (de as ItemTool).DamageType.ToString() + " damage\n";
+
+            if (de.ItemType == ItemType.Tool) description += (de as ItemTool).MiningDamage + " Mining damage\n";
+
+            if (de.ItemType == ItemType.Weapon) if ((de as ItemWeapon).Knockback > 0) description += (de as ItemWeapon).Knockback.ToString() + " Knockback\n";
+            if (de.ItemType == ItemType.Tool) if ((de as ItemTool).Knockback > 0) description += (de as ItemTool).Knockback.ToString() + " Knockback\n";
+
+            if (de.ManaPerUse > 0) description += "Consumes " + de.ManaPerUse + "mana\n";
+
+            if (de.UseTimer != 0 && (de is ItemWeapon || de is ItemTool)) description += "Swings " + (1 / de.UseTimer).ToString("0.0") + " TPS\n";
+
+            if (de.MaxStackCount > 1) description += "\nStacks up to " + de.MaxStackCount + "\n";
+
+            if (de.Tooltip != "") description += "\n" +  de.Tooltip + "";
+
+            Singleton_MouseItemHolder.Instance.ShowTooltip(description);
+
         }
 
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            //Сделать так, чтобы скрывался Tooltip предмета
-        }
+        public void OnPointerExit(PointerEventData eventData) => Singleton_MouseItemHolder.Instance.HideTooltip();
 
         // Левая - 0, Правая - 1
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            m_Ivp.MakeActionDependingOnClickType((int)eventData.button, m_Id);
-        }
+        public void OnPointerClick(PointerEventData eventData) => m_Ivp.MakeActionDependingOnClickType((int) eventData.button, m_Id);
 
         /// <summary>
         /// Инициализирует кнопку

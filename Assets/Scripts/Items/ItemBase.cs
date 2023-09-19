@@ -63,7 +63,11 @@ namespace DecayingEarth
         /// </summary>
         public string Tooltip => m_Tooltip;
 
-        [SerializeField] protected int StackDecreaseAfterUse = 0;
+        [SerializeField] protected int m_StackDecreaseAfterUse = 0;
+        /// <summary>
+        /// Сколько предмета будет "израсходовано" после успешного использования.
+        /// </summary>
+        public int StackDecreaseAfterUse => m_StackDecreaseAfterUse;
 
 
         [SerializeField] protected HoldType m_HoldType = HoldType.Empty;

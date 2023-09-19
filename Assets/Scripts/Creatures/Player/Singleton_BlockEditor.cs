@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.WSA;
 using Utility;
 using Random = UnityEngine.Random;
 
@@ -322,7 +321,7 @@ namespace DecayingEarth
             {
                 if (rh.collider.gameObject.name != tag)
                 {
-                    Debug.Log(rh.collider.gameObject.name);
+                    //Debug.Log(rh.collider.gameObject.name);
                     continue;
                 }
                 Collider2D cl = rh.collider;

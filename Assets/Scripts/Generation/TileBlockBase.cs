@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Utility;
-using static UnityEditor.PlayerSettings;
 
 #if UNITY_EDITOR
 using UnityEditor;

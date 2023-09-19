@@ -2,13 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.WSA;
 using Utility;
-using static Unity.Burst.Intrinsics.X86;
 
 namespace DecayingEarth
 {
-    public class Singletone_CaveGenerator : MonoSingleton<Singletone_CaveGenerator>
+    public class Singleton_CaveGenerator : MonoSingleton<Singleton_CaveGenerator>
     {
         /// <summary>
         /// X и Y размер генерируемой пещеры
@@ -20,10 +18,13 @@ namespace DecayingEarth
         /// —сылки на целевые тайлмапы - пол, стены и руды.
         /// </summary>
         [SerializeField] private Tilemap m_FloorTilemap;
-        
+
+        [SerializeField] private Tilemap m_FloorDetsTilemap;
+
         [SerializeField] private Tilemap m_WallsTilemap;
         
         [SerializeField] private Tilemap m_OresTilemap;
+
 
         private TileBehaviourRule[] m_FloorRule;
         public TileBehaviourRule[] FloorRule => m_FloorRule;
@@ -257,7 +258,7 @@ namespace DecayingEarth
 
         IEnumerator Cycle(int CaveX, int CaveY, int xo, int yo, Tilemap wall)
         {
-            Singletone_CaveGenerator cg = null;
+            Singleton_CaveGenerator cg = null;
 
 #if UNITY_EDITOR
             cg = this;

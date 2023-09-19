@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.Tilemaps;
 using Utility;
 
 namespace DecayingEarth
@@ -16,6 +16,7 @@ namespace DecayingEarth
         public event UnityAction InvButtonPressed;
         public event UnityAction PauseMenuButtonPressed;
         public event UnityAction<int> HotbarButtonPressedByIndex;
+        public event UnityAction<TileBlockICraftingStation> CraftingStationUsed;
 
         private bool m_IBPressed = false;
         private bool m_PMBPressed = false;
@@ -52,8 +53,19 @@ namespace DecayingEarth
             }
             if (MouseRight)
             {
+
                 if (Singleton_SessionData.Instance != null) Singleton_SessionData.Instance.UpdateLastClick(IsClickOnCanvas());
-                OnRightMouseButtonPressed?.Invoke();
+                var tile = IsClickOnTile();
+                if (!Singleton_SessionData.Instance.IsLastClickWasOnCanvas && tile != null)
+                {
+                    if (tile is TileBlockICraftingStation)
+                    {
+                        CraftingStationUsed?.Invoke((TileBlockICraftingStation)tile);
+                        Debug.Log(tile.name);
+                    }
+
+                }
+                else OnRightMouseButtonPressed?.Invoke();
             }
             if (MouseRightHold)
             {
@@ -90,6 +102,17 @@ namespace DecayingEarth
             }
             return false;
 
+        }
+
+        private TileBlockBase IsClickOnTile()
+        {
+            Tilemap m_WallsTilemap = Singleton_GridLibrary.Instance.WallsTilemap;
+            Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3Int coordinate = m_WallsTilemap.WorldToCell(pos);
+            var tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
+
+            if (tile != null) return tile;
+            else return null;
         }
         
         /// <summary>

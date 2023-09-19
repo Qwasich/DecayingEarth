@@ -96,7 +96,7 @@ namespace DecayingEarth
         /// <param name="wall">Целевой Тайлмап</param>
         /// <param name="mode">0 - Полный, 1 - Только передние, 2 - Только верхние</param>
         /// <param name="cavegen">Если указан - будет брать правила тайлов оттуда а не из библиотеки. ОБЯЗАТЕЛЬНО ДЛЯ ГЕНЕРАЦИИ В РЕДАКТОРЕ.</param>
-        public static void PlaceEditedWallsAltRule(int x, int y, Tilemap wall, int mode = 0, Singletone_CaveGenerator cavegen = null)
+        public static void PlaceEditedWallsAltRule(int x, int y, Tilemap wall, int mode = 0, Singleton_CaveGenerator cavegen = null)
         {
             if (mode > 2 || mode < 0) { Debug.LogError("Alt Rule Generation mode set wrongly! Must use value between 0 and 2, inclusive."); return; }
             TileBlockBase tile = wall.GetTile<TileBlockBase>(new Vector3Int(x, y, 0));

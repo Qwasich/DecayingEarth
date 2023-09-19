@@ -6,6 +6,8 @@ namespace DecayingEarth
 {
     public class Singleton_MouseItemHolder : MonoSingleton<Singleton_MouseItemHolder>
     {
+        [SerializeField] private GameObject m_TooltipItem;
+        [SerializeField] private Text m_TooltipText;
         [SerializeField] private GameObject m_MouseObject;
         [SerializeField] private Image m_Icon;
         [SerializeField] private Text m_Text;
@@ -14,8 +16,8 @@ namespace DecayingEarth
 
         public void Update()
         {
-            if (m_MouseObject.activeInHierarchy == false) return;
-            m_MouseObject.transform.position = Input.mousePosition;
+            if (m_MouseObject.activeInHierarchy == true) m_MouseObject.transform.position = Input.mousePosition;
+            if (m_TooltipItem.activeInHierarchy == true) m_TooltipItem.transform.position = Input.mousePosition;
         }
 
         /// <summary>
@@ -29,6 +31,7 @@ namespace DecayingEarth
             m_HandItem = item;
             m_MouseObject.SetActive(true);
             UpdateHandVisual();
+            HideTooltip();
 
             return true;
         }
@@ -111,9 +114,36 @@ namespace DecayingEarth
         /// </summary>
         public void UpdateHandVisual()
         {
-            if (m_Icon != null) m_Icon.sprite = m_HandItem.Item.Icon;
+            if (m_HandItem.Item != null && m_Icon != null) m_Icon.sprite = m_HandItem.Item.Icon;
             if (m_Text != null && m_HandItem.StackCount > 1) m_Text.text = m_HandItem.StackCount.ToString();
             if (m_Text != null && m_HandItem.StackCount <= 1) m_Text.text = "";
+        }
+
+        /// <summary>
+        /// Показывает окошко с Tooltip
+        /// </summary>
+        /// <param name="text">Текст, который надо вывести на Tooltip</param>
+        public void ShowTooltip(string text)
+        {
+            if(m_TooltipItem != null && HandItem.Item == null) m_TooltipItem.SetActive(true);
+            UpdateTooltipText(text);
+        }
+
+        /// <summary>
+        /// Обновляет текст Tooltip переданным
+        /// </summary>
+        /// <param name="text">Текст, который надо вывести на Tooltip</param>
+        public void UpdateTooltipText(string text)
+        {
+            if (m_TooltipText != null && HandItem.Item == null) m_TooltipText.text = text;
+        }
+
+        /// <summary>
+        /// Прячет Tooltip
+        /// </summary>
+        public void HideTooltip()
+        {
+            if (m_TooltipItem != null) m_TooltipItem.SetActive(false);
         }
 
 
