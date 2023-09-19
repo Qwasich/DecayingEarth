@@ -18,7 +18,11 @@ namespace DecayingEarth
 
         private void Update()
         {
-            
+            if (!Singleton_SessionData.Instance.IsInventoryHidden)
+            {
+                m_Player.GetAxisParameters(0, 0);
+                return;
+            }
             UpdateMoveAxis();
             UpdatePlayer();
 

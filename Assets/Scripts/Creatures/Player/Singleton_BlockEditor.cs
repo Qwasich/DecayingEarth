@@ -116,7 +116,7 @@ namespace DecayingEarth
                 Singleton_SessionData.Instance.UpdateLastTileCoordinate((Vector2Int)coordinate);
 
                 int i = 1;
-                if (ore == null) i = tile.DealDamage(damage, m_WallsTilemap.CellToWorld(coordinate));
+                if (ore == null || ore.MaxDurability < tile.MaxDurability) i = tile.DealDamage(damage, m_WallsTilemap.CellToWorld(coordinate));
                 else i = ore.DealDamage(damage, m_WallsTilemap.CellToWorld(oreCoord));
 
                 if (i == 0)
@@ -127,11 +127,17 @@ namespace DecayingEarth
                     if (ore != null) UsefulBits.FixTilePosition(oreCoord, m_OresTilemap, ore);
                     if (addTile != null) UsefulBits.FixTilePosition(addCoord, m_WallsTilemap, addTile);
 
-                    if (ore != null)
+                    if (ore != null && ore.MaxDurability >= tile.MaxDurability)
                     {
                         m_OresTilemap.SetTile(oreCoord, null);
                         tile.DealDamage(1000000, m_WallsTilemap.CellToWorld(oreCoord));
                     }
+                    if (ore != null && ore.MaxDurability < tile.MaxDurability)
+                    {
+                        ore.DealDamage(1000000, m_OresTilemap.CellToWorld(oreCoord));
+                        m_OresTilemap.SetTile(oreCoord, null);
+                    }
+
                     if (addTile != null) ParticleSpawner(m_WallsTilemap.CellToWorld(addCoord), addTile);
                     ParticleSpawner(m_WallsTilemap.CellToWorld(coordinate), tile);
                     m_WallsTilemap.SetTile(coordinate, null);

@@ -26,7 +26,11 @@ namespace DecayingEarth
             m_State = !m_State;
             Singleton_SessionData.Instance.UpdateInventoryVisibility(m_State);
 
-            if (m_State) Singleton_MouseItemHolder.Instance.DropItem();
+            if (m_State)
+            {
+                Singleton_MouseItemHolder.Instance.DropItem();
+                Singleton_CraftingEntryPoint.Instance.DisableCraftingUI();
+            }
         }
     }
 }

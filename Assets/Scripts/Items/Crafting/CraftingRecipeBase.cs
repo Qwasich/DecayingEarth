@@ -9,21 +9,21 @@ namespace DecayingEarth
     public struct CraftingComponent
     {
         public ItemBase Item;
-        public int RequiredAmount;
+        public int Amount;
 
-        public CraftingComponent(ItemBase item, int requiredAmount)
+        public CraftingComponent(ItemBase item, int amount)
         {
             Item = item;
-            RequiredAmount = requiredAmount;
+            Amount = amount;
         }
     }
 
     [Serializable]
     [CreateAssetMenu]
-    public class CraftingRecepieBase : ScriptableObject
+    public class CraftingRecipeBase : ScriptableObject
     {
         public List<CraftingComponent> Components;
-        public List<InvItem> Result;
+        public CraftingComponent Result;
         
     }
 }

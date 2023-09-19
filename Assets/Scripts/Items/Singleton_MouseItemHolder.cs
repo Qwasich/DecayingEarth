@@ -98,12 +98,12 @@ namespace DecayingEarth
         /// Увеличивает количество предметов в руке на 1, если позволяет размер стака.
         /// </summary>
         /// <returns>Возвращает False если комманда неуспешна.</returns>
-        public bool IncreaseHandItemByOne()
+        public bool IncreaseHandItemByNumber(int count = 1)
         {
             if (m_HandItem.Item == null) return false;
 
-            if (m_HandItem.StackCount + 1 > m_HandItem.Item.MaxStackCount) return false;
-            m_HandItem = new InvItem(m_HandItem.Item, m_HandItem.StackCount + 1);
+            if (m_HandItem.StackCount + count > m_HandItem.Item.MaxStackCount) return false;
+            m_HandItem = new InvItem(m_HandItem.Item, m_HandItem.StackCount + count);
 
             UpdateHandVisual();
             return true;

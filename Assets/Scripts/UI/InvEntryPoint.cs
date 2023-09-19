@@ -145,7 +145,7 @@ namespace DecayingEarth
                 {
                     if (mIh.HandItem.Item != m_Inventory.Items[bId].Item) return;
                     m_Inventory.DecreaseItemCount(bId,1);
-                    mIh.IncreaseHandItemByOne();
+                    mIh.IncreaseHandItemByNumber();
                     m_ButtonArray[bId].UpdateButtonGraphics();
                     ReadyToUpdate?.Invoke();
                     return;

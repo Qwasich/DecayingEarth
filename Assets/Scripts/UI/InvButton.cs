@@ -31,7 +31,19 @@ namespace DecayingEarth
 
             if (de == null || Singleton_SessionData.Instance.IsInventoryHidden) return;
 
-            string description =de.Name + "\n\n";
+            Singleton_MouseItemHolder.Instance.ShowTooltip(FormatItemToTooltip(de));
+
+        }
+
+        /// <summary>
+        /// Форматирует передаваемый в функцию объект в строку, пригодную для Tooltip
+        /// </summary>
+        /// <param name="de">Предмет для Tooltip</param>
+        /// <returns></returns>
+        public static string FormatItemToTooltip(ItemBase de)
+        {
+            string description;
+            description = de.Name + "\n\n";
 
             if (de.StackDecreaseAfterUse > 0) description += "Consumable\n\n";
 
@@ -49,10 +61,9 @@ namespace DecayingEarth
 
             if (de.MaxStackCount > 1) description += "\nStacks up to " + de.MaxStackCount + "\n";
 
-            if (de.Tooltip != "") description += "\n" +  de.Tooltip + "";
+            if (de.Tooltip != "") description += "\n" + de.Tooltip + "";
 
-            Singleton_MouseItemHolder.Instance.ShowTooltip(description);
-
+            return description;
         }
 
         public void OnPointerExit(PointerEventData eventData) => Singleton_MouseItemHolder.Instance.HideTooltip();

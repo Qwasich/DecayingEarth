@@ -37,6 +37,18 @@ namespace DecayingEarth
         /// </summary>
         public TileBlockBase FillerTile => m_FillerTile;
 
+        [SerializeField] private GameObject m_BigRecipeHolder;
+        /// <summary>
+        /// Большое окошко для одного рецепта, префаб
+        /// </summary>
+        public GameObject BigRecipeHolder => m_BigRecipeHolder;
+
+        [SerializeField] private GameObject m_RecipeButton;
+        /// <summary>
+        /// Кнопка для рецептов
+        /// </summary>
+        public GameObject RecipeButton => m_RecipeButton;
+
 
     }
 }

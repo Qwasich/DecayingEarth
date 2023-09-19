@@ -60,6 +60,11 @@ namespace DecayingEarth
                 {
                     if (tile is TileBlockICraftingStation)
                     {
+                        if (Singleton_SessionData.Instance.IsInventoryHidden)
+                        {
+                            m_IBPressed = true;
+                            InvButtonPressed?.Invoke();
+                        }
                         CraftingStationUsed?.Invoke((TileBlockICraftingStation)tile);
                         Debug.Log(tile.name);
                     }
