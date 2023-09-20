@@ -17,6 +17,7 @@ namespace DecayingEarth
         public event UnityAction PauseMenuButtonPressed;
         public event UnityAction<int> HotbarButtonPressedByIndex;
         public event UnityAction<TileBlockICraftingStation> CraftingStationUsed;
+        public event UnityAction<Vector3Int> ChestStorageUsed;
 
         private bool m_IBPressed = false;
         private bool m_PMBPressed = false;
@@ -53,9 +54,10 @@ namespace DecayingEarth
             }
             if (MouseRight)
             {
-
+                
                 if (Singleton_SessionData.Instance != null) Singleton_SessionData.Instance.UpdateLastClick(IsClickOnCanvas());
-                var tile = IsClickOnTile();
+                Vector3Int coord;
+                var tile = IsClickOnTile(out coord);
                 if (!Singleton_SessionData.Instance.IsLastClickWasOnCanvas && tile != null)
                 {
                     if (tile is TileBlockICraftingStation)
@@ -66,6 +68,17 @@ namespace DecayingEarth
                             InvButtonPressed?.Invoke();
                         }
                         CraftingStationUsed?.Invoke((TileBlockICraftingStation)tile);
+                        Debug.Log(tile.name);
+                    }
+
+                    if (tile is TileBlockStorageChest)
+                    {
+                        if (Singleton_SessionData.Instance.IsInventoryHidden)
+                        {
+                            m_IBPressed = true;
+                            InvButtonPressed?.Invoke();
+                        }
+                        ChestStorageUsed?.Invoke(coord);
                         Debug.Log(tile.name);
                     }
 
@@ -109,11 +122,11 @@ namespace DecayingEarth
 
         }
 
-        private TileBlockBase IsClickOnTile()
+        private TileBlockBase IsClickOnTile(out Vector3Int coordinate)
         {
             Tilemap m_WallsTilemap = Singleton_GridLibrary.Instance.WallsTilemap;
             Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector3Int coordinate = m_WallsTilemap.WorldToCell(pos);
+            coordinate = m_WallsTilemap.WorldToCell(pos);
             var tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
 
             if (tile != null) return tile;

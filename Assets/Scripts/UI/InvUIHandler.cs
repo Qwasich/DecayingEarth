@@ -30,6 +30,7 @@ namespace DecayingEarth
             {
                 Singleton_MouseItemHolder.Instance.DropItem();
                 Singleton_CraftingEntryPoint.Instance.DisableCraftingUI();
+                Singleton_GlobalChestController.Instance.CloseInventory();
             }
         }
     }

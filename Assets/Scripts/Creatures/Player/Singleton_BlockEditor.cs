@@ -59,7 +59,7 @@ namespace DecayingEarth
             if (tile.InvokeRule == false)
             {
                 int j = 1;
-                j = tile.DealDamage(damage, m_WallsTilemap.CellToWorld(coordinate));
+                j = tile.DealDamage(damage, m_WallsTilemap.CellToWorld(coordinate),coordinate);
 
                 if (j == 0)
                 {
@@ -116,8 +116,8 @@ namespace DecayingEarth
                 Singleton_SessionData.Instance.UpdateLastTileCoordinate((Vector2Int)coordinate);
 
                 int i = 1;
-                if (ore == null || ore.MaxDurability < tile.MaxDurability) i = tile.DealDamage(damage, m_WallsTilemap.CellToWorld(coordinate));
-                else i = ore.DealDamage(damage, m_WallsTilemap.CellToWorld(oreCoord));
+                if (ore == null || ore.MaxDurability < tile.MaxDurability) i = tile.DealDamage(damage, m_WallsTilemap.CellToWorld(coordinate),coordinate);
+                else i = ore.DealDamage(damage, m_WallsTilemap.CellToWorld(oreCoord),oreCoord);
 
                 if (i == 0)
                 {
@@ -130,11 +130,11 @@ namespace DecayingEarth
                     if (ore != null && ore.MaxDurability >= tile.MaxDurability)
                     {
                         m_OresTilemap.SetTile(oreCoord, null);
-                        tile.DealDamage(1000000, m_WallsTilemap.CellToWorld(oreCoord));
+                        tile.DealDamage(1000000, m_WallsTilemap.CellToWorld(oreCoord),oreCoord);
                     }
                     if (ore != null && ore.MaxDurability < tile.MaxDurability)
                     {
-                        ore.DealDamage(1000000, m_OresTilemap.CellToWorld(oreCoord));
+                        ore.DealDamage(1000000, m_OresTilemap.CellToWorld(oreCoord),oreCoord);
                         m_OresTilemap.SetTile(oreCoord, null);
                     }
 
@@ -198,6 +198,8 @@ namespace DecayingEarth
                 TileBlockBase bot = m_WallsTilemap.GetTile<TileBlockBase>(new Vector3Int(coordinate.x, coordinate.y - 1, coordinate.z));
                 if (bot != null && !bot.InvokeRule) return false;
             }
+
+            if (itemTile is TileBlockStorageChest) Singleton_GlobalChestController.Instance.AddInventory(coordinate);
             
             if (itemTile.IsALightSource)
             {

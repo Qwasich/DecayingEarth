@@ -20,11 +20,7 @@ namespace DecayingEarth
 
         public void Start()
         {
-            for (int i = 0; i < m_ButtonArray.Length; i++)
-            {
-                m_ButtonArray[i].Initiate(i, this);
-                m_ButtonArray[i].UpdateButtonGraphics();
-            }
+            InitiateInvPoint();
             ReadyToUpdate?.Invoke();
         }
 
@@ -33,6 +29,16 @@ namespace DecayingEarth
         /// </summary>
         /// <param name="inv"></param>
         public void SetInventory(Inventory inv) => m_Inventory = inv;
+
+        public void InitiateInvPoint()
+        {
+            if(m_Inventory == null) return;
+            for (int i = 0; i < m_ButtonArray.Length; i++)
+            {
+                m_ButtonArray[i].Initiate(i, this);
+                m_ButtonArray[i].UpdateButtonGraphics();
+            }
+        }
 
         /// <summary>
         /// Обновляет все кнопки, привязанные к входной точке инвентаря.

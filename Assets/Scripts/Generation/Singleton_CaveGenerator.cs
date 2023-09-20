@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Utility;
+using static DecayingEarth.WorldGenerationRules;
 
 namespace DecayingEarth
 {
@@ -15,7 +16,7 @@ namespace DecayingEarth
         private int m_CaveYSize;
 
         /// <summary>
-        /// Ссылки на целевые тайлмапы - пол, стены и руды.
+        /// Ссылки на целевые тайлмапы - пол, стены, руды и фичи.
         /// </summary>
         [SerializeField] private Tilemap m_FloorTilemap;
 
@@ -34,6 +35,9 @@ namespace DecayingEarth
 
         private TileBehaviourRule[] m_WallTopRule;
         public TileBehaviourRule[] WallTopRule => m_WallTopRule;
+
+        private FeatureSlot[] m_FloorFeatureRule;
+        public FeatureSlot[] FloorFeatureRule => m_FloorFeatureRule;
 
         /// <summary>
         /// Генерация мира по-правилам. Если не в редакторе - игнорируется.
@@ -85,6 +89,7 @@ namespace DecayingEarth
             m_FloorRule = rules.m_FloorRule;
             m_WallFrontRule = rules.m_WallFrontRule;
             m_WallTopRule = rules.m_WallTopRule;
+            m_FloorFeatureRule = rules.m_Features;
             m_MapFillPercent = rules.m_MapFillPercent;
             m_NumberOfCAIterations = rules.m_NumberOfCAIterations;
             m_Ores = rules.Ores;
@@ -110,6 +115,7 @@ namespace DecayingEarth
             m_FloorTilemap.ClearAllTiles();
             m_WallsTilemap.ClearAllTiles();
             m_OresTilemap.ClearAllTiles();
+            m_FloorDetsTilemap.ClearAllTiles();
             GenerateFloor(m_FloorTilemap, m_FloorRule[0]);
             GenerateRandomWallPattern(m_WallsTilemap, m_WallTopRule[0]);
 
@@ -123,10 +129,15 @@ namespace DecayingEarth
 
             CheckForWallGenerationErrors(m_WallsTilemap);
 
+            GenerateStartingRoom(m_WallsTilemap, new Vector2Int(2, 2));
+
             PlaceEditedWalls(m_WallsTilemap);
 
             if (m_Ores.Length > 0) for (int i = 0; i < m_Ores.Length; i++) GenerateOresByTypeCountAndSize(m_Ores[i], m_OresTilemap, m_WallsTilemap);
             else Debug.Log("Warning: No ores to generate!");
+
+            if (m_FloorFeatureRule.Length > 0) for (int i = 0; i < m_FloorFeatureRule.Length; i++) PlaceFeatureInRandomRoom(m_FloorFeatureRule[i], m_WallsTilemap, m_FloorDetsTilemap);
+            else Debug.Log("Warning: No floor features to generate!");
         }
 
         /// <summary>
@@ -217,6 +228,22 @@ namespace DecayingEarth
 
             Debug.LogError("Tag floor isn't found, returning default");
             return m_FloorRule[0];
+        }
+
+        /// <summary>
+        /// Возвращает правило по тэгу
+        /// </summary>
+        /// <param name="tag">Тэг поиска</param>
+        /// <returns>Правило фичи пола</returns>
+        private TileBehaviourRule GetFloorFeatureByTag(string tag)
+        {
+            for (int i = 0; i < m_FloorFeatureRule.Length; i++)
+            {
+                if (tag == m_FloorFeatureRule[i].TileRule.Tag) return m_FloorFeatureRule[i].TileRule;
+            }
+
+            Debug.LogError("Tag floor feature isn't found, returning default");
+            return m_FloorFeatureRule[0].TileRule;
         }
 
         /// <summary>
@@ -392,9 +419,87 @@ namespace DecayingEarth
                     if (bottomtile == null && toptile.Tag != tile.Tag) tilemap.SetTile(new Vector3Int(i, j, 0), toptile);
                 }
             }
+        }
 
-                   
+        /// <summary>
+        /// Ставит фичи пола на карте, в случайных комнатах
+        /// </summary>
+        /// <param name="Feature">Фича, которую ставим</param>
+        /// <param name="wallTilemap">Тайлмап Стен</param>
+        /// <param name="featureFloorTilemap">Тайлмап фич пола</param>
+        private void PlaceFeatureInRandomRoom(FeatureSlot Feature, Tilemap wallTilemap, Tilemap featureFloorTilemap)
+        {
+            if (featureFloorTilemap == null || wallTilemap == null) return;
+            if (Feature.TileRule == null) return;
 
+            int mult = Feature.GenerationMultiplier;
+            if (mult < 1) mult = 1;
+
+            int max = Feature.MaximalAmount * mult;
+            int min = Feature.MinimalAmount * mult;
+
+            int actual = Random.Range(min, max + 1);
+
+            int maxIter = 0;
+
+            for (int i = 0; i < actual; i++)
+            {
+                if (maxIter > (m_CaveXSize + m_CaveYSize) * 2)
+                {
+                    Debug.Log(" Flood fill exceeded safe amount of iterations, aborting");
+                    break;
+                }
+                Vector3Int rCrd = new Vector3Int(Random.Range(1 - m_XOffset, m_CaveXSize - m_XOffset), Random.Range(1 - m_YOffset, m_CaveYSize - m_YOffset));
+                if (FindEmptyRoomByFlood(rCrd, wallTilemap, featureFloorTilemap, Feature)) continue;
+                i--;
+                maxIter++;
+            }    
+
+        }
+
+        private List<Vector3Int> m_LatestRoomFloodCoordinates;
+
+        /// <summary>
+        /// Алгоритм заполнения заливкой
+        /// </summary>
+        /// <param name="stCrd"><Проверяемая координата/param>
+        /// <param name="wallTilemap">Целевой тайлмап стен</param>
+        /// <param name="featureFloorTilemap">Целевой тайлмап фич пола</param>
+        /// <param name="slot">Фича, которую ставим</param>
+        /// <returns></returns>
+        private bool FindEmptyRoomByFlood(Vector3Int stCrd, Tilemap wallTilemap, Tilemap featureFloorTilemap, FeatureSlot slot)
+        {
+            if (wallTilemap.GetTile(stCrd) != null) return false;
+            if (featureFloorTilemap.GetTile(stCrd) != null) return false;
+
+            int r = Random.Range(0, slot.TileRule.TileGroups.Length * 3);
+
+            if (r < slot.TileRule.TileGroups.Length * 2) featureFloorTilemap.SetTile(stCrd,slot.TileRule.TileGroups[0].Tiles[Random.Range(0, slot.TileRule.TileGroups[0].Tiles.Length)]);
+            else featureFloorTilemap.SetTile(stCrd, slot.TileRule.TileGroups[Random.Range(1, slot.TileRule.TileGroups.Length)].Tiles[Random.Range(0, slot.TileRule.TileGroups[0].Tiles.Length)]);
+
+            //m_LatestRoomFloodCoordinates.Add(stCrd);
+
+            FindEmptyRoomByFlood(new Vector3Int(stCrd.x + 1, stCrd.y), wallTilemap, featureFloorTilemap, slot);
+            FindEmptyRoomByFlood(new Vector3Int(stCrd.x, stCrd.y + 1), wallTilemap, featureFloorTilemap, slot);
+            FindEmptyRoomByFlood(new Vector3Int(stCrd.x - 1, stCrd.y), wallTilemap, featureFloorTilemap, slot);
+            FindEmptyRoomByFlood(new Vector3Int(stCrd.x, stCrd.y - 1), wallTilemap, featureFloorTilemap, slot);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Генерирует стартовую комнату
+        /// </summary>
+        /// <param name="wallmap"></param>
+        private void GenerateStartingRoom(Tilemap wallmap, Vector2Int size)
+        {
+            for (int i = -1 - size.x / 2; i <= size.x / 2; i++)
+            {
+                for (int j = -1 - size.y / 2; j <= size.y / 2; j++)
+                {
+                    wallmap.SetTile(new Vector3Int(i, j), null);
+                }
+            }
         }
 
     }

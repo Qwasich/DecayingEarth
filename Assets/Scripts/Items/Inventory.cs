@@ -21,9 +21,9 @@ namespace DecayingEarth
 
     public interface ISaveableInventory
     {
-        public void Save(out Vector2Int tag, out List<InvItem> itemList, out int invSize);
+        public void Save(out List<InvItem> itemList, out int invSize);
         public void ManualSave(out string tag, out List<InvItem> itemList, out int invSize);
-        public void Load(Vector2Int tag, List<InvItem> itemList, int invSize);
+        public void Load(List<InvItem> itemList, int invSize);
         public void ManualLoad(string tag, List<InvItem> itemList, int invSize);
     }
 
@@ -34,9 +34,6 @@ namespace DecayingEarth
         /// Лист всех предметов в инвентаре.
         /// </summary>
         public List<InvItem> Items => m_Items;
-
-        private Vector2Int m_TagCoordinate;
-        [SerializeField] public Vector2Int TagCoordinate => m_TagCoordinate;
 
         [SerializeField] private int m_InventorySize = 36;
         /// <summary>
@@ -63,7 +60,7 @@ namespace DecayingEarth
 
         private void Awake()
         {
-            m_TagCoordinate = new Vector2Int(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y));
+            //m_TagCoordinate = new Vector2Int(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y));
             m_Items = new List<InvItem>(m_InventorySize);
 
             for (int i = 0; i < m_Items.Capacity; i++)
@@ -84,10 +81,9 @@ namespace DecayingEarth
         /// <param name="tag">Вектор-тэг инвентаря</param>
         /// <param name="itemList">Лист предметов инвентаря</param>
         /// <param name="invSize">Размер инвентаря</param>
-        public void Save(out Vector2Int tag, out List<InvItem> itemList, out int invSize)
+        public void Save(out List<InvItem> itemList, out int invSize)
         {
             if (m_IsManual) Debug.LogError("Warning! Attempt to save inventory by coordinate tag instead of manual on object: " + name);
-            tag = m_TagCoordinate;
             itemList = m_Items;
             invSize = m_InventorySize;
         }
@@ -108,10 +104,9 @@ namespace DecayingEarth
         /// <param name="tag">Вектор-тэг инвентаря</param>
         /// <param name="itemList">Лист предметов инвентаря</param>
         /// <param name="invSize">Размер инвентаря</param>
-        public void Load(Vector2Int tag, List<InvItem> itemList, int invSize)
+        public void Load(List<InvItem> itemList, int invSize)
         {
             if (m_IsManual) Debug.LogError("Warning! Attempt to load inventory by coordinate tag instead of manual on object: " + name);
-            m_TagCoordinate = tag;
             m_Items = itemList;
             m_InventorySize = invSize;
         }

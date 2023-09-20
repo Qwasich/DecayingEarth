@@ -20,13 +20,13 @@ namespace DecayingEarth
     {
         [Header("Block Parameters")]
 
-        [SerializeField] private BlockType m_BlockType = BlockType.TOP;
+        [SerializeField] protected BlockType m_BlockType = BlockType.TOP;
         /// <summary>
         /// Тип блока
         /// </summary>
         public BlockType BlockType => m_BlockType;
 
-        [SerializeField] private string m_Tag;
+        [SerializeField] protected string m_Tag;
         /// <summary>
         /// Тэг блока
         /// </summary>
@@ -34,15 +34,15 @@ namespace DecayingEarth
         /// <summary>
         /// Прочность блока.
         /// </summary>
-        [SerializeField] private int m_Durability;
+        [SerializeField] protected int m_Durability;
 
-        private int m_MaxDurability;
+        protected int m_MaxDurability;
         public int MaxDurability => m_MaxDurability;
 
-        private int m_RemainingDurability;
+        protected int m_RemainingDurability;
         public int RemainingDurability => m_RemainingDurability;
 
-        [SerializeField] private Vector2Int m_Size = new Vector2Int(1, 1);
+        [SerializeField] protected Vector2Int m_Size = new Vector2Int(1, 1);
         /// <summary>
         /// Размер тайла, необходим для проверки возможности поставить блок.
         /// </summary>
@@ -51,15 +51,15 @@ namespace DecayingEarth
         /// <summary>
         /// Если истинно, любой урон игнорируется.
         /// </summary>
-        [SerializeField] private bool m_IsIndestructible;
+        [SerializeField] protected bool m_IsIndestructible;
 
-        [SerializeField] private bool m_InvokeRule = true;
+        [SerializeField] protected bool m_InvokeRule = true;
         /// <summary>
         /// Если истинно, будет изменять тайлы вокруг по правилам блоков.
         /// </summary>
         public bool InvokeRule => m_InvokeRule;
 
-        [SerializeField] private bool m_IgnoreRigidbody = false;
+        [SerializeField] protected bool m_IgnoreRigidbody = false;
         /// <summary>
         /// Если True, пропускает проверку Rigidbody при установке.
         /// </summary>
@@ -68,22 +68,22 @@ namespace DecayingEarth
         /// <summary>
         /// Предмет, выпадающий при уничтожении.
         /// </summary>
-        [SerializeField] private ItemBase[] m_Loot;
+        [SerializeField] protected ItemBase[] m_Loot;
 
         [Header("Animation")]
-        [SerializeField] private Sprite[] m_Animation;
+        [SerializeField] protected Sprite[] m_Animation;
         /// <summary>
         /// Спрайты анимации тайла.
         /// </summary>
         public Sprite[] Animation => m_Animation;
 
-        [SerializeField] private float m_AnimationSpeed = 1f;
+        [SerializeField] protected float m_AnimationSpeed = 1f;
         /// <summary>
         /// Скорость анимации
         /// </summary>
         public float AnimationSpeed => m_AnimationSpeed;
 
-        [SerializeField] private float m_AnimationStartTime = 0f;
+        [SerializeField] protected float m_AnimationStartTime = 0f;
         /// <summary>
         /// Стартовое время анимации
         /// </summary>
@@ -91,31 +91,31 @@ namespace DecayingEarth
 
         [Header("Light")]
         
-        [SerializeField] private bool m_IsALightSource = false;
+        [SerializeField] protected bool m_IsALightSource = false;
         /// <summary>
         /// Является ли тайл источником света
         /// </summary>
         public bool IsALightSource => m_IsALightSource;
 
-        [SerializeField] private float m_LightRange = 3;
+        [SerializeField] protected float m_LightRange = 3;
         /// <summary>
         /// Радиус Света
         /// </summary>
         public float LightRange => m_LightRange;
 
-        [SerializeField] private float m_LightIntensity = 10;
+        [SerializeField] protected float m_LightIntensity = 10;
         /// <summary>
         /// Интенсивность света
         /// </summary>
         public float LightIntensity => m_LightIntensity;
 
-        [SerializeField] private Color m_LightColor;
+        [SerializeField] protected Color m_LightColor;
         /// <summary>
         /// Цвет прикрепленного освещения
         /// </summary>
         public Color LightColor => m_LightColor;
 
-        [SerializeField][Range(0,180)] private float m_SpotAngle = 110;
+        [SerializeField][Range(0,180)] protected float m_SpotAngle = 110;
         /// <summary>
         /// Угол освещения
         /// </summary>
@@ -130,13 +130,6 @@ namespace DecayingEarth
             m_RemainingDurability = m_Durability;
 
             return base.StartUp(position, tilemap, go);
-            /*
-            if (m_IsALightSource)
-            {
-                GameObject ls = Instantiate(Singleton_PrefabLibrary.Instance.LightSourcePrefab);
-                m_Light = ls.GetComponent<Light>();
-                ls.transform.position = new Vector3(0.25f, 0.25f);
-            }*/
         }
 
 
@@ -168,8 +161,9 @@ namespace DecayingEarth
         /// </summary>
         /// <param name="damage">Наносимый урон</param>
         /// <param name="pos">Позиция справна предмета</param>
+        /// <param name="tilePosition">Позиция тайла</param>
         /// <returns></returns>
-        public virtual int DealDamage(int damage,Vector3 pos)
+        public virtual int DealDamage(int damage,Vector3 pos, Vector3Int tilePosition)
         {
             if (m_IsIndestructible) return 2;
             if (damage * 5 <= m_MaxDurability) return 2;

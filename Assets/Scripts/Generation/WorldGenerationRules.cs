@@ -1,9 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace DecayingEarth
 {
+    
+
     [CreateAssetMenu]
     public class WorldGenerationRules : ScriptableObject
     {
@@ -43,5 +46,37 @@ namespace DecayingEarth
         /// ƒополнительный множитель, увеличивающий количество возможной руды на карте.
         /// </summary>
         public int OreGenerationMultiplier;
+
+        /// <summary>
+        /// ‘ичи генерации пола. 
+        /// </summary>
+        [Serializable]
+        public struct FeatureSlot
+        {
+            /// <summary>
+            /// ѕравило генерации
+            /// </summary>
+            public TileBehaviourRule TileRule;
+            /// <summary>
+            /// ћинимальное количество фичи дл€ генерации
+            /// </summary>
+            public int MinimalAmount;
+            /// <summary>
+            /// ћаксимальное количество фичи дл€ генерации
+            /// </summary>
+            public int MaximalAmount;
+            /// <summary>
+            /// ћножитель генерации, увеличивает количество фич.
+            /// </summary>
+            public int GenerationMultiplier;
+        }
+
+        /// <summary>
+        /// ƒополнительные фичи генерации пола.
+        /// </summary>
+        [Header("Features Generation")]
+        public FeatureSlot[] m_Features;
+        
+
     }
 }

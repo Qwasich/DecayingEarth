@@ -96,11 +96,13 @@
     <Compile Include="Assets\Scripts\UI\InvUIHandler.cs" />
     <Compile Include="Assets\Scripts\Items\ItemTool.cs" />
     <Compile Include="Assets\Scripts\Generation\Singleton_CaveGenerator.cs" />
+    <Compile Include="Assets\Scripts\Items\Crafting\ButtonManualCraft.cs" />
     <Compile Include="Assets\Scripts\Items\Crafting\Singleton_CraftingEntryPoint.cs" />
     <Compile Include="Assets\Scripts\Generation\TileGroup.cs" />
     <Compile Include="Assets\Scripts\Items\Hotbar.cs" />
     <Compile Include="Assets\Scripts\DataCollectors\Singleton_SessionData.cs" />
-    <Compile Include="Assets\Scripts\Items\Crafting\ButtonManualCraft.cs" />
+    <Compile Include="Assets\Scripts\Generation\TileBlockStorageChest.cs" />
+    <Compile Include="Assets\Scripts\Items\Singleton_GlobalChestController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

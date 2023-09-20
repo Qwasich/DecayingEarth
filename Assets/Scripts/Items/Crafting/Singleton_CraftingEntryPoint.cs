@@ -47,6 +47,7 @@ namespace DecayingEarth
             List<CraftingRecipeBase> CraftableRecipes = new List<CraftingRecipeBase>();
             List<CraftingRecipeBase> UnavailableRecipes = new List<CraftingRecipeBase>();
             m_CraftingWindow.SetActive(true);
+            Singleton_GlobalChestController.Instance.CloseInventory();
 
             if (m_ContentWindow.transform.childCount > 0) while (m_ContentWindow.transform.childCount > 0) DestroyImmediate(m_ContentWindow.transform.GetChild(0).gameObject);
 
