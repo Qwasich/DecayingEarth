@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Utility;
@@ -63,7 +64,10 @@ namespace DecayingEarth
             }
         }
 
-        public void CloseInventory() => m_ChestUI.SetActive(false);
+        public void CloseInventory()
+        {
+            m_ChestUI.SetActive(false);
+        }
 
         public void RemoveInventory(Vector3Int pos)
         {
@@ -80,12 +84,13 @@ namespace DecayingEarth
 
         public bool CheckInventoryEmpriness(Vector3Int pos)
         {
-
             for (int i = 0; i < m_Inventories.Count; i++)
             {
                 if (m_Inventories[i].ChestPosition == pos)
                 {
                     Inventory check = m_Inventories[i].AttachedInventory;
+
+                    if (m_ChestUI.activeSelf && m_ChestPoint.Inventory == check) return false;
                     for (int j = 0; j < check.Items.Count; j ++)
                     {
                         if (check.Items[j].Item != null) return false;

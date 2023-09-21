@@ -71,6 +71,7 @@ namespace DecayingEarth
         [SerializeField] protected ItemBase[] m_Loot;
 
         [Header("Animation")]
+        [SerializeField] protected bool m_IgnoreAnimationSetup = false;
         [SerializeField] protected Sprite[] m_Animation;
         /// <summary>
         /// Спрайты анимации тайла.
@@ -145,6 +146,8 @@ namespace DecayingEarth
         
         public override bool GetTileAnimationData(Vector3Int position, ITilemap tilemap, ref TileAnimationData tileAnimationData)
         {
+            if (m_IgnoreAnimationSetup) return base.GetTileAnimationData(position, tilemap, ref tileAnimationData);
+
             if (m_Animation != null && m_Animation.Length > 0)
             {
                 tileAnimationData.animatedSprites = m_Animation;

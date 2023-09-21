@@ -86,9 +86,11 @@
     <Compile Include="Assets\Scripts\Generation\TileBehaviourRule.cs" />
     <Compile Include="Assets\Scripts\UI\InvEntryPoint.cs" />
     <Compile Include="Assets\Scripts\DataCollectors\Singleton_TileLibrary.cs" />
+    <Compile Include="Assets\Scripts\Generation\TileBlockStorageChest.cs" />
     <Compile Include="Assets\Scripts\Creatures\Player\Singleton_BlockEditor.cs" />
     <Compile Include="Assets\Scripts\Items\Inventory.cs" />
     <Compile Include="Assets\Scripts\Items\ItemBlock.cs" />
+    <Compile Include="Assets\Scripts\Items\Singleton_GlobalChestController.cs" />
     <Compile Include="Assets\Scripts\Items\DestructionTimer.cs" />
     <Compile Include="Assets\Scripts\Items\ItemBase.cs" />
     <Compile Include="Assets\Scripts\Generation\WorldGenerationRules.cs" />
@@ -101,8 +103,6 @@
     <Compile Include="Assets\Scripts\Generation\TileGroup.cs" />
     <Compile Include="Assets\Scripts\Items\Hotbar.cs" />
     <Compile Include="Assets\Scripts\DataCollectors\Singleton_SessionData.cs" />
-    <Compile Include="Assets\Scripts\Generation\TileBlockStorageChest.cs" />
-    <Compile Include="Assets\Scripts\Items\Singleton_GlobalChestController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

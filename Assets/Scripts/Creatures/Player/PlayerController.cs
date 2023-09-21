@@ -5,6 +5,10 @@ namespace DecayingEarth
     [RequireComponent(typeof(Player))]
     public class PlayerController : MonoBehaviour
     {
+        [SerializeField] private SpriteRenderer m_Renderer;
+        [SerializeField] private Sprite m_StandingSprite;
+        [SerializeField] private float m_AnimationSpeed = 0.3f;
+        [SerializeField] private Animator m_Animator;
 
         private Player m_Player;
 
@@ -14,6 +18,7 @@ namespace DecayingEarth
         private void Awake()
         {
             m_Player = GetComponent<Player>();
+            m_Animator.speed = m_AnimationSpeed;
         }
 
         private void Update()
@@ -25,6 +30,7 @@ namespace DecayingEarth
             }
             UpdateMoveAxis();
             UpdatePlayer();
+            UpdateAnimation();
 
 
         }
@@ -33,6 +39,20 @@ namespace DecayingEarth
         {
             m_VerticalAxis = Input.GetAxis("Vertical");
             m_HorizontalAxis = Input.GetAxis("Horizontal");
+        }
+
+        private void UpdateAnimation()
+        {
+            if (m_VerticalAxis == 0 && m_HorizontalAxis == 0 && m_Renderer.sprite != m_StandingSprite)
+            {
+                m_Animator.StartPlayback();
+                m_Renderer.sprite = m_StandingSprite;
+                return;
+            }
+            if (m_HorizontalAxis > 0) m_Renderer.flipX = false;
+            if (m_HorizontalAxis < 0) m_Renderer.flipX = true;
+
+            if (m_VerticalAxis != 0 || m_HorizontalAxis != 0) m_Animator.StopPlayback();
         }
 
         private void UpdatePlayer()

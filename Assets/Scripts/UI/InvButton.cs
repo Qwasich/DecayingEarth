@@ -59,7 +59,7 @@ namespace DecayingEarth
 
             if (de.UseTimer != 0 && (de is ItemWeapon || de is ItemTool)) description += "Swings " + (1 / de.UseTimer).ToString("0.0") + " TPS\n";
 
-            if (de.MaxStackCount > 1) description += "\nStacks up to " + de.MaxStackCount + "\n";
+            if (de.MaxStackCount > 1) description += "Stacks up to " + de.MaxStackCount + "\n";
 
             if (de.Tooltip != "") description += "\n" + de.Tooltip + "";
 

@@ -9,7 +9,6 @@ namespace DecayingEarth
 {
     public class TileBlockStorageChest : TileBlockBase
     {
-
         /// <summary>
         /// Возвращает 0 если тайл уничтожен, 1 если повреждения прошли, 2 если блок неразрушим или слишком маленький урон.
         /// </summary>
