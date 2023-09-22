@@ -221,6 +221,7 @@ namespace DecayingEarth
                 m_WallsTilemap.SetTile(coordinate, itemTile);
                 return true;
             }
+            else Singleton_GridLibrary.Instance.FloorDetsTilemap.SetTile(coordinate, null);
 
             TileBehaviourRule wallSideRule = Singleton_TileLibrary.Instance.ReturnWallSideRuleByTag(itemTile.Tag);
             m_WallsTilemap.SetTile(coordinate, itemTile);

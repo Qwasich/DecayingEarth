@@ -83,6 +83,8 @@ namespace DecayingEarth
                 return;
             }
 
+            
+
             if (clickType == 0)
             {
                 if (mIh.HandItem.Item == null && m_Inventory.Items[bId].Item != null)
@@ -91,6 +93,7 @@ namespace DecayingEarth
                     m_Inventory.RemoveItemCompletely(bId);
                     m_ButtonArray[bId].UpdateButtonGraphics();
                     ReadyToUpdate?.Invoke();
+                    Singleton_CraftingEntryPoint.Instance.InitiateCrafting();
                     return;
                 }
 
@@ -100,6 +103,7 @@ namespace DecayingEarth
                     mIh.RemoveItem();
                     m_ButtonArray[bId].UpdateButtonGraphics();
                     ReadyToUpdate?.Invoke();
+                    Singleton_CraftingEntryPoint.Instance.InitiateCrafting();
                     return;
                 }
 
@@ -113,6 +117,7 @@ namespace DecayingEarth
                         mIh.GrabItem(it);
                         m_ButtonArray[bId].UpdateButtonGraphics();
                         ReadyToUpdate?.Invoke();
+                        Singleton_CraftingEntryPoint.Instance.InitiateCrafting();
                         return;
                     }
                     else
@@ -122,6 +127,7 @@ namespace DecayingEarth
                         if (count != 0) mIh.GrabItem(new InvItem(m_Inventory.Items[bId].Item, count));
                         m_ButtonArray[bId].UpdateButtonGraphics();
                         ReadyToUpdate?.Invoke();
+                        Singleton_CraftingEntryPoint.Instance.InitiateCrafting();
                         return;
                     }
                 }
@@ -135,6 +141,7 @@ namespace DecayingEarth
                     m_Inventory.DecreaseItemCount(bId, 1);
                     m_ButtonArray[bId].UpdateButtonGraphics();
                     ReadyToUpdate?.Invoke();
+                    Singleton_CraftingEntryPoint.Instance.InitiateCrafting();
                     return;
                 }
 
@@ -144,6 +151,7 @@ namespace DecayingEarth
                     mIh.DecreaseHandItemByNumber(1);
                     m_ButtonArray[bId].UpdateButtonGraphics();
                     ReadyToUpdate?.Invoke();
+                    Singleton_CraftingEntryPoint.Instance.InitiateCrafting();
                     return;
                 }
 
@@ -154,6 +162,7 @@ namespace DecayingEarth
                     mIh.IncreaseHandItemByNumber();
                     m_ButtonArray[bId].UpdateButtonGraphics();
                     ReadyToUpdate?.Invoke();
+                    Singleton_CraftingEntryPoint.Instance.InitiateCrafting();
                     return;
                 }
             }

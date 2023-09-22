@@ -76,6 +76,11 @@ namespace DecayingEarth
         /// </summary>
         [Header("Features Generation")]
         public FeatureSlot[] m_Features;
+
+        /// <summary>
+        /// Массив объектов, который будет сгенерирован картой как "растения"
+        /// </summary>
+        public TileBlockGrowablle[] m_AllowedFoliage;
         
 
     }

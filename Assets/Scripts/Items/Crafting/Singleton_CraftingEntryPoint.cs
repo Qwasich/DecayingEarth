@@ -38,6 +38,8 @@ namespace DecayingEarth
             lastStation = null;
         }
 
+        public void UpdateCrafting() => InitiateCrafting();
+
         /// <summary>
         /// Открывает окно крафта, в зависимости от передаваемых рецептов.
         /// </summary>

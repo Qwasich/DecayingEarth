@@ -2,6 +2,7 @@ using DecayingEarth;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UIElements;
 
 namespace Utility
 {
@@ -33,7 +34,7 @@ namespace Utility
             while (timer > 0 && cap < 10000)
             {
 
-                
+
                 Matrix4x4 tileTransform = Matrix4x4.Translate(Random.insideUnitCircle * shakeIntensity);
 
                 TileChangeData tileData = new TileChangeData
@@ -58,7 +59,7 @@ namespace Utility
 
             Matrix4x4 tl = Matrix4x4.Translate(Vector3.zero);
 
-            TileChangeData td= new TileChangeData
+            TileChangeData td = new TileChangeData
             {
                 position = tileCoord,
                 tile = block,

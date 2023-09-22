@@ -27,6 +27,7 @@ namespace DecayingEarth
 
             if (clickType == 0)
             {
+                if (!Singleton_SessionData.Instance.IsInventoryHidden) return 0;
                 bool b = Singleton_BlockEditor.Instance.DamageWallBlock(m_MiningDamage, m_MaxDistance);
 
                 if (b) return StackDecreaseAfterUse;

@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -38,6 +39,9 @@ namespace DecayingEarth
 
         private FeatureSlot[] m_FloorFeatureRule;
         public FeatureSlot[] FloorFeatureRule => m_FloorFeatureRule;
+
+        private TileBlockGrowablle[] m_AllowedFoliage;
+        public TileBlockGrowablle[] AllowedFoliage => m_AllowedFoliage;
 
         /// <summary>
         /// Генерация мира по-правилам. Если не в редакторе - игнорируется.
@@ -94,6 +98,7 @@ namespace DecayingEarth
             m_NumberOfCAIterations = rules.m_NumberOfCAIterations;
             m_Ores = rules.Ores;
             m_OreMultiplier = rules.OreGenerationMultiplier;
+            m_AllowedFoliage = rules.m_AllowedFoliage;
         }
 
         public void SetSeed(int number) => m_Seed = number;
@@ -457,7 +462,7 @@ namespace DecayingEarth
 
         }
 
-        private List<Vector3Int> m_LatestRoomFloodCoordinates;
+        // private List<Vector3Int> m_LatestRoomFloodCoordinates;
 
         /// <summary>
         /// Алгоритм заполнения заливкой
@@ -474,7 +479,11 @@ namespace DecayingEarth
 
             int r = Random.Range(0, slot.TileRule.TileGroups.Length * 3);
 
-            if (r < slot.TileRule.TileGroups.Length * 2) featureFloorTilemap.SetTile(stCrd,slot.TileRule.TileGroups[0].Tiles[Random.Range(0, slot.TileRule.TileGroups[0].Tiles.Length)]);
+            if (r < slot.TileRule.TileGroups.Length * 2)
+            {
+                featureFloorTilemap.SetTile(stCrd, slot.TileRule.TileGroups[0].Tiles[Random.Range(0, slot.TileRule.TileGroups[0].Tiles.Length)]);
+                TryPlaceFoliage(stCrd);
+            }
             else featureFloorTilemap.SetTile(stCrd, slot.TileRule.TileGroups[Random.Range(1, slot.TileRule.TileGroups.Length)].Tiles[Random.Range(0, slot.TileRule.TileGroups[0].Tiles.Length)]);
 
             //m_LatestRoomFloodCoordinates.Add(stCrd);
@@ -500,6 +509,18 @@ namespace DecayingEarth
                     wallmap.SetTile(new Vector3Int(i, j), null);
                 }
             }
+        }
+
+        private void TryPlaceFoliage(Vector3Int coord)
+        {
+            Debug.Log("Reached");
+            TileBlockGrowablle tile = m_AllowedFoliage[Random.Range(0, m_AllowedFoliage.Length)];
+            if (tile == null) return;
+            Debug.Log("Tile Set");
+            int chance = Random.Range(0, tile.GrowthChance * 10);
+            if (chance == 0) m_WallsTilemap.SetTile(coord, tile);
+
+            Debug.Log("Tile Placed");
         }
 
     }

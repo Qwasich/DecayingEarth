@@ -103,6 +103,8 @@
     <Compile Include="Assets\Scripts\Generation\TileGroup.cs" />
     <Compile Include="Assets\Scripts\Items\Hotbar.cs" />
     <Compile Include="Assets\Scripts\DataCollectors\Singleton_SessionData.cs" />
+    <Compile Include="Assets\Scripts\Generation\TileBlockGrowablle.cs" />
+    <Compile Include="Assets\Scripts\Generation\Singleton_CropManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
