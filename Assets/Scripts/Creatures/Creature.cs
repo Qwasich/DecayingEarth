@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace DecayingEarth
 {
@@ -51,6 +53,28 @@ namespace DecayingEarth
         public float InincibilityTimer => m_InvincibilityTimer;
 
         protected float m_Timer;
+        [Header("Audio")]
+        [SerializeField] protected AudioSource m_AudioSource;
+        /// <summary>
+        /// Источник звука, прикрепленный к существу.
+        /// </summary>
+        public AudioSource AudioSource => m_AudioSource;
+
+        [SerializeField] protected AudioClip m_DamageSound;
+        /// <summary>
+        /// Звук, играемый при повреждении
+        /// </summary>
+        public AudioClip DamageSound => m_DamageSound;
+
+        [SerializeField] protected AudioClip m_DestroySound;
+        /// <summary>
+        /// Звук, играемый при уничтожении
+        /// </summary>
+        public AudioClip DestroySound => m_DestroySound;
+
+
+
+
 
         #region Unity Functions
 
@@ -92,6 +116,7 @@ namespace DecayingEarth
             if (Random.Range(0, 101) <= critchance * 100) damage = Mathf.CeilToInt(damage * critmultiplier);
 
             m_CurrentHealth -= damage;
+            PlayAudio(m_DamageSound);
             if (m_CurrentHealth <= 0) OnKill();
             return damage;
         }
@@ -111,8 +136,21 @@ namespace DecayingEarth
             return heal;
         }
 
+        public void PlayAudio(AudioClip audio)
+        {
+            if (audio == null) return;
+            float pitch = 1f;
+
+            pitch += Random.Range(-0.5f, 0.5f);
+
+            m_AudioSource.pitch = pitch;
+            m_AudioSource.clip = audio;
+            m_AudioSource.Play();
+        }
+
         protected virtual void OnKill()
         {
+            PlayAudio(m_DestroySound);
             Destroy(gameObject);
         }
 

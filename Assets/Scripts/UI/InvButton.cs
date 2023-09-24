@@ -49,7 +49,7 @@ namespace DecayingEarth
 
             if (de.ItemType == ItemType.Weapon) description += (de as ItemWeapon).DealtDamage.ToString() + " " + (de as ItemWeapon).DamageType.ToString() + " damage\n";
             if (de.ItemType == ItemType.Tool) description += (de as ItemTool).DealtDamage.ToString() + " " + (de as ItemTool).DamageType.ToString() + " damage\n";
-            if (de.ItemType == ItemType.Ammo) description += (de as ItemProjectile).DealtDamage.ToString() + " " + (de as ItemTool).DamageType.ToString() + " damage\n";
+            if (de.ItemType == ItemType.Ammo) description += (de as ItemProjectile).DealtDamage.ToString() + " " + (de as ItemProjectile).DamageType.ToString() + " damage\n";
 
             if (de.ItemType == ItemType.Tool) description += (de as ItemTool).MiningDamage + " Mining damage\n";
 

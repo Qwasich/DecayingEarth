@@ -32,7 +32,7 @@ namespace DecayingEarth
                 m_Animator.enabled = true;
             }
 
-            if (!Singleton_SessionData.Instance.IsInventoryHidden && !IsDead && m_Player.CurrentHealth > 0)
+            if (!Singleton_SessionData.Instance.IsInventoryHidden && !IsDead && !Singleton_SessionData.Instance.IsMainMenuOpen && m_Player.CurrentHealth > 0)
             {
                 m_Animator.StartPlayback();
                 m_Player.GetAxisParameters(0, 0);

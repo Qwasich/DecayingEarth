@@ -111,6 +111,23 @@
     <Compile Include="Assets\Scripts\DebugScrpits\InventoryStartEquipment.cs" />
     <Compile Include="Assets\Scripts\Creatures\Player\Singleton_PlayerInfo.cs" />
     <Compile Include="Assets\Scripts\UI\UIPlayerHPBar.cs" />
+    <Compile Include="Assets\Scripts\Misc\GenerateOnStart.cs" />
+    <Compile Include="Assets\Scripts\UI\Export\Buttons\base\UISelectableButton.cs" />
+    <Compile Include="Assets\Scripts\UI\Export\Buttons\base\UISelectableContainer.cs" />
+    <Compile Include="Assets\Scripts\UI\Export\Buttons\base\UIButton.cs" />
+    <Compile Include="Assets\Scripts\UI\Export\SpawnObjectByPropertyList.cs" />
+    <Compile Include="Assets\Scripts\UI\Export\UIButtonSound.cs" />
+    <Compile Include="Assets\Scripts\UI\Export\Buttons\UISettingButton.cs" />
+    <Compile Include="Assets\Scripts\Settings\ResolutionSetting.cs" />
+    <Compile Include="Assets\Scripts\Settings\AudioMixerSettings.cs" />
+    <Compile Include="Assets\Scripts\Settings\GraphicsQualitySetting.cs" />
+    <Compile Include="Assets\Scripts\Settings\SettingsLoader.cs" />
+    <Compile Include="Assets\Scripts\Settings\Setting.cs" />
+    <Compile Include="Assets\Scripts\Settings\Pauser.cs" />
+    <Compile Include="Assets\Scripts\Misc\SceneSwitcher.cs" />
+    <Compile Include="Assets\Scripts\Misc\LoaderAsync.cs" />
+    <Compile Include="Assets\Scripts\UI\UIMenuHandler.cs" />
+    <Compile Include="Assets\Scripts\Settings\FullscreenSetting.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

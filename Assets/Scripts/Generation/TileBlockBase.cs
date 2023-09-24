@@ -70,6 +70,19 @@ namespace DecayingEarth
         /// </summary>
         [SerializeField] protected ItemBase[] m_Loot;
 
+        [Header("Audio")]
+        [SerializeField] private AudioClip m_DamageSound;
+        /// <summary>
+        /// Звук, играемый при повреждении
+        /// </summary>
+        public AudioClip DamageSound => m_DamageSound;
+
+        [SerializeField] private AudioClip m_DestroySound;
+        /// <summary>
+        /// Звук, играемый при уничтожении
+        /// </summary>
+        public AudioClip DestroySound => m_DestroySound;
+
         [Header("Animation")]
         [SerializeField] protected bool m_IgnoreAnimationSetup = false;
         [SerializeField] protected Sprite[] m_Animation;
@@ -177,6 +190,7 @@ namespace DecayingEarth
             
             if (m_RemainingDurability <= 0)
             {
+                if (m_DestroySound != null) Singleton_PlayerInfo.Instance.Player.PlayAudio(m_DestroySound);
                 if (m_Loot == null) return 0;
                 for (int i = 0; i < m_Loot.Length; i++)
                 {
@@ -188,7 +202,8 @@ namespace DecayingEarth
                 m_RemainingDurability = m_MaxDurability;
                 return 0;
             }
-            else return 1;
+            if (m_DamageSound != null) Singleton_PlayerInfo.Instance.Player.PlayAudio(m_DamageSound);
+            return 1;
         }
 
         /// <summary>

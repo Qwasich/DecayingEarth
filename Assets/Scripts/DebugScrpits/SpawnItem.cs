@@ -8,7 +8,7 @@ namespace DecayingEarth
     {
         [SerializeField] private ItemBase m_SpawnItem;
         [SerializeField] private int m_SpawnCount = 1;
-
+#if UNITY_EDITOR
         [ContextMenu(nameof(SpawnItemMenu))]
         private void SpawnItemMenu()
         {
@@ -19,5 +19,6 @@ namespace DecayingEarth
             pi.InitiateItem(m_SpawnItem, m_SpawnCount, false);
 
         }
+#endif
     }
 }

@@ -19,10 +19,22 @@ namespace DecayingEarth
         public bool IsTop => Instance.m_IsTop;
 
         private bool m_IsInventoryHidden = true;
+        /// <summary>
+        /// Проверка, скрыт ли инвентарь или нет
+        /// </summary>
         public bool IsInventoryHidden => Instance.m_IsInventoryHidden;
 
         private bool m_IsLastClickWasOnCanvas = false;
+        /// <summary>
+        /// Было ли последнее нажатие на любой элемент Canvas
+        /// </summary>
         public bool IsLastClickWasOnCanvas => m_IsLastClickWasOnCanvas;
+
+        private bool m_IsMainMenuOpen = false;
+        /// <summary>
+        /// Открыто ли главное меню
+        /// </summary>
+        public bool IsMainMenuOpen => m_IsMainMenuOpen;
 
 
 
@@ -49,6 +61,12 @@ namespace DecayingEarth
         /// </summary>
         /// <param name="v">Значение</param>
         public void UpdateLastClick(bool v) => m_IsLastClickWasOnCanvas = v;
+
+        /// <summary>
+        /// Обновляет открыто ли меню или нет
+        /// </summary>
+        /// <param name="v">Значение</param>
+        public void UpdateMainMenu(bool v) => m_IsMainMenuOpen = v;
 
 
     }

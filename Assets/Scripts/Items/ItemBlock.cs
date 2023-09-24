@@ -20,6 +20,7 @@ namespace DecayingEarth
             {
                 if (m_TileBlock != null)
                 {
+                    creature.PlayAudio(m_UseSound);
                     bool b = Singleton_BlockEditor.Instance.PlaceWallBlock(m_TileBlock,m_Distance);
                     if (!b) return 0;
                 }

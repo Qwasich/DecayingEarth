@@ -61,6 +61,7 @@ namespace DecayingEarth
 
             m_CurrentHealth -= damage;
             UpdateHP?.Invoke(m_CurrentHealth, m_MaxHealth);
+            PlayAudio(m_DamageSound);
             if (m_CurrentHealth <= 0) OnKill();
             return damage;
         }
@@ -80,12 +81,13 @@ namespace DecayingEarth
             return heal;
         }
 
-
+#if UNITY_EDITOR
         [ContextMenu(nameof(KillYourself))]
         public void KillYourself()
         {
             if (!UnityEditor.EditorApplication.isPlaying) return;
-            DealDamage(MaxHealth,0,1.5f);
+            DealDamage(MaxHealth, 0, 1.5f);
         }
+#endif
     }
 }

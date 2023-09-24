@@ -59,8 +59,8 @@ namespace DecayingEarth
             if (clickType == 0)
             {
                 if (!Singleton_SessionData.Instance.IsInventoryHidden) return 0;
-
-                if(m_UsesAmmo &&  m_SelfProjectile != null && inventory != null)
+                creature.PlayAudio(m_UseSound);
+                if (m_UsesAmmo &&  m_SelfProjectile != null && inventory != null)
                 {
                     
                     ItemProjectile ipr = CheckForAmmo(inventory);

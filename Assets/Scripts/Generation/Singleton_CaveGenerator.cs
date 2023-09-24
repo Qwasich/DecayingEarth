@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -141,7 +140,7 @@ namespace DecayingEarth
             if (m_Ores.Length > 0) for (int i = 0; i < m_Ores.Length; i++) GenerateOresByTypeCountAndSize(m_Ores[i], m_OresTilemap, m_WallsTilemap);
             else Debug.Log("Warning: No ores to generate!");
 
-            if (m_FloorFeatureRule.Length > 0) for (int i = 0; i < m_FloorFeatureRule.Length; i++) PlaceFeatureInRandomRoom(m_FloorFeatureRule[i], m_WallsTilemap, m_FloorDetsTilemap);
+            if (m_FloorFeatureRule.Length > 0 && m_FloorFeatureRule != null) for (int i = 0; i < m_FloorFeatureRule.Length; i++) PlaceFeatureInRandomRoom(m_FloorFeatureRule[i], m_WallsTilemap, m_FloorDetsTilemap);
             else Debug.Log("Warning: No floor features to generate!");
         }
 
@@ -513,14 +512,11 @@ namespace DecayingEarth
 
         private void TryPlaceFoliage(Vector3Int coord)
         {
-            Debug.Log("Reached");
+            if (m_AllowedFoliage.Length == 0) return;
             TileBlockGrowablle tile = m_AllowedFoliage[Random.Range(0, m_AllowedFoliage.Length)];
             if (tile == null) return;
-            Debug.Log("Tile Set");
             int chance = Random.Range(0, tile.GrowthChance * 10);
             if (chance == 0) m_WallsTilemap.SetTile(coord, tile);
-
-            Debug.Log("Tile Placed");
         }
 
     }

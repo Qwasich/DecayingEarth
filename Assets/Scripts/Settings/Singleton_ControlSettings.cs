@@ -44,6 +44,15 @@ namespace DecayingEarth
         private void Update()
         {
             if (Singleton_PlayerInfo.Instance != null && Singleton_PlayerInfo.Instance.Player.CurrentHealth <= 0) return;
+
+            if (Cancel != 0 && !m_PMBPressed)
+            {
+                m_PMBPressed = true;
+                PauseMenuButtonPressed?.Invoke();
+            }
+            else if (Cancel == 0 && m_PMBPressed) m_PMBPressed = false;
+
+            if (Singleton_SessionData.Instance.IsMainMenuOpen) return;
             if (MouseLeft)
             {
                 if(Singleton_SessionData.Instance != null) Singleton_SessionData.Instance.UpdateLastClick(IsClickOnCanvas());
@@ -97,12 +106,7 @@ namespace DecayingEarth
             }
             else if (Inventory <= 0.1 && m_IBPressed) m_IBPressed = false;
 
-            if (Cancel != 0 && !m_PMBPressed)
-            {
-                m_PMBPressed = true;
-                PauseMenuButtonPressed?.Invoke();
-            }
-            else if (Cancel == 0 && m_PMBPressed) m_PMBPressed = false;
+            
 
             UpdateHotbarButtons();
         }

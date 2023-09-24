@@ -27,6 +27,7 @@ namespace DecayingEarth
         public void PlayAnimation(float playTime, HoldType hold, Sprite sprite, float offsetAngle)
         {
             if (!Singleton_SessionData.Instance.IsInventoryHidden) return;
+            if (Singleton_SessionData.Instance.IsMainMenuOpen) return;
             m_LatestAngle = offsetAngle;
             //if (m_IsCoroutineRunning) return;
             StopAllCoroutines();
