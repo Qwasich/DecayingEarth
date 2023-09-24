@@ -44,6 +44,14 @@ namespace DecayingEarth
         /// </summary>
         public int DamageReduction => m_DamageReduction;
 
+        [SerializeField] private float m_InincibilityTimer = 0.3f;
+        /// <summary>
+        /// —колько объект остаетс€ неу€звимым к повреждени€м, после получени€ урона
+        /// </summary>
+        public float InincibilityTimer => m_InincibilityTimer;
+
+        private float m_Timer;
+
         #region Unity Functions
 
         protected virtual void Awake()
@@ -51,6 +59,13 @@ namespace DecayingEarth
             m_CurrentHealth = m_MaxHealth;
         }
         #endregion
+
+        protected virtual void Update()
+        {
+            if (m_Timer <= 0) return;
+
+            m_Timer -= Time.deltaTime;
+        }
 
         #region Puclic Functions
         /// <summary>
@@ -63,7 +78,8 @@ namespace DecayingEarth
         /// <returns></returns>
         public int DealDamage(int damage, float critchance, float critmultiplier)
         {
-            if (m_IsInvincible) return 0;
+            if (m_IsInvincible || m_Timer > 0) return 0;
+            m_Timer = m_InincibilityTimer;
             if (damage <= 0) damage = 1;
             if (critchance > 1) critchance = 1;
             if (critchance < 0) critchance = 0;

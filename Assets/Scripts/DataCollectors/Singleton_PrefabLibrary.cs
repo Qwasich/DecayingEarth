@@ -7,7 +7,7 @@ namespace DecayingEarth
 {
     public class Singleton_PrefabLibrary : MonoSingleton<Singleton_PrefabLibrary>
     {
-        [SerializeField] private  GameObject m_DummyItemPrefab;
+        [SerializeField] private GameObject m_DummyItemPrefab;
         /// <summary>
         /// Стандартный префаб предмета.
         /// </summary>
@@ -48,6 +48,12 @@ namespace DecayingEarth
         /// Кнопка для рецептов
         /// </summary>
         public GameObject RecipeButton => m_RecipeButton;
+
+        [SerializeField] private GameObject m_ProjectileDummy;
+        /// <summary>
+        /// Базовый префаб снаряда
+        /// </summary>
+        public GameObject ProjectileDummy => m_ProjectileDummy;
 
 
     }

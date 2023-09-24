@@ -12,7 +12,7 @@ namespace DecayingEarth
         [SerializeField] protected TileBlockBase m_TileBlock;
         [SerializeField] protected float m_Distance = 2;
 
-        public int UseItem(int clickType)
+        public int UseItem(int clickType, Creature creature, InvEntryPoint inventory)
         {
             if (Singleton_SessionData.Instance.IsLastClickWasOnCanvas) return 0;
 

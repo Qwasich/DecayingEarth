@@ -8,6 +8,7 @@ namespace DecayingEarth
     public class Singleton_CraftingEntryPoint : MonoSingleton<Singleton_CraftingEntryPoint>
     {
         [SerializeField] private GameObject m_CraftingWindow;
+        public bool IsCraftingWindowOpen => m_CraftingWindow.activeSelf;
         [SerializeField] private GameObject m_ContentWindow;
         [SerializeField] private InvEntryPoint m_Inventory;
         [SerializeField] private List<CraftingRecipeBase> m_HandRecipes;
@@ -15,7 +16,9 @@ namespace DecayingEarth
         [SerializeField] private Text m_DefaultCraftingText;
         [SerializeField] private string m_DefaultCraftingTitle = "Crafting";
 
-        private TileBlockICraftingStation lastStation = null;
+        private TileBlockICraftingStation m_LastStation = null;
+
+        public TileBlockICraftingStation LastStation => m_LastStation;
 
         private void Start()
         {
@@ -35,7 +38,7 @@ namespace DecayingEarth
             if (m_CraftingWindow.activeSelf == false) return;
             if (m_ContentWindow.transform.childCount > 0) while (m_ContentWindow.transform.childCount > 0) DestroyImmediate(m_ContentWindow.transform.GetChild(0).gameObject);
             m_CraftingWindow.SetActive(false);
-            lastStation = null;
+            m_LastStation = null;
         }
 
         public void UpdateCrafting() => InitiateCrafting();
@@ -56,6 +59,7 @@ namespace DecayingEarth
             bool result;
 
             if (craftingStation != null && craftingStation.WindowName != "") m_DefaultCraftingText.text = craftingStation.WindowName;
+            else if (m_LastStation != null && m_LastStation.WindowName != "") m_DefaultCraftingText.text = m_LastStation.WindowName;
             else m_DefaultCraftingText.text = m_DefaultCraftingTitle;
 
 
@@ -72,8 +76,17 @@ namespace DecayingEarth
 
             if (craftingStation != null && craftingStation.Recepies.Count > 0)
             {
-                lastStation = craftingStation;
+                m_LastStation = craftingStation;
                 foreach (var recipe in craftingStation.Recepies)
+                {
+                    result = ScanInventoryForRecipe(recipe);
+                    if (result) CraftableRecipes.Add(recipe);
+                    else UnavailableRecipes.Add(recipe);
+                }
+            }
+            else if (craftingStation == null && m_LastStation != null)
+            {
+                foreach (var recipe in m_LastStation.Recepies)
                 {
                     result = ScanInventoryForRecipe(recipe);
                     if (result) CraftableRecipes.Add(recipe);
@@ -110,7 +123,7 @@ namespace DecayingEarth
             else Singleton_MouseItemHolder.Instance.IncreaseHandItemByNumber(recipe.Result.Amount);
             Singleton_MouseItemHolder.Instance.HideTooltip();
 
-            InitiateCrafting(lastStation);
+            InitiateCrafting(m_LastStation);
         }
 
         /// <summary>

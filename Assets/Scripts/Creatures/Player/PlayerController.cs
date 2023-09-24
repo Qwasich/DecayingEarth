@@ -25,6 +25,7 @@ namespace DecayingEarth
         {
             if (!Singleton_SessionData.Instance.IsInventoryHidden)
             {
+                m_Animator.StopPlayback();
                 m_Player.GetAxisParameters(0, 0);
                 return;
             }

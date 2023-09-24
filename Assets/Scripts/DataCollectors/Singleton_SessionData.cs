@@ -5,6 +5,7 @@ namespace DecayingEarth
 {
     public class Singleton_SessionData : MonoSingleton<Singleton_SessionData>
     {
+
         private Vector2Int m_LastTileInteractionCoordinate = Vector2Int.zero;
         /// <summary>
         /// Последняя координата тайла, с которой происходило взаимодействие

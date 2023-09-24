@@ -26,6 +26,7 @@ namespace DecayingEarth
         /// <param name="sprite">Спрайт, использующийся для анимации</param>
         public void PlayAnimation(float playTime, HoldType hold, Sprite sprite, float offsetAngle)
         {
+            if (!Singleton_SessionData.Instance.IsInventoryHidden) return;
             m_LatestAngle = offsetAngle;
             //if (m_IsCoroutineRunning) return;
             StopAllCoroutines();

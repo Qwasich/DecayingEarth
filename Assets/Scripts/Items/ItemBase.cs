@@ -11,7 +11,15 @@ namespace DecayingEarth
         ArmorHead,
         ArmorBody,
         ArmorLegs,
-        Accessory
+        Accessory,
+        Ammo
+    }
+
+    public enum AmmoType
+    {
+        None,
+        Arrow,
+        Bullet
     }
 
     public enum DamageType
@@ -36,8 +44,10 @@ namespace DecayingEarth
         /// Использует предмет, в зависимости от нажатой клавиши мыши
         /// </summary>
         /// <param name="clickType">0 - левая, 1 - правая.</param>
+        /// <param name="creature">Существо, использовавшее предмет</param>
+        /// <param name="inventory">Инвентарь, с которым происходит взаимодействие</param>
         /// <returns>Возвращает число, на которое надо уменьшить стак после успешного использования. Иначе возвращает ноль.</returns>
-        public int UseItem(int clickType);
+        public int UseItem(int clickType, Creature creature, InvEntryPoint inventory);
     }
 
     public abstract class ItemBase : ScriptableObject

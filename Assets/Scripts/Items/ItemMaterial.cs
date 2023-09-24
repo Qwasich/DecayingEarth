@@ -10,7 +10,7 @@ namespace DecayingEarth
     {
         [SerializeField] protected override ItemType m_ItemType => ItemType.Material;
 
-        public int UseItem(int clickType)
+        public int UseItem(int clickType, Creature creature, InvEntryPoint inventory)
         {
             return 0;
         }

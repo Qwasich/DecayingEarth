@@ -49,6 +49,7 @@ namespace DecayingEarth
 
             if (de.ItemType == ItemType.Weapon) description += (de as ItemWeapon).DealtDamage.ToString() + " " + (de as ItemWeapon).DamageType.ToString() + " damage\n";
             if (de.ItemType == ItemType.Tool) description += (de as ItemTool).DealtDamage.ToString() + " " + (de as ItemTool).DamageType.ToString() + " damage\n";
+            if (de.ItemType == ItemType.Ammo) description += (de as ItemProjectile).DealtDamage.ToString() + " " + (de as ItemTool).DamageType.ToString() + " damage\n";
 
             if (de.ItemType == ItemType.Tool) description += (de as ItemTool).MiningDamage + " Mining damage\n";
 
@@ -57,7 +58,7 @@ namespace DecayingEarth
 
             if (de.ManaPerUse > 0) description += "Consumes " + de.ManaPerUse + "mana\n";
 
-            if (de.UseTimer != 0 && (de is ItemWeapon || de is ItemTool)) description += "Swings " + (1 / de.UseTimer).ToString("0.0") + " TPS\n";
+            if (de.UseTimer != 0 && (de is ItemWeapon || de is ItemTool)) description += "Speed " + (1 / de.UseTimer).ToString("0.0") + " TPS\n";
 
             if (de.MaxStackCount > 1) description += "Stacks up to " + de.MaxStackCount + "\n";
 
