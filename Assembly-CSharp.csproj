@@ -108,6 +108,9 @@
     <Compile Include="Assets\Scripts\Items\Hotbar.cs" />
     <Compile Include="Assets\Scripts\DataCollectors\Singleton_SessionData.cs" />
     <Compile Include="Assets\Scripts\Generation\Singleton_CropManager.cs" />
+    <Compile Include="Assets\Scripts\DebugScrpits\InventoryStartEquipment.cs" />
+    <Compile Include="Assets\Scripts\Creatures\Player\Singleton_PlayerInfo.cs" />
+    <Compile Include="Assets\Scripts\UI\UIPlayerHPBar.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

@@ -8,6 +8,7 @@ namespace DecayingEarth
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
+            if (Singleton_PlayerInfo.Instance.Player.CurrentHealth <= 0) return;
             PhysicalItem item = collision.gameObject.GetComponent<PhysicalItem>();
             if (item == null) return;
 

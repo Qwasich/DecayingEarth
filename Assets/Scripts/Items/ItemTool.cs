@@ -62,7 +62,11 @@ namespace DecayingEarth
                 else return 0;
 
             }
-
+            if (clickType == 1)
+            {
+                //Добавить возможность назначать кастомные скрипты на правую кнопку мыши
+                return 0;
+            }
 
             return 0;
         }

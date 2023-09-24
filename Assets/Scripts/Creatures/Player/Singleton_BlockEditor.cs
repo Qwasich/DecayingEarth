@@ -51,7 +51,7 @@ namespace DecayingEarth
             {
                 Collider2D col = CheckTriggerCollider(m_WallsTilemap.CellToWorld(coordinate) + new Vector3(0.25f, 0.25f),"LightCollider", new Vector2(0.2f, 0.2f), new Vector3(0, 0, -1.34f));
 
-                if (col != null && tile.RemainingDurability - damage <= 1) Destroy(col.transform.root.gameObject);
+                if (col != null && tile.RemainingDurability - damage <= 0) Destroy(col.transform.root.gameObject);
             }
 
             PlaceOrRemoveInvisibleTiles(coordinate, tile, m_WallsTilemap, false);

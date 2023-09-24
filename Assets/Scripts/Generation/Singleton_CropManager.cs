@@ -82,14 +82,14 @@ namespace DecayingEarth
                 {
                     TrySpreadingFrom(m_CropList[i].Coordinate, m_CropList[i].Tile.SpreadableBlock);
                 }
-                
+                GenerateRandomFoliage(m_CropList[i].Coordinate);
 
                 if (m_CropList[i].Tile.NextBlock != null)
                 {
                     Singleton_GridLibrary.Instance.WallsTilemap.SetTile(m_CropList[i].Coordinate, m_CropList[i].Tile.NextBlock);
                     if (m_CropList[i].Tile.NextBlock is TileBlockGrowablle && (m_CropList[i].Tile.NextBlock as TileBlockGrowablle).NextBlock != null)
                     {
-                        GenerateRandomFoliage(m_CropList[i].Coordinate);
+                        
                         m_CropList[i] = new CropInfo(m_CropList[i].Tile.NextBlock as TileBlockGrowablle, m_CropList[i].Coordinate);
                         continue;
                     }
@@ -183,13 +183,22 @@ namespace DecayingEarth
         /// <param name="pos">Координата</param>
         public void GenerateRandomFoliage(Vector3Int pos)
         {
-            if (Singleton_GridLibrary.Instance.FloorDetsTilemap.GetTile(pos) != null) return; 
+            if (Singleton_GridLibrary.Instance.FloorDetsTilemap.GetTile(pos) != null) return;
 
-            TileGroup tileGroup = Singleton_TileLibrary.Instance.ReturnFloorFeatureRuleByTag("CaveGrass").TileGroups[0];
+            TileBehaviourRule tileRule = Singleton_TileLibrary.Instance.ReturnFloorFeatureRuleByTag("CaveGrass");
+            TileGroup tileGroup = tileRule.TileGroups[0];
             TileBlockBase tile = null;
-            if (tileGroup != null) tile = (TileBlockBase) tileGroup.Tiles[Random.Range(0, tileGroup.Tiles.Length)];
+            if (tileGroup != null)
+            {
+                Debug.Log("Tile Set");
+                tile = (TileBlockBase)tileGroup.Tiles[Random.Range(0, tileGroup.Tiles.Length)];
+            }
 
-            if(tile != null) Singleton_GridLibrary.Instance.FloorDetsTilemap.SetTile(pos, tile);
+            if(tile != null)
+            {
+                Debug.Log("Tile placed");
+                Singleton_GridLibrary.Instance.FloorDetsTilemap.SetTile(pos, tile);
+            }
         }
 
         public void TrySpreadingFrom(Vector3Int pos, TileBlockBase tile)

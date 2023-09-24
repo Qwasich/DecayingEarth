@@ -100,6 +100,12 @@ namespace DecayingEarth
         /// </summary>
         public float ManaPerUse => m_ManaPerUse;
 
+        [SerializeField] protected AudioClip m_UseSound;
+        /// <summary>
+        /// Звук, привязанный к этому премету
+        /// </summary>
+        public AudioClip UseSound => m_UseSound;
+
 
     }
 }

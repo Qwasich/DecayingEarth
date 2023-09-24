@@ -43,6 +43,7 @@ namespace DecayingEarth
 
         private void Update()
         {
+            if (Singleton_PlayerInfo.Instance != null && Singleton_PlayerInfo.Instance.Player.CurrentHealth <= 0) return;
             if (MouseLeft)
             {
                 if(Singleton_SessionData.Instance != null) Singleton_SessionData.Instance.UpdateLastClick(IsClickOnCanvas());

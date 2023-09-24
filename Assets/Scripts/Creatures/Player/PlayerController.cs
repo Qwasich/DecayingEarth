@@ -7,6 +7,7 @@ namespace DecayingEarth
     {
         [SerializeField] private SpriteRenderer m_Renderer;
         [SerializeField] private Sprite m_StandingSprite;
+        [SerializeField] private Sprite m_DeathSprite;
         [SerializeField] private float m_AnimationSpeed = 0.3f;
         [SerializeField] private Animator m_Animator;
 
@@ -14,6 +15,8 @@ namespace DecayingEarth
 
         private float m_VerticalAxis;
         private float m_HorizontalAxis;
+
+        private bool IsDead = false;
 
         private void Awake()
         {
@@ -23,15 +26,32 @@ namespace DecayingEarth
 
         private void Update()
         {
-            if (!Singleton_SessionData.Instance.IsInventoryHidden)
+            if (m_Player.CurrentHealth > 0 && IsDead)
             {
-                m_Animator.StopPlayback();
+                IsDead = false;
+                m_Animator.enabled = true;
+            }
+
+            if (!Singleton_SessionData.Instance.IsInventoryHidden && !IsDead && m_Player.CurrentHealth > 0)
+            {
+                m_Animator.StartPlayback();
                 m_Player.GetAxisParameters(0, 0);
                 return;
             }
-            UpdateMoveAxis();
-            UpdatePlayer();
-            UpdateAnimation();
+            if (!IsDead)
+            {
+                UpdateMoveAxis();
+                UpdatePlayer();
+                UpdateAnimation();
+            }
+
+            if (m_Player.CurrentHealth <= 0 && !IsDead)
+            {
+                m_Animator.enabled = false;
+                m_Renderer.sprite = m_DeathSprite;
+                IsDead = true;
+            }
+
 
 
         }

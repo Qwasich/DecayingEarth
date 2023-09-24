@@ -83,13 +83,13 @@ namespace DecayingEarth
             {
                 fromAngle = angle + 90 - offsetAngle + 180;
                 toAngle = angle + 90 + offsetAngle + 180;
-                m_ToolModel.transform.localScale = new Vector3(1, 1, 1);
+                m_ToolModel.transform.localScale = new Vector3(-1, 1, 1);
             }
             else
             {
                 fromAngle = angle + 90 + offsetAngle + 180;
                 toAngle = angle + 90 - offsetAngle + 180;
-                m_ToolModel.transform.localScale = new Vector3(-1, 1, 1);
+                m_ToolModel.transform.localScale = new Vector3(1, 1, 1);
             }
 
 

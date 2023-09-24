@@ -7,50 +7,50 @@ namespace DecayingEarth
     {
         
         [Header("Creature Parameters")]
-        [SerializeField] private string m_Nickname;
+        [SerializeField] protected string m_Nickname;
         /// <summary>
         /// Имя Существа
         /// </summary>
         public string Name => m_Nickname;
 
-        [SerializeField] private int m_MaxHealth;
-        private int m_CurrentHealth;
+        [SerializeField] protected int m_MaxHealth;
+        protected int m_CurrentHealth;
 
         public int MaxHealth => m_MaxHealth;
         public int CurrentHealth => m_CurrentHealth;
         
 
-        [SerializeField] private bool m_IsInvincible;
+        [SerializeField] protected bool m_IsInvincible;
         /// <summary>
         /// Если истинно, игнорирует любой урон.
         /// </summary>
         public bool IsInvincible => m_IsInvincible;
 
-        [SerializeField] private int m_PhysicalArmor;
+        [SerializeField] protected int m_PhysicalArmor;
         /// <summary>
         /// Физическая броня, вычитает урон по: Урон = Урон - Броня * модификатор. Округляется вверх при вычислении.
         /// </summary>
         public int PhysicalArmor => m_PhysicalArmor;
 
-        [SerializeField][Range(0,1)] private float m_ArmorMultiplier = 0.5f;
+        [SerializeField][Range(0,1)] protected float m_ArmorMultiplier = 0.5f;
         /// <summary>
         /// Модификатор блока, напрямую умножается на блок, чтобы получить число.
         /// </summary>
         public float ArmorMultiplier => m_ArmorMultiplier;
 
-        [SerializeField][Range(0, 100)] private int m_DamageReduction = 0;
+        [SerializeField][Range(0, 100)] protected int m_DamageReduction = 0;
         /// <summary>
         /// Процент урона, поглощаемого существом. Сначала применяется поглощение, потом - броня. Округляется вниз при вычислении.
         /// </summary>
         public int DamageReduction => m_DamageReduction;
 
-        [SerializeField] private float m_InincibilityTimer = 0.3f;
+        [SerializeField] protected float m_InvincibilityTimer = 0.05f;
         /// <summary>
         /// Сколько объект остается неуязвимым к повреждениям, после получения урона
         /// </summary>
-        public float InincibilityTimer => m_InincibilityTimer;
+        public float InincibilityTimer => m_InvincibilityTimer;
 
-        private float m_Timer;
+        protected float m_Timer;
 
         #region Unity Functions
 
@@ -76,10 +76,11 @@ namespace DecayingEarth
         /// Большее или меньшее значение будет принудительно округлятся до соответствующего предела. </param>
         /// <param name="critmultiplier">Множитель критического урона, 1.5 - минимальный. Максимум не ограничен.</param>
         /// <returns></returns>
-        public int DealDamage(int damage, float critchance, float critmultiplier)
+        public virtual int DealDamage(int damage, float critchance, float critmultiplier)
         {
             if (m_IsInvincible || m_Timer > 0) return 0;
-            m_Timer = m_InincibilityTimer;
+            if (m_CurrentHealth <= 0) return 0;
+            m_Timer = m_InvincibilityTimer;
             if (damage <= 0) damage = 1;
             if (critchance > 1) critchance = 1;
             if (critchance < 0) critchance = 0;
@@ -95,7 +96,7 @@ namespace DecayingEarth
             return damage;
         }
 
-        public int HealDamage(int heal, float critchance, float critmultiplier)
+        public virtual int HealDamage(int heal, float critchance, float critmultiplier)
         {
             if (m_IsInvincible) return 0;
             if (heal <= 0) heal = 1;
@@ -110,7 +111,7 @@ namespace DecayingEarth
             return heal;
         }
 
-        public void OnKill()
+        protected virtual void OnKill()
         {
             Destroy(gameObject);
         }

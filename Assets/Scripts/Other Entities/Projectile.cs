@@ -61,14 +61,17 @@ namespace DecayingEarth
 
         private void OnLifetimeEnd()
         {
+            /*
             if (m_DropItem.IsDroppableOnCollision)
             {
                 GameObject go = Instantiate(Singleton_PrefabLibrary.Instance.DummyItemPrefab, transform);
                 PhysicalItem pi = go.GetComponent<PhysicalItem>();
                 pi.InitiateItem(m_DropItem, 1, false);
-            }
+            }*/
             Destroy(gameObject);
+
         }
+
 
         public void Initialize(ItemProjectile projectile, int addedDamage)
         {

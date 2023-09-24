@@ -76,6 +76,7 @@ namespace DecayingEarth
         public void MakeActionDependingOnClickType(int clickType, int bId)
         {
             if (m_Inventory == null || Singleton_SessionData.Instance.IsInventoryHidden) return;
+            if (Singleton_PlayerInfo.Instance.Player.CurrentHealth <= 0) return;
             if (mIh.HandItem.Item == null && m_Inventory.Items[bId].Item == null) return;
             if (m_Inventory.Items.Count <= bId)
             {

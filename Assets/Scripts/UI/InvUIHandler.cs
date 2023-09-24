@@ -20,8 +20,15 @@ namespace DecayingEarth
             Singleton_ControlSettings.Instance.InvButtonPressed -= ChangeInventory;
         }
 
-        private void ChangeInventory()
+        public void ChangeInventory()
         {
+            if (Singleton_PlayerInfo.Instance.Player.CurrentHealth <= 0)
+            {
+                m_InventoryUI?.SetActive(false);
+                m_State = true; Singleton_SessionData.Instance.UpdateInventoryVisibility(m_State);
+                return;
+            }
+
             m_InventoryUI?.SetActive(m_State);
             m_State = !m_State;
             Singleton_SessionData.Instance.UpdateInventoryVisibility(m_State);
@@ -34,5 +41,6 @@ namespace DecayingEarth
                 Singleton_GlobalChestController.Instance.CloseInventory();
             }
         }
+
     }
 }

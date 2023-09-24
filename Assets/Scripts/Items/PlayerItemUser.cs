@@ -40,9 +40,17 @@ namespace DecayingEarth
 
         }
 
+        public void Initialize(PlayerItemAnimationController contr, Player player, WeaponCollisionHandler wch )
+        {
+            m_AnimationController = contr;
+            m_Player = player;
+            m_WeaponCollisionHandler = wch;
+        }
+
         private void TryToUseItemLeftMouseButton()
         {
-            if (Singleton_SessionData.Instance.IsLastClickWasOnCanvas)return;
+            if (Singleton_SessionData.Instance.IsLastClickWasOnCanvas) return;
+            if (m_Player.CurrentHealth <= 0) return;
             if (!AreUsedItemsTheSame()) m_LastItemTimer = 0;
             if (m_LastItemTimer > 0 || m_AnimationController.IsCoroutineRunning) return;
             if (Singleton_SessionData.Instance.IsInventoryHidden == false && Singleton_MouseItemHolder.Instance.HandItem.Item != null)
