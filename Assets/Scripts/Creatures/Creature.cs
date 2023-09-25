@@ -86,9 +86,7 @@ namespace DecayingEarth
 
         protected virtual void Update()
         {
-            if (m_Timer <= 0) return;
-
-            m_Timer -= Time.deltaTime;
+            if (m_Timer > 0) m_Timer -= Time.deltaTime;
         }
 
         #region Puclic Functions

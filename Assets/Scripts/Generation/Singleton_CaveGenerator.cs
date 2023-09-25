@@ -515,7 +515,7 @@ namespace DecayingEarth
             if (m_AllowedFoliage.Length == 0) return;
             TileBlockGrowablle tile = m_AllowedFoliage[Random.Range(0, m_AllowedFoliage.Length)];
             if (tile == null) return;
-            int chance = Random.Range(0, tile.GrowthChance * 10);
+            int chance = Random.Range(0, tile.GrowthChance / 5);
             if (chance == 0) m_WallsTilemap.SetTile(coord, tile);
         }
 

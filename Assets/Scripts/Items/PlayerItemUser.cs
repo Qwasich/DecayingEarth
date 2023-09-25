@@ -56,7 +56,7 @@ namespace DecayingEarth
             if (Singleton_SessionData.Instance.IsInventoryHidden == false && Singleton_MouseItemHolder.Instance.HandItem.Item != null)
             {
                 var item = Singleton_MouseItemHolder.Instance.HandItem.Item;
-                if (item.HoldType != HoldType.Empty) m_AnimationController.PlayAnimation(item.UseTimer, item.HoldType, item.Icon, item.SwingAngle);
+                if (item.HoldType != HoldType.Empty) m_AnimationController.PlayAnimation(item.UseTimer, item.HoldType, item.Icon, item.SwingAngle, Camera.main.ScreenToWorldPoint(Input.mousePosition));
                 int d = (item as UseItem).UseItem(0, m_Player, m_PlayerInventory);
                 m_LastItemTimer = item.UseTimer;
                 m_LastUsedItem = item;
@@ -70,7 +70,7 @@ namespace DecayingEarth
                 if (m_PlayerInventory.Inventory.Items[hb].Item != null)
                 {
                     var item = m_PlayerInventory.Inventory.Items[hb].Item;
-                    if (item.HoldType != HoldType.Empty) m_AnimationController.PlayAnimation(item.UseTimer, item.HoldType, item.Icon, item.SwingAngle);
+                    if (item.HoldType != HoldType.Empty) m_AnimationController.PlayAnimation(item.UseTimer, item.HoldType, item.Icon, item.SwingAngle, Camera.main.ScreenToWorldPoint(Input.mousePosition));
                     int d = (item as UseItem).UseItem(0, m_Player, m_PlayerInventory);
                     m_LastItemTimer = item.UseTimer;
                     m_LastUsedItem = item;
@@ -99,7 +99,7 @@ namespace DecayingEarth
                 if (m_PlayerInventory.Inventory.Items[hb].Item != null)
                 {
                     var item = m_PlayerInventory.Inventory.Items[hb].Item;
-                    if (item.HoldType != HoldType.Empty) m_AnimationController.PlayAnimation(item.UseTimer, item.HoldType, item.Icon, item.SwingAngle);
+                    if (item.HoldType != HoldType.Empty) m_AnimationController.PlayAnimation(item.UseTimer, item.HoldType, item.Icon, item.SwingAngle, Camera.main.ScreenToWorldPoint(Input.mousePosition));
                     int d = (item as UseItem).UseItem(1, m_Player, m_PlayerInventory);
                     m_LastItemTimer = item.UseTimer;
                     m_LastUsedItem = item;

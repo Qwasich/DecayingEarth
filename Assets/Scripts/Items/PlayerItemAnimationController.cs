@@ -24,15 +24,14 @@ namespace DecayingEarth
         /// <param name="playTime">Время, за которое выполняется анимация</param>
         /// <param name="hold">Тип удержания</param>
         /// <param name="sprite">Спрайт, использующийся для анимации</param>
-        public void PlayAnimation(float playTime, HoldType hold, Sprite sprite, float offsetAngle)
+        public void PlayAnimation(float playTime, HoldType hold, Sprite sprite, float offsetAngle, Vector3 targetPos)
         {
             if (!Singleton_SessionData.Instance.IsInventoryHidden) return;
             if (Singleton_SessionData.Instance.IsMainMenuOpen) return;
             m_LatestAngle = offsetAngle;
             //if (m_IsCoroutineRunning) return;
             StopAllCoroutines();
-            Vector3 mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 dir = mouse - m_ToolModel.transform.position;
+            Vector2 dir = targetPos - m_ToolModel.transform.position;
 
             float angle = Vector2.SignedAngle(Vector2.right, dir);
             m_ToolModel.transform.rotation = Quaternion.Euler(0, 0, angle - 90);

@@ -28,6 +28,7 @@ namespace DecayingEarth
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
+            if (collision.gameObject.name == "PickupHitbox") return;
             Creature creat = collision.gameObject.transform.root.GetComponent<Creature>();
             if (creat == null) return;
             var item = m_Item;

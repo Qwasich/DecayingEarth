@@ -128,6 +128,7 @@
     <Compile Include="Assets\Scripts\Misc\LoaderAsync.cs" />
     <Compile Include="Assets\Scripts\UI\UIMenuHandler.cs" />
     <Compile Include="Assets\Scripts\Settings\FullscreenSetting.cs" />
+    <Compile Include="Assets\Scripts\Creatures\Singleton_CreatureSpawner.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
