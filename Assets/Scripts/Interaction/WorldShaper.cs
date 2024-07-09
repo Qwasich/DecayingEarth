@@ -13,136 +13,40 @@ namespace DecayingEarth
         /// <param name="x">Координата X</param>
         /// <param name="y">Координата Y</param>
         /// <param name="wall">Целевой Тайлмап</param>
-        /// <param name="wallSideRule">Правило передних стен</param>
-        /// <param name="wallTopRule">Правило верхних стен</param>
-        [Obsolete("Use Alt Rule instead. This metod wasn't updated, but still a great coding reference.")]
-        public static void PlaceEditedWalls(int x, int y, Tilemap wall, TileBehaviourRule wallSideRule, TileBehaviourRule wallTopRule)
-        {
-            if (wall.GetTile(new Vector3Int(x, y, 0)) == null) return;
-            bool c = true;
-
-            bool lt = false;
-            bool t = false;
-            bool rt = false;
-            bool l = false;
-            bool r = false;
-            bool ld = false;
-            bool d = false;
-            bool rd = false;
-
-            if (wall.GetTile(new Vector3Int(x - 1, y + 1, 0)) != null) lt = true;
-            if (wall.GetTile(new Vector3Int(x, y + 1, 0)) != null) t = true;
-            if (wall.GetTile(new Vector3Int(x + 1, y + 1, 0)) != null) rt = true;
-            if (wall.GetTile(new Vector3Int(x - 1, y, 0)) != null) l = true;
-            if (wall.GetTile(new Vector3Int(x + 1, y, 0)) != null) r = true;
-            if (wall.GetTile(new Vector3Int(x - 1, y - 1, 0)) != null) ld = true;
-            if (wall.GetTile(new Vector3Int(x, y - 1, 0)) != null) d = true;
-            if (wall.GetTile(new Vector3Int(x + 1, y - 1, 0)) != null) rd = true;
-
-            //доп проверка
-            if (lt != c && t != c && rt != c && l != c && r != c && ld != c && d != c && rd != c) wall.SetTile(new Vector3Int(x, y, 0), null);
-            if (t != c && d != c) wall.SetTile(new Vector3Int(x, y, 0), null);
-            
-            //Нижние стены
-            if (t == c && l == c && r == c && d != c) { wall.SetTile(new Vector3Int(x, y, 0), wallSideRule.TileGroups[0].Tiles[Random.Range(0, wallSideRule.TileGroups[0].Tiles.Length)]); return; }
-            if (t == c && l == c && r != c && d != c) { wall.SetTile(new Vector3Int(x, y, 0), wallSideRule.TileGroups[1].Tiles[Random.Range(0, wallSideRule.TileGroups[1].Tiles.Length)]); return; }
-            if (t == c && l != c && r == c && d != c) { wall.SetTile(new Vector3Int(x, y, 0), wallSideRule.TileGroups[2].Tiles[Random.Range(0, wallSideRule.TileGroups[2].Tiles.Length)]); return; }
-            if (t == c && l != c && r != c && d != c) { wall.SetTile(new Vector3Int(x, y, 0), wallSideRule.TileGroups[3].Tiles[Random.Range(0, wallSideRule.TileGroups[3].Tiles.Length)]); return; }
-
-            //правые стены
-            if (lt == c && t == c && l == c && r != c && ld == c && d == c) { wall.SetTile(new Vector3Int(x, y, 0), wallTopRule.TileGroups[1].Tiles[Random.Range(0, wallTopRule.TileGroups[1].Tiles.Length)]); return; }
-            if (lt == c && t == c && l == c && r == c && ld == c && d == c && rd != c) { wall.SetTile(new Vector3Int(x, y, 0), wallTopRule.TileGroups[1].Tiles[Random.Range(0, wallTopRule.TileGroups[1].Tiles.Length)]); return; }
-
-            //левые стены
-            if (t == c && rt == c && l != c && r == c && d == c && rd == c) { wall.SetTile(new Vector3Int(x, y, 0), wallTopRule.TileGroups[2].Tiles[Random.Range(0, wallTopRule.TileGroups[2].Tiles.Length)]); return; }
-            if (t == c && rt == c && l == c && r == c && ld != c && d == c && rd == c) { wall.SetTile(new Vector3Int(x, y, 0), wallTopRule.TileGroups[2].Tiles[Random.Range(0, wallTopRule.TileGroups[2].Tiles.Length)]); return; }
-
-            //обе стены
-            if (t == c && l != c && r != c && d == c) { wall.SetTile(new Vector3Int(x, y, 0), wallTopRule.TileGroups[3].Tiles[Random.Range(0, wallTopRule.TileGroups[3].Tiles.Length)]); return; }
-            if (t == c && l == c && r != c && ld != c && d == c) { wall.SetTile(new Vector3Int(x, y, 0), wallTopRule.TileGroups[3].Tiles[Random.Range(0, wallTopRule.TileGroups[3].Tiles.Length)]); return; }
-            if (t == c && l != c && r == c && d == c && rd != c) { wall.SetTile(new Vector3Int(x, y, 0), wallTopRule.TileGroups[3].Tiles[Random.Range(0, wallTopRule.TileGroups[3].Tiles.Length)]); return; }
-            if (t == c && l == c && r == c && ld != c && d == c && rd != c) { wall.SetTile(new Vector3Int(x, y, 0), wallTopRule.TileGroups[3].Tiles[Random.Range(0, wallTopRule.TileGroups[3].Tiles.Length)]); return; }
-
-            //обе стены сверху
-            if (t != c && l != c && r != c && d == c) { wall.SetTile(new Vector3Int(x, y, 0), wallTopRule.TileGroups[4].Tiles[Random.Range(0, wallTopRule.TileGroups[4].Tiles.Length)]); return; }
-
-            //правый угол
-            if (t != c && l == c && r != c && d == c) { wall.SetTile(new Vector3Int(x, y, 0), wallTopRule.TileGroups[5].Tiles[Random.Range(0, wallTopRule.TileGroups[5].Tiles.Length)]); return; }
-            if (t != c && l == c && r == c && d == c && rd != c) { wall.SetTile(new Vector3Int(x, y, 0), wallTopRule.TileGroups[5].Tiles[Random.Range(0, wallTopRule.TileGroups[5].Tiles.Length)]); return; }
-
-            //левый угол
-            if (t != c && l != c && r == c && d == c) { wall.SetTile(new Vector3Int(x, y, 0), wallTopRule.TileGroups[6].Tiles[Random.Range(0, wallTopRule.TileGroups[6].Tiles.Length)]); return; }
-            if (t != c && l == c && r == c && ld != c && d == c) { wall.SetTile(new Vector3Int(x, y, 0), wallTopRule.TileGroups[6].Tiles[Random.Range(0, wallTopRule.TileGroups[6].Tiles.Length)]); return; }
-
-            //только верх
-            if (t != c && l == c && r == c && d == c) { wall.SetTile(new Vector3Int(x, y, 0), wallTopRule.TileGroups[7].Tiles[Random.Range(0, wallTopRule.TileGroups[7].Tiles.Length)]); return; }
-
-            //обратные углы
-            if (lt != c && t == c && rt == c && l == c && r == c && rd == c) { wall.SetTile(new Vector3Int(x, y, 0), wallTopRule.TileGroups[8].Tiles[0]); return; }
-            if (lt == c && t == c && rt != c && l == c && r == c && ld == c) { wall.SetTile(new Vector3Int(x, y, 0), wallTopRule.TileGroups[8].Tiles[1]); return; }
-            if (lt != c && t == c && rt != c && l == c && r == c) { wall.SetTile(new Vector3Int(x, y, 0), wallTopRule.TileGroups[8].Tiles[2]); return; }
-            if (lt != c && t == c && l == c && r != c) { wall.SetTile(new Vector3Int(x, y, 0), wallTopRule.TileGroups[8].Tiles[3]); return; }
-            if (lt != c && t == c && l == c && r == c && rd != c) { wall.SetTile(new Vector3Int(x, y, 0), wallTopRule.TileGroups[8].Tiles[3]); return; }
-            if (t == c && rt != c && r != c && l == c) { wall.SetTile(new Vector3Int(x, y, 0), wallTopRule.TileGroups[8].Tiles[4]); return; }
-            if (t == c && rt != c && r == c && l == c && ld != c) { wall.SetTile(new Vector3Int(x, y, 0), wallTopRule.TileGroups[8].Tiles[4]); return; }
-
-        }
-
-        /// <summary>
-        /// Редактирует стены и подбирает нужные формы в зависимости от правил.
-        /// </summary>
-        /// <param name="x">Координата X</param>
-        /// <param name="y">Координата Y</param>
-        /// <param name="wall">Целевой Тайлмап</param>
-        /// <param name="mode">0 - Полный, 1 - Только передние, 2 - Только верхние</param>
         /// <param name="cavegen">Если указан - будет брать правила тайлов оттуда а не из библиотеки. ОБЯЗАТЕЛЬНО ДЛЯ ГЕНЕРАЦИИ В РЕДАКТОРЕ.</param>
-        public static void PlaceEditedWallsAltRule(int x, int y, Tilemap wall, int mode = 0, Singleton_CaveGenerator cavegen = null)
+        public static void PlaceEditedWallsAltRule(int x, int y, Tilemap wall, Singleton_CaveGenerator cavegen = null)
         {
-            if (mode > 2 || mode < 0) { Debug.LogError("Alt Rule Generation mode set wrongly! Must use value between 0 and 2, inclusive."); return; }
             TileBlockBase tile = wall.GetTile<TileBlockBase>(new Vector3Int(x, y, 0));
             if (tile == null) return;
             if (!tile.InvokeRule) return;
-            if (tile.Tag == "")
+            if (tile.BlockTag == "")
             {
                 Debug.LogError("Tile " + tile.name +" has no tag set, block generation failure"); 
                 return;
             }
 
-            TileBehaviourRule wallSideRule = null;
-            TileBehaviourRule wallTopRule = null;
+            TileGroup tileGroup = null;
             if (cavegen != null)
             {
-                for (int i = 0; i < cavegen.WallFrontRule.Length; i++)
+                for (int i = 0; i < cavegen.TileRule.Length; i++)
                 {
-                    if (tile.Tag == cavegen.WallFrontRule[i].Tag)
+                    if (tile.BlockTag == cavegen.TileRule[i].BlockTag)
                     {
-                        wallSideRule = cavegen.WallFrontRule[i];
-                        break;
-                    }
-                }
-
-                for (int i = 0; i < cavegen.WallTopRule.Length; i++)
-                {
-                    if (tile.Tag == cavegen.WallTopRule[i].Tag)
-                    {
-                        wallTopRule = cavegen.WallTopRule[i];
+                        tileGroup = cavegen.TileRule[i];
                         break;
                     }
 
                 }
 
-                if (wallTopRule == null || wallSideRule == null)
+                if (tileGroup == null)
                 {
-                    Debug.LogError("Proper Top Tile Rule isn't set for the tile tag " + tile.Tag + " on the latest used world generation settings."); return;
+                    Debug.LogError("Proper Tile Rule isn't set for the tile tag " + tile.BlockTag + " on the latest used world generation settings."); return;
                 }
             }
             else
             {
-                wallSideRule = Singleton_TileLibrary.Instance.ReturnWallSideRuleByTag(tile.Tag);
-                wallTopRule = Singleton_TileLibrary.Instance.ReturnWallTopRuleByTag(tile.Tag);
+                tileGroup = Singleton_TileLibrary.Instance.ReturnTileGroupByTag(tile.BlockTag);
             }
-            
-            int c = 2;
 
             int lt = 0;
             int t = 0;
@@ -154,72 +58,61 @@ namespace DecayingEarth
             int rd = 0;
 
             tile = wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y + 1));
-            if (tile != null && tile.InvokeRule) lt = (int)tile.BlockType;
+            if (tile != null && tile.InvokeRule) lt = 1;
             tile = wall.GetTile<TileBlockBase>(new Vector3Int(x, y + 1));
-            if (tile != null && tile.InvokeRule) t = (int)tile.BlockType;
+            if (tile != null && tile.InvokeRule) t = 1;
             tile = wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y + 1));
-            if (tile != null && tile.InvokeRule) rt = (int)tile.BlockType;
+            if (tile != null && tile.InvokeRule) rt = 1;
             tile = wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y));
-            if (tile != null && tile.InvokeRule) l = (int)tile.BlockType;
+            if (tile != null && tile.InvokeRule) l = 1;
             tile = wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y));
-            if (tile != null && tile.InvokeRule) r = (int)tile.BlockType;
+            if (tile != null && tile.InvokeRule) r = 1;
             tile = wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y - 1));
-            if (tile != null && tile.InvokeRule) ld = (int)tile.BlockType;
+            if (tile != null && tile.InvokeRule) ld = 1;
             tile = wall.GetTile<TileBlockBase>(new Vector3Int(x, y - 1));
-            if (tile != null && tile.InvokeRule) d = (int)tile.BlockType;
+            if (tile != null && tile.InvokeRule) d = 1;
             tile = wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y - 1));
-            if (tile != null && tile.InvokeRule) rd = (int)tile.BlockType;
+            if (tile != null && tile.InvokeRule) rd = 1;
 
-            //доп проверка
-            //if (lt == c && t == c && rt == c && l == c && r != c && ld != c && d != c && rd != c) wall.SetTile(new Vector3Int(x, y, 0), null);
-            if (t == 0 && d == 0) wall.SetTile(new Vector3Int(x, y, 0), null);
 
-            if (mode == 0 || mode == 1)
-            {
-                //Нижние стены
-                if (t == c && l != 0 && r != 0 && d == 0) { wall.SetTile(new Vector3Int(x, y), wallSideRule.TileGroups[0].Tiles[Random.Range(0, wallSideRule.TileGroups[0].Tiles.Length)]); }
-                if (t == c && l != 0 && r == 0 && d == 0) { wall.SetTile(new Vector3Int(x, y), wallSideRule.TileGroups[1].Tiles[Random.Range(0, wallSideRule.TileGroups[1].Tiles.Length)]); }
-                if (t == c && l == 0 && r != 0 && d == 0) { wall.SetTile(new Vector3Int(x, y), wallSideRule.TileGroups[2].Tiles[Random.Range(0, wallSideRule.TileGroups[2].Tiles.Length)]); }
-                if (t == c && l == 0 && r == 0 && d == 0) { wall.SetTile(new Vector3Int(x, y), wallSideRule.TileGroups[3].Tiles[Random.Range(0, wallSideRule.TileGroups[3].Tiles.Length)]); }
-            }
+            //обычные стены
+            if (t == 0 && l == 0 && r == 1 && d == 1 && rd == 1) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[0]); return; }
+            if (t == 0 && l == 1 && r == 1 && rd == 1 && d == 1 && ld == 1) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[1]); return; }
+            if (t == 0 && l == 1 && r == 0 && ld == 1 && d == 1) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[2]); return; }
 
-            if (mode == 1) return;
+            if (t == 1 && rt == 1 && l == 0 && r == 1 && d == 1 && rd == 1) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[3]); return; }
+            if (lt == 1 && t == 1 && rt == 1 && l == 1 && r == 1 && ld == 1 && d == 1 && rd == 1) return;
+            if (lt == 1 && t == 1 && l == 1 && r == 0 && ld == 1 && d == 1) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[5]); return; }
 
-            if (GetTileType(wall, x, y) == BlockType.SIDE) return;
+            if (t == 1 && rt == 1 && l == 0 && r == 1 && d == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[6]); return; }
+            if (lt == 1 && t == 1 && rt == 1 && l == 1 && r == 1 && d == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[7]); return; }
+            if (lt == 1 && t == 1 && l == 1 && r == 0 && d == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[8]); return; }
 
-            //правые стены
-            if (lt == c && t == c && l == c && r != c && ld != 0 && d != 0) { wall.SetTile(new Vector3Int(x, y), wallTopRule.TileGroups[1].Tiles[Random.Range(0, wallTopRule.TileGroups[1].Tiles.Length)]); return; }
-            if (lt == c && t == c && l == c && r == c && ld != 0 && d != 0 && rd == 0) { wall.SetTile(new Vector3Int(x, y), wallTopRule.TileGroups[1].Tiles[Random.Range(0, wallTopRule.TileGroups[1].Tiles.Length)]); return; }
+            //Вертикальные стены
+            if (t == 0 && l == 0 && r == 0 && d == 1) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[9]); return; }
+            if (t == 1 && l == 0 && r == 0 && d == 1) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[10]); return; }
+            if (t == 1 && l == 0 && r == 0 && d == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[11]); return; }
 
-            //левые стены
-            if (t == c && rt == c && l != c && r == c && d != 0 && rd != 0) { wall.SetTile(new Vector3Int(x, y), wallTopRule.TileGroups[2].Tiles[Random.Range(0, wallTopRule.TileGroups[2].Tiles.Length)]); return; }
+            //Замкнутые стены
+            if (t == 0 && l == 0 && r == 1 && d == 1 && rd == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[12]); return; }
+            if (t == 0 && l == 1 && r == 1 && rd == 0 && d == 1 && ld == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[13]); return; }
+            if (t == 0 && l == 1 && r == 0 && ld == 0 && d == 1) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[14]); return; }
 
-            //обе стены
-            if (t == c && l != c && r != c && d != 0) { wall.SetTile(new Vector3Int(x, y), wallTopRule.TileGroups[3].Tiles[Random.Range(0, wallTopRule.TileGroups[3].Tiles.Length)]); return; }
+            if (t == 1 && rt == 0 && l == 0 && r == 1 && d == 1 && rd == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[15]); return; }
+            if (lt == 0 && t == 1 && rt == 0 && l == 1 && r == 1 && ld == 0 && d == 1 && rd == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[16]); return; }
+            if (lt == 0 && t == 1 && l == 1 && r == 0 && ld == 0 && d == 1) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[17]); return; }
 
-            //обе стены сверху
-            if (t != c && l != c && r != c && d != 0) { wall.SetTile(new Vector3Int(x, y), wallTopRule.TileGroups[4].Tiles[Random.Range(0, wallTopRule.TileGroups[4].Tiles.Length)]); return; }
+            if (t == 1 && rt == 0 && l == 0 && r == 1 && d == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[18]); return; }
+            if (lt == 0 && t == 1 && rt == 0 && l == 1 && r == 1 && d == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[19]); return; }
+            if (lt == 0 && t == 1 && l == 1 && r == 0 && d == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[20]); return; }
 
-            //правый угол
-            if (t != c && l == c && r != c && d != 0) { wall.SetTile(new Vector3Int(x, y), wallTopRule.TileGroups[5].Tiles[Random.Range(0, wallTopRule.TileGroups[5].Tiles.Length)]); return; }
+            //Горизонтальные стены
+            if (t == 0 && l == 0 && r == 1 && d == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[21]); return; }
+            if (t == 0 && l == 1 && r == 1 && d == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[22]); return; }
+            if (t == 0 && l == 1 && r == 0 && d == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[23]); return; }
 
-            //левый угол
-            if (t != c && l != c && r == c && d != 0) { wall.SetTile(new Vector3Int(x, y), wallTopRule.TileGroups[6].Tiles[Random.Range(0, wallTopRule.TileGroups[6].Tiles.Length)]); return; }
-
-            //только верх
-            if (t != c && l == c && r == c && d != 0) { wall.SetTile(new Vector3Int(x, y), wallTopRule.TileGroups[7].Tiles[Random.Range(0, wallTopRule.TileGroups[7].Tiles.Length)]); return; }
-
-            //обратные углы
-            if (lt != c && t == c && rt == c && l == c && r == c && d != 0 && rd != 0) { wall.SetTile(new Vector3Int(x, y), wallTopRule.TileGroups[8].Tiles[0]); return; }
-            if (lt == c && t == c && rt != c && l == c && r == c && ld != 0 && d != 0) { wall.SetTile(new Vector3Int(x, y), wallTopRule.TileGroups[8].Tiles[1]); return; }
-            if (lt != c && t == c && rt != c && l == c && r == c && d != 0) { wall.SetTile(new Vector3Int(x, y), wallTopRule.TileGroups[8].Tiles[2]); return; }
-            if (lt != c && t == c && l == c && r != c && d != 0) { wall.SetTile(new Vector3Int(x, y), wallTopRule.TileGroups[8].Tiles[3]); return; }
-            if (lt != c && t == c && l == c && r == c && d != 0 && rd == 0) { wall.SetTile(new Vector3Int(x, y), wallTopRule.TileGroups[8].Tiles[3]); return; }
-            if (t == c && rt != c && l != c && r == c && d != 0) { wall.SetTile(new Vector3Int(x, y), wallTopRule.TileGroups[8].Tiles[4]); return; }
-
-            if (mode != 2) return;
-            if (lt == c && t == c && rt == c && l == c & r == c && ld != 0 && d != 0 && rd != 0) {wall.SetTile(new Vector3Int(x, y), wallTopRule.TileGroups[0].Tiles[0]); return;}
-
+            //Колонна
+            if (t == 0 && l == 0 && r == 0 && d == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[24]); return; }
         }
 
 
@@ -233,7 +126,7 @@ namespace DecayingEarth
         public static string GetTileTag(Tilemap target, int x, int y)
         {
             TileBlockBase tile = target.GetTile<TileBlockBase>(new Vector3Int(x, y));
-            return tile.Tag;
+            return tile.BlockTag;
         }
 
         /// <summary>
@@ -247,164 +140,16 @@ namespace DecayingEarth
         /// <param name="mode">false - Режим разрушения, true - режим установки</param>
         public static void EditWallsAroundPoint(int x, int y, Tilemap wall, TileBlockBase tile, int radius, bool mode = false)
         {
-            TileBehaviourRule wallSideRule = Singleton_TileLibrary.Instance.ReturnWallSideRuleByTag(tile.Tag);
-            TileBehaviourRule wallTopRule = Singleton_TileLibrary.Instance.ReturnWallTopRuleByTag(tile.Tag);
+            TileGroup tileGroup;
 
-            int c = 2;
-
-            int lt = 0;
-            int t = 0;
-            int rt = 0;
-            int l = 0;
-            int r = 0;
-            int ld = 0;
-            int d = 0;
-            int rd = 0;
-
-            TileBlockBase checkTile = null;
-
-
-            checkTile = wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y + 1));
-            if (checkTile != null && checkTile.InvokeRule) lt = (int)checkTile.BlockType;
-            checkTile = wall.GetTile<TileBlockBase>(new Vector3Int(x, y + 1));
-            if (checkTile != null && checkTile.InvokeRule) t = (int)checkTile.BlockType;
-            checkTile = wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y + 1));
-            if (checkTile != null && checkTile.InvokeRule) rt = (int)checkTile.BlockType;
-            checkTile = wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y));
-            if (checkTile != null && checkTile.InvokeRule) l = (int)checkTile.BlockType;
-            checkTile = wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y));
-            if (checkTile != null && checkTile.InvokeRule) r = (int)checkTile.BlockType;
-            checkTile = wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y - 1));
-            if (checkTile != null && checkTile.InvokeRule) ld = (int)checkTile.BlockType;
-            checkTile = wall.GetTile<TileBlockBase>(new Vector3Int(x, y - 1));
-            if (checkTile != null && checkTile.InvokeRule) d = (int)checkTile.BlockType;
-            checkTile = wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y - 1));
-            if (checkTile != null && checkTile.InvokeRule) rd = (int)checkTile.BlockType;
+            tileGroup = Singleton_TileLibrary.Instance.ReturnTileGroupByTag(tile.BlockTag);
 
             if (mode == false)
             {
-
-                if (tile.BlockType == BlockType.TOP)
-                {
-                    bool check = true;
-
-                    TileBlockBase bottomTile = (TileBlockBase)wall.GetTile(new Vector3Int(x, y - 1));
-                    TileBlockBase topTile = (TileBlockBase)wall.GetTile(new Vector3Int(x, y + 1));
-
-                    if (bottomTile != null && bottomTile.BlockType == BlockType.SIDE)
-                    {
-                        wall.SetTile(new Vector3Int(x, y - 1), null);
-                        if (wall.GetTile(new Vector3Int(x, y - 1)) == null) d = 0;
-                    }
-                                        TileBehaviourRule oldSideRule = null;
-                    if (topTile != null && tile.Tag != topTile.Tag && topTile.BlockType == BlockType.TOP)
-                    {
-                        oldSideRule = wallSideRule;
-                        wallSideRule = Singleton_TileLibrary.Instance.ReturnWallSideRuleByTag(topTile.Tag);
-                        if (wallSideRule != null) { }
-                        else wallSideRule = oldSideRule;
-                    }
-
-                    if (topTile != null && topTile.BlockType == BlockType.SIDE)
-                    {
-                        wall.SetTile(new Vector3Int(x, y), null);
-                        check = false;
-                    }
-                    //Нижние стены
-                    if (check && t == c && l != 0 && r != 0 && d != 1) { wall.SetTile(new Vector3Int(x, y), wallSideRule.TileGroups[0].Tiles[Random.Range(0, wallSideRule.TileGroups[0].Tiles.Length)]); }
-                    else if (check && t == c && l != 0 && r == 0 && d != 1) { wall.SetTile(new Vector3Int(x, y), wallSideRule.TileGroups[1].Tiles[Random.Range(0, wallSideRule.TileGroups[2].Tiles.Length)]); }
-                    else if (check && t == c && l == 0 && r != 0 && d != 1) { wall.SetTile(new Vector3Int(x, y), wallSideRule.TileGroups[2].Tiles[Random.Range(0, wallSideRule.TileGroups[1].Tiles.Length)]); }
-                    else if (check && t == c && l == 0 && r == 0 && d != 1) { wall.SetTile(new Vector3Int(x, y), wallSideRule.TileGroups[3].Tiles[Random.Range(0, wallSideRule.TileGroups[3].Tiles.Length)]); }
-                    if (oldSideRule != null) wallSideRule = oldSideRule;
-
-                }
-
-                if (tile.BlockType == BlockType.SIDE)
-                {
-                    TileBlockBase tl = (TileBlockBase)wall.GetTile(new Vector3Int(x, y + 2));
-                    if (tl == null || tl.BlockType == BlockType.SIDE)
-                    {
-                        wall.SetTile(new Vector3Int(x, y + 1), null);
-                        if (wall.GetTile(new Vector3Int(x, y - 1)) != null) d = (int)GetTileType(wall, x, y - 1);
-                        t = 0;
-                    }
-                    TileBehaviourRule oldSideRule = null;
-                    if (tl != null && tile.Tag != tl.Tag && tl.BlockType == BlockType.SIDE)
-                    {
-                        oldSideRule = wallSideRule;
-                        wallSideRule = Singleton_TileLibrary.Instance.ReturnWallSideRuleByTag(tl.Tag);
-                        if (wallSideRule != null) { }
-                        else wallSideRule = oldSideRule;
-                    }
-                    else if (t == c && l != 0 && r != 0 && d == 0) { wall.SetTile(new Vector3Int(x, y + 1), wallSideRule.TileGroups[0].Tiles[Random.Range(0, wallSideRule.TileGroups[0].Tiles.Length)]); }
-                    else if (t == c && l != 0 && r == 0 && d == 0) { wall.SetTile(new Vector3Int(x, y + 1), wallSideRule.TileGroups[1].Tiles[Random.Range(0, wallSideRule.TileGroups[2].Tiles.Length)]); }
-                    else if (t == c && l == 0 && r != 0 && d == 0) { wall.SetTile(new Vector3Int(x, y + 1), wallSideRule.TileGroups[2].Tiles[Random.Range(0, wallSideRule.TileGroups[1].Tiles.Length)]); }
-                    else if (t == c && l == 0 && r == 0 && d == 0) { wall.SetTile(new Vector3Int(x, y + 1), wallSideRule.TileGroups[3].Tiles[Random.Range(0, wallSideRule.TileGroups[3].Tiles.Length)]); }
-                    if (oldSideRule != null) wallSideRule = oldSideRule;
-                }
-               
+                wall.SetTile(new Vector3Int(x, y), null);
             }
 
-            if (mode == true)
-            {
-                int m = 1;
-                TileBlockBase bottomTile = (TileBlockBase)wall.GetTile(new Vector3Int(x, y - 1));
-                if (tile.BlockType == BlockType.TOP)
-                {
-                    TileBlockBase topTile = (TileBlockBase)wall.GetTile(new Vector3Int(x, y + 1));
-                    if ((bottomTile == null && topTile == null) || (bottomTile == null && topTile != null && topTile.InvokeRule == true && topTile.BlockType == BlockType.SIDE) ||
-                        (bottomTile != null && bottomTile.InvokeRule == false && topTile == null) || (bottomTile != null && bottomTile.InvokeRule == false && topTile != null && topTile.InvokeRule == true && topTile.BlockType == BlockType.SIDE))
-                    {
-                        wall.SetTile(new Vector3Int(x, y + 1), wallTopRule.TileGroups[0].Tiles[0]);
-                        m = 0;
-                    }
-
-
-                    if (bottomTile == null && topTile != null && topTile.InvokeRule == false)
-                    {
-                        wall.SetTile(new Vector3Int(x, y), wallTopRule.TileGroups[0].Tiles[0]);
-                        wall.SetTile(new Vector3Int(x, y - 1), wallTopRule.TileGroups[0].Tiles[0]);
-                        //m = 0;
-                    }
-
-
-                    if (bottomTile != null && topTile!= null && topTile.BlockType == BlockType.SIDE && Singleton_SessionData.Instance.IsTop == false)
-                    {
-                        wall.SetTile(new Vector3Int(x, y + 1), wallTopRule.TileGroups[0].Tiles[0]);
-                        d = 0;
-                        t = c;
-                        m = 0;
-                    }
-                    if (bottomTile != null && topTile != null && topTile.BlockType == BlockType.SIDE && Singleton_SessionData.Instance.IsTop == true)
-                    {
-                        m = 0;
-                    }
-                }
-
-                if (tile.BlockType == BlockType.SIDE)
-                {
-                    if (bottomTile == null)
-                    {
-                        wall.SetTile(new Vector3Int(x, y - 1), wallTopRule.TileGroups[0].Tiles[0]);
-                    }
-                }
-                bottomTile = (TileBlockBase)wall.GetTile(new Vector3Int(x, y - 1));
-                if (bottomTile == null)
-                {
-                    if (wall.GetTile(new Vector3Int(x, y)) != null) t = (int)GetTileType(wall, x, y);
-                    if (wall.GetTile(new Vector3Int(x - 1, y - 1)) != null) l = (int)GetTileType(wall, x - 1, y - m);
-                    if (wall.GetTile(new Vector3Int(x + 1, y - 1)) != null) r = (int)GetTileType(wall, x + 1, y - m);
-                    d = 0;
-                }
-                
-
-                //Нижние стены
-                if (t == c && l != 0 && r != 0 && d == 0) { wall.SetTile(new Vector3Int(x, y - m), wallSideRule.TileGroups[0].Tiles[Random.Range(0, wallSideRule.TileGroups[0].Tiles.Length)]); }
-                else if (t == c && l != 0 && r == 0 && d == 0) { wall.SetTile(new Vector3Int(x, y - m), wallSideRule.TileGroups[1].Tiles[Random.Range(0, wallSideRule.TileGroups[2].Tiles.Length)]); }
-                else if (t == c && l == 0 && r != 0 && d == 0) { wall.SetTile(new Vector3Int(x, y - m), wallSideRule.TileGroups[2].Tiles[Random.Range(0, wallSideRule.TileGroups[1].Tiles.Length)]); }
-                else if (t == c && l == 0 && r == 0 && d == 0) { wall.SetTile(new Vector3Int(x, y - m), wallSideRule.TileGroups[3].Tiles[Random.Range(0, wallSideRule.TileGroups[3].Tiles.Length)]); }
-
-            }
+            if (mode == true) wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[4]);
 
             Singleton_SessionData.Instance.UpdateLastTileCoordinate(new Vector2Int(x,y));
 
@@ -414,16 +159,7 @@ namespace DecayingEarth
             {
                 for (int j = y - radius; j <= radius + y; j++)
                 {
-                    if (i == j && i==x && j == y && !mode) continue;
-                    PlaceEditedWallsAltRule(i, j, wall, 1);
-                }
-            }
-            for (int i = x - radius; i <= radius + x; i++)
-            {
-                for (int j = y - radius; j <= radius + y; j++)
-                {
-                    if (i == j && i == x && j == y && !mode) continue;
-                    PlaceEditedWallsAltRule(i, j, wall, 2);
+                    PlaceEditedWallsAltRule(i, j, wall);
                 }
             }
         }

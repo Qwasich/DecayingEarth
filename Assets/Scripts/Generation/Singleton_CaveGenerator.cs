@@ -26,15 +26,8 @@ namespace DecayingEarth
         
         [SerializeField] private Tilemap m_OresTilemap;
 
-
-        private TileBehaviourRule[] m_FloorRule;
-        public TileBehaviourRule[] FloorRule => m_FloorRule;
-
-        private TileBehaviourRule[] m_WallFrontRule;
-        public TileBehaviourRule[] WallFrontRule => m_WallFrontRule;
-
-        private TileBehaviourRule[] m_WallTopRule;
-        public TileBehaviourRule[] WallTopRule => m_WallTopRule;
+        private TileGroup[] m_TileRule;
+        public TileGroup[] TileRule => m_TileRule;
 
         private FeatureSlot[] m_FloorFeatureRule;
         public FeatureSlot[] FloorFeatureRule => m_FloorFeatureRule;
@@ -89,9 +82,7 @@ namespace DecayingEarth
         {
             m_CaveXSize = rules.m_CaveXSize;
             m_CaveYSize = rules.m_CaveYSize;
-            m_FloorRule = rules.m_FloorRule;
-            m_WallFrontRule = rules.m_WallFrontRule;
-            m_WallTopRule = rules.m_WallTopRule;
+            m_TileRule = rules.m_TileRule;
             m_FloorFeatureRule = rules.m_Features;
             m_MapFillPercent = rules.m_MapFillPercent;
             m_NumberOfCAIterations = rules.m_NumberOfCAIterations;
@@ -111,7 +102,7 @@ namespace DecayingEarth
 #endif
             m_XOffset = Mathf.FloorToInt(m_CaveXSize / 2);
             m_YOffset = Mathf.FloorToInt(m_CaveYSize / 2);
-            if (m_FloorRule == null || m_WallFrontRule == null || m_WallTopRule == null || m_CaveXSize <= 0 || m_CaveYSize <= 0) { Debug.LogError("Error: Rules aren't set properly"); return; } 
+            if (m_TileRule == null || m_CaveXSize <= 0 || m_CaveYSize <= 0) { Debug.LogError("Error: Rules aren't set properly"); return; } 
             if (m_FloorTilemap == null || m_WallsTilemap == null || m_OresTilemap == null) { Debug.LogError("Error: Target tilemaps are not set"); return; } 
             if (m_MapFillPercent == 0 || m_MapFillPercent == 100) { Debug.Log("Warning: Map fill percent " + m_MapFillPercent +"!"); return; }
             if (m_NumberOfCAIterations <= 0) { Debug.Log("Warning: Iteration count set to " + m_NumberOfCAIterations + "!"); return; }
@@ -120,18 +111,17 @@ namespace DecayingEarth
             m_WallsTilemap.ClearAllTiles();
             m_OresTilemap.ClearAllTiles();
             m_FloorDetsTilemap.ClearAllTiles();
-            GenerateFloor(m_FloorTilemap, m_FloorRule[0]);
-            GenerateRandomWallPattern(m_WallsTilemap, m_WallTopRule[0]);
+            GenerateFloor(m_FloorTilemap, m_TileRule[0]);
+            GenerateRandomWallPattern(m_WallsTilemap, m_TileRule[0]);
 
-            for (int i = 0; i < m_NumberOfCAIterations; i++) CellAutomataIteration(m_WallsTilemap, m_WallTopRule[0]);
+            for (int i = 0; i < m_NumberOfCAIterations; i++) CellAutomataIteration(m_WallsTilemap, m_TileRule[0]);
 
-            for (int i = 1; i < m_WallTopRule.Length; i++)
+            for (int i = 1; i < m_TileRule.Length; i++)
             {
-                if (m_WallTopRule[i].Tag == "BorderBlock") continue;
-                GenerateBlocksByPerlinNoise(Random.Range(0, 100), m_WallsTilemap, m_WallTopRule[i], 0.65f);
+                if (m_TileRule[i].BlockTag == "BorderBlock") continue;
+                GenerateBlocksByPerlinNoise(Random.Range(0, 100), m_WallsTilemap, m_TileRule[i], 0.65f);
             }
 
-            CheckForWallGenerationErrors(m_WallsTilemap);
 
             GenerateStartingRoom(m_WallsTilemap, new Vector2Int(2, 2));
 
@@ -148,14 +138,14 @@ namespace DecayingEarth
         /// Генерирует стены на выбранном тайлмапе по определенным правилам.
         /// </summary>
         /// <param name="floor">Целевой Тайлмап</param>
-        /// <param name="floorRule">Правило укладки пола</param>
-        private void GenerateFloor(Tilemap floor, TileBehaviourRule floorRule)
+        /// <param name="tileGroup">Группа, откуда будем брать пол</param>
+        private void GenerateFloor(Tilemap floor, TileGroup tileGroup)
         {
             for (int i = 0 - m_XOffset; i < m_CaveXSize - m_XOffset; i++)
             {
                 for (int j = 0 - m_YOffset; j < m_CaveYSize - m_YOffset; j++)
                 {
-                    floor.SetTile(new Vector3Int(i, j, 0), floorRule.TileGroups[0].Tiles[Random.Range(0, floorRule.TileGroups[0].Tiles.Length)]);
+                    floor.SetTile(new Vector3Int(i, j, 0), tileGroup.Tiles[Random.Range(25, 33)]);
                 }
             }
         }
@@ -164,24 +154,25 @@ namespace DecayingEarth
         /// Случайная генерация стен в разных точках на выбранном тайлмапе. Зависит от параметра Map Fill Percent
         /// </summary>
         /// <param name="wall">Целевой Тайлмап</param>
-        /// <param name="wallTopRule">Правило верхних стен</param>
-        private void GenerateRandomWallPattern(Tilemap wall, TileBehaviourRule wallTopRule)
+        /// <param name="tileGroup">Группа тайлов</param>
+        private void GenerateRandomWallPattern(Tilemap wall, TileGroup tileGroup)
         {
             for (int i = -2 - m_XOffset; i < 2 + m_CaveXSize - m_XOffset; i++)
             {
 
                 for (int j = -2 - m_YOffset; j < 2 + m_CaveYSize - m_YOffset; j++)
                 {
+                    //TODO - перенести на Async или Ienumerator
                     if (i <= 0 - m_XOffset || i >= m_CaveXSize - 2 - m_XOffset || j <= 0 - m_YOffset || j >= m_CaveYSize - 2 - m_YOffset)
                     {
-                        wall.SetTile(new Vector3Int(i, j, 0), GetTopWallRuleByTag("BorderBlock").TileGroups[0].Tiles[0]);
+                        wall.SetTile(new Vector3Int(i, j, 0), GetTileGroupByTag("BorderBlock").Tiles[4]);
                         continue;
                     }
 
                     int x = Random.Range(0, 100);
                     if (x < m_MapFillPercent)
                     {
-                        wall.SetTile(new Vector3Int(i, j, 0), GetTopWallRuleByTag("StoneRaw").TileGroups[0].Tiles[0]);
+                        wall.SetTile(new Vector3Int(i, j, 0), tileGroup.Tiles[4]);
                     }
                     else continue;
                 }
@@ -189,73 +180,27 @@ namespace DecayingEarth
         }
 
         /// <summary>
-        /// Возвращает правило по тэгу
+        /// Возвращает группу тайлов по тэгу
         /// </summary>
         /// <param name="tag">Тэг поиска</param>
-        /// <returns>Правило передней стены</returns>
-        private TileBehaviourRule GetFrontWallRuleByTag(string tag)
+        /// <returns>Группа тайлов</returns>
+        private TileGroup GetTileGroupByTag(string tag)
         {
-            for (int i = 0; i< m_WallFrontRule.Length; i++)
+            for (int i = 0; i < m_TileRule.Length; i++)
             {
-                if (tag == m_WallFrontRule[i].Tag) return m_WallFrontRule[i];
+                if (tag == m_TileRule[i].BlockTag) return m_TileRule[i];
             }
 
-            Debug.LogError("Tag side isn't found, returning default");
-            return m_WallFrontRule[0];
-        }
-        /// <summary>
-        /// Возвращает правило по тэгу
-        /// </summary>
-        /// <param name="tag">Тэг поиска</param>
-        /// <returns>Правило верхней стены</returns>
-        private TileBehaviourRule GetTopWallRuleByTag(string tag)
-        {
-            for (int i = 0; i < m_WallTopRule.Length; i++)
-            {
-                if (tag == m_WallTopRule[i].Tag) return m_WallTopRule[i];
-            }
-
-            Debug.LogError("Tag top isn't found, returning default");
-            return m_WallTopRule[0];
-        }
-        /// <summary>
-        /// Возвращает правило по тэгу
-        /// </summary>
-        /// <param name="tag">Тэг поиска</param>
-        /// <returns>Правило пола</returns>
-        private TileBehaviourRule GetFloorRuleByTag(string tag)
-        {
-            for (int i = 0; i < m_FloorRule.Length; i++)
-            {
-                if (tag == m_FloorRule[i].Tag) return m_FloorRule[i];
-            }
-
-            Debug.LogError("Tag floor isn't found, returning default");
-            return m_FloorRule[0];
-        }
-
-        /// <summary>
-        /// Возвращает правило по тэгу
-        /// </summary>
-        /// <param name="tag">Тэг поиска</param>
-        /// <returns>Правило фичи пола</returns>
-        private TileBehaviourRule GetFloorFeatureByTag(string tag)
-        {
-            for (int i = 0; i < m_FloorFeatureRule.Length; i++)
-            {
-                if (tag == m_FloorFeatureRule[i].TileRule.Tag) return m_FloorFeatureRule[i].TileRule;
-            }
-
-            Debug.LogError("Tag floor feature isn't found, returning default");
-            return m_FloorFeatureRule[0].TileRule;
+            Debug.LogError("Tag isn't found, returning default");
+            return m_TileRule[0];
         }
 
         /// <summary>
         /// Итерирует стены клеточным автоматом один раз на выбранном тайлмапе.
         /// </summary>
         /// <param name="wall">Целевой Тайлмап</param>
-        /// <param name="wallTopRule">Правило верхних стен</param>
-        private void CellAutomataIteration(Tilemap wall, TileBehaviourRule wallTopRule)
+        /// <param name="tileGroup">Группа тайлов/param>
+        private void CellAutomataIteration(Tilemap wall, TileGroup tileGroup)
         {
             for (int i = 1 - m_XOffset; i < m_CaveXSize - 1 - m_XOffset; i++)
             {
@@ -272,14 +217,14 @@ namespace DecayingEarth
                         }
                     }
 
-                    if (counter > 4) wall.SetTile(new Vector3Int(i, j, 0), wallTopRule.TileGroups[0].Tiles[0]);
+                    if (counter > 4) wall.SetTile(new Vector3Int(i, j, 0), tileGroup.Tiles[4]);
                     if (counter < 4) wall.SetTile(new Vector3Int(i, j, 0), null);
                 }
             }
         }
 
         /// <summary>
-        /// Алгоритм покраски стен на выбранном тайлмапе по заданным правилам. Нужно правило передних стен и верхних.
+        /// Алгоритм покраски стен на выбранном тайлмапе по заданным правилам.
         /// </summary>
         /// <param name="wall">Целевой Тайлмап</param>
         private void PlaceEditedWalls(Tilemap wall)
@@ -298,7 +243,7 @@ namespace DecayingEarth
             {
                 for (int j = 0 - yo; j < CaveY - yo; j++)
                 {
-                    WorldShaper.PlaceEditedWallsAltRule(i, j, wall, 0, cg);
+                    WorldShaper.PlaceEditedWallsAltRule(i, j, wall, cg);
                 }
             }
             yield return null;
@@ -312,7 +257,7 @@ namespace DecayingEarth
         /// <param name="wallmap">Тайлмап стен</param>
         private void GenerateOresByTypeCountAndSize(TileGroup_Ore ore, Tilemap oremap, Tilemap wallmap)
         {
-            if (ore.Tiles.Length == 0) { Debug.LogError("Error: No ore tiles set to " + ore.GroupName + " tilemap."); return; }
+            if (ore.Tiles.Length == 0) { Debug.LogError("Error: No ore tiles set to " + ore.BlockTag + " tilemap."); return; }
 
             int rarity = Random.Range(ore.RarityMin, ore.RarityMax + 1);
             rarity += rarity * m_OreMultiplier;
@@ -324,7 +269,6 @@ namespace DecayingEarth
                 int yrand = Random.Range(0 - m_YOffset, m_CaveYSize - m_YOffset);
                 TileBlockBase tile = wallmap.GetTile<TileBlockBase>(new Vector3Int(xrand, yrand, 0));
                 if (tile == null) continue;
-                if (tile.BlockType != BlockType.TOP) continue;
                 oremap.SetTile(new Vector3Int(xrand, yrand, 0), ore.Tiles[Random.Range(0,ore.Tiles.Length)]);
                 orecount--;
                 while (orecount > 0)
@@ -350,7 +294,7 @@ namespace DecayingEarth
 
                         tile = wallmap.GetTile<TileBlockBase>(new Vector3Int(x, y, 0));
 
-                        if (tile != null && tile.BlockType == BlockType.TOP && tile.Tag != "BorderBlock" && oremap.GetTile(new Vector3Int(x, y, 0)) == null)
+                        if (tile != null && tile.BlockTag != "BorderBlock" && oremap.GetTile(new Vector3Int(x, y, 0)) == null)
                         {
                             oremap.SetTile(new Vector3Int(xrand, yrand, 0), ore.Tiles[Random.Range(0, ore.Tiles.Length)]);
                             orecount--;
@@ -370,15 +314,15 @@ namespace DecayingEarth
         /// </summary>
         /// <param name="seed">Семя генерации шума, от него будет идти рассчет</param>
         /// <param name="wallmap">Целевой тайлмап</param>
-        /// <param name="wallTopRule">Правило тайлов, которые мы хотим поставить</param>
+        /// <param name="tileGroup">Группа Тайлов, которые мы хотим поставить</param>
         /// <param name="treshold">Чуствительность к шуму, от 0.1 до 1 включительно. Если значение шума превышает - будет поставлен блок.</param>
-        private void GenerateBlocksByPerlinNoise(float seed, Tilemap wallmap, TileBehaviourRule wallTopRule, float treshold)
+        private void GenerateBlocksByPerlinNoise(float seed, Tilemap wallmap, TileGroup tileGroup, float treshold)
         {
             if (treshold > 1) treshold = 1;
             if (treshold < 0.1) treshold = 0.1f;
 
             seed *= treshold;
-            StartCoroutine(PerlinPlacer(m_CaveXSize, m_CaveYSize, m_XOffset, m_YOffset, wallmap, (TileBlockBase)wallTopRule.TileGroups[0].Tiles[0],seed, treshold));
+            StartCoroutine(PerlinPlacer(m_CaveXSize, m_CaveYSize, m_XOffset, m_YOffset, wallmap, (TileBlockBase)tileGroup.Tiles[4],seed, treshold));
         }
 
         IEnumerator PerlinPlacer(int CaveX, int CaveY, int xo, int yo, Tilemap wallmap, TileBlockBase tile, float seed, float treshold)
@@ -405,35 +349,14 @@ namespace DecayingEarth
         }
 
         /// <summary>
-        /// Проверяет стены, перед превращением их в боковые. Нужно, чтобы исправить неприятный баг, где стены со стороны по какой-то причине могут отличаться от стен сверху.
-        /// </summary>
-        /// <param name="tilemap">Целевой тайлмап</param>
-        private void CheckForWallGenerationErrors(Tilemap tilemap)
-        {
-            for (int i = 1 - m_XOffset; i < m_CaveXSize - m_XOffset - 1; i++)
-            {
-                for (int j = 1 - m_YOffset; j < m_CaveYSize - m_YOffset - 1; j++)
-                {
-                    TileBlockBase tile = tilemap.GetTile<TileBlockBase>(new Vector3Int(i, j, 0));
-                    if (tile == null) continue;
-                    TileBlockBase toptile = tilemap.GetTile<TileBlockBase>(new Vector3Int(i, j + 1, 0));
-                    if (toptile == null) continue;
-                    TileBlockBase bottomtile = tilemap.GetTile<TileBlockBase>(new Vector3Int(i, j - 1, 0));
-
-                    if (bottomtile == null && toptile.Tag != tile.Tag) tilemap.SetTile(new Vector3Int(i, j, 0), toptile);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Ставит фичи пола на карте, в случайных комнатах
+        /// Ставит пола на карте, в случайных комнатах
         /// </summary>
         /// <param name="Feature">Фича, которую ставим</param>
         /// <param name="wallTilemap">Тайлмап Стен</param>
-        /// <param name="featureFloorTilemap">Тайлмап фич пола</param>
-        private void PlaceFeatureInRandomRoom(FeatureSlot Feature, Tilemap wallTilemap, Tilemap featureFloorTilemap)
+        /// <param name="floorTilemap">Тайлмап фич пола</param>
+        private void PlaceFeatureInRandomRoom(FeatureSlot Feature, Tilemap wallTilemap, Tilemap floorTilemap)
         {
-            if (featureFloorTilemap == null || wallTilemap == null) return;
+            if (floorTilemap == null || wallTilemap == null) return;
             if (Feature.TileRule == null) return;
 
             int mult = Feature.GenerationMultiplier;
@@ -454,7 +377,7 @@ namespace DecayingEarth
                     break;
                 }
                 Vector3Int rCrd = new Vector3Int(Random.Range(1 - m_XOffset, m_CaveXSize - m_XOffset), Random.Range(1 - m_YOffset, m_CaveYSize - m_YOffset));
-                if (FindEmptyRoomByFlood(rCrd, wallTilemap, featureFloorTilemap, Feature)) continue;
+                if (FindEmptyRoomByFlood(rCrd, wallTilemap, floorTilemap, Feature)) continue;
                 i--;
                 maxIter++;
             }    
@@ -466,31 +389,28 @@ namespace DecayingEarth
         /// <summary>
         /// Алгоритм заполнения заливкой
         /// </summary>
-        /// <param name="stCrd"><Проверяемая координата/param>
+        /// <param name="coordinate">Проверяемая координата</param>
         /// <param name="wallTilemap">Целевой тайлмап стен</param>
-        /// <param name="featureFloorTilemap">Целевой тайлмап фич пола</param>
+        /// <param name="floorTilemap">Целевой тайлмап фич пола</param>
         /// <param name="slot">Фича, которую ставим</param>
         /// <returns></returns>
-        private bool FindEmptyRoomByFlood(Vector3Int stCrd, Tilemap wallTilemap, Tilemap featureFloorTilemap, FeatureSlot slot)
+        private bool FindEmptyRoomByFlood(Vector3Int coordinate, Tilemap wallTilemap, Tilemap floorTilemap, FeatureSlot slot)
         {
-            if (wallTilemap.GetTile(stCrd) != null) return false;
-            if (featureFloorTilemap.GetTile(stCrd) != null) return false;
+            if (wallTilemap.GetTile(coordinate) != null) return false;
+            if (floorTilemap.GetTile(coordinate) != null) return false;
 
-            int r = Random.Range(0, slot.TileRule.TileGroups.Length * 3);
+            int r = Random.Range(0, 4);
 
-            if (r < slot.TileRule.TileGroups.Length * 2)
-            {
-                featureFloorTilemap.SetTile(stCrd, slot.TileRule.TileGroups[0].Tiles[Random.Range(0, slot.TileRule.TileGroups[0].Tiles.Length)]);
-                TryPlaceFoliage(stCrd);
-            }
-            else featureFloorTilemap.SetTile(stCrd, slot.TileRule.TileGroups[Random.Range(1, slot.TileRule.TileGroups.Length)].Tiles[Random.Range(0, slot.TileRule.TileGroups[0].Tiles.Length)]);
+            floorTilemap.SetTile(coordinate, slot.TileRule.Tiles[Random.Range(25, 33)]);
+
+            if (r == 0) TryPlaceFoliage(coordinate);
 
             //m_LatestRoomFloodCoordinates.Add(stCrd);
 
-            FindEmptyRoomByFlood(new Vector3Int(stCrd.x + 1, stCrd.y), wallTilemap, featureFloorTilemap, slot);
-            FindEmptyRoomByFlood(new Vector3Int(stCrd.x, stCrd.y + 1), wallTilemap, featureFloorTilemap, slot);
-            FindEmptyRoomByFlood(new Vector3Int(stCrd.x - 1, stCrd.y), wallTilemap, featureFloorTilemap, slot);
-            FindEmptyRoomByFlood(new Vector3Int(stCrd.x, stCrd.y - 1), wallTilemap, featureFloorTilemap, slot);
+            FindEmptyRoomByFlood(new Vector3Int(coordinate.x + 1, coordinate.y), wallTilemap, floorTilemap, slot);
+            FindEmptyRoomByFlood(new Vector3Int(coordinate.x, coordinate.y + 1), wallTilemap, floorTilemap, slot);
+            FindEmptyRoomByFlood(new Vector3Int(coordinate.x - 1, coordinate.y), wallTilemap, floorTilemap, slot);
+            FindEmptyRoomByFlood(new Vector3Int(coordinate.x, coordinate.y - 1), wallTilemap, floorTilemap, slot);
 
             return true;
         }

@@ -185,13 +185,12 @@ namespace DecayingEarth
         {
             if (Singleton_GridLibrary.Instance.FloorDetsTilemap.GetTile(pos) != null) return;
 
-            TileBehaviourRule tileRule = Singleton_TileLibrary.Instance.ReturnFloorFeatureRuleByTag("CaveGrass");
-            TileGroup tileGroup = tileRule.TileGroups[0];
+            TileGroup tileGroup = Singleton_TileLibrary.Instance.ReturnTileGroupByTag("CaveGrass");
             TileBlockBase tile = null;
             if (tileGroup != null)
             {
                 Debug.Log("Tile Set");
-                tile = (TileBlockBase)tileGroup.Tiles[Random.Range(0, tileGroup.Tiles.Length)];
+                tile = (TileBlockBase)tileGroup.Tiles[Random.Range(25, 33)];
             }
 
             if(tile != null)

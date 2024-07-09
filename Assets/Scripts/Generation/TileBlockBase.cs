@@ -30,7 +30,7 @@ namespace DecayingEarth
         /// <summary>
         /// Тэг блока
         /// </summary>
-        public string Tag => m_Tag;
+        public string BlockTag => m_Tag;
         /// <summary>
         /// Прочность блока.
         /// </summary>

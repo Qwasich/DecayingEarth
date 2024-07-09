@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.WSA;
 using Utility;
 using Random = UnityEngine.Random;
 
@@ -23,7 +24,6 @@ namespace DecayingEarth
             m_FloorTilemap = Singleton_GridLibrary.Instance.FloorTilemap;
         }
 
-
         /// <summary>
         /// Повреждает блок
         /// </summary>
@@ -38,10 +38,7 @@ namespace DecayingEarth
             Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
             float dist = Vector2.Distance(Camera.main.transform.position, pos);
-            if (dist > maxDistance) return false; 
-            TileBlockBase addTile = null;
-            Vector3Int addCoord = Vector3Int.zero;
-            Vector3Int oreCoord = Vector3Int.zero;
+            if (dist > maxDistance) return false;
 
             Vector3Int coordinate = m_WallsTilemap.WorldToCell(pos);
             TileBlockBase tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
@@ -49,7 +46,7 @@ namespace DecayingEarth
 
             if (tile.IsALightSource)
             {
-                Collider2D col = CheckTriggerCollider(m_WallsTilemap.CellToWorld(coordinate) + new Vector3(0.25f, 0.25f),"LightCollider", new Vector2(0.2f, 0.2f), new Vector3(0, 0, -1.34f));
+                Collider2D col = CheckTriggerCollider(m_WallsTilemap.CellToWorld(coordinate) + new Vector3(0.25f, 0.25f), "LightCollider", new Vector2(0.2f, 0.2f), new Vector3(0, 0, -1.34f));
 
                 if (col != null && tile.RemainingDurability - damage <= 0) Destroy(col.transform.root.gameObject);
             }
@@ -59,7 +56,7 @@ namespace DecayingEarth
             if (tile.InvokeRule == false)
             {
                 int j = 1;
-                j = tile.DealDamage(damage, m_WallsTilemap.CellToWorld(coordinate),coordinate);
+                j = tile.DealDamage(damage, m_WallsTilemap.CellToWorld(coordinate), coordinate);
 
                 if (j == 0)
                 {
@@ -73,40 +70,11 @@ namespace DecayingEarth
                     int rdseed = Random.Range(0, 500);
                     if (tile != null) StartCoroutine(UsefulBits.TileShaker(coordinate, m_WallsTilemap, tile, m_BlockShakeTime, m_BlockShakeIntensity, m_BlockShakesPerSecond, rdseed));
                 }
-
                 return true;
             }
             else
             {
-                TileBlockBase ore = null;
-                if (tile.BlockType == BlockType.TOP)
-                {
-                    ore = m_OresTilemap.GetTile<TileBlockBase>(coordinate);
-                    oreCoord = new Vector3Int(coordinate.x, coordinate.y, coordinate.z);
-
-                    TileBlockBase til = m_WallsTilemap.GetTile<TileBlockBase>(new Vector3Int(coordinate.x, coordinate.y - 1, coordinate.z));
-                    if (til.BlockType == BlockType.SIDE)
-                    {
-                        addTile = til;
-                        addCoord = new Vector3Int(coordinate.x, coordinate.y - 1, coordinate.z);
-
-                    }
-                }
-                else if (tile.BlockType == BlockType.SIDE)
-                {
-                    ore = m_OresTilemap.GetTile<TileBlockBase>(new Vector3Int(coordinate.x, coordinate.y + 1, coordinate.z));
-                    oreCoord = new Vector3Int(coordinate.x, coordinate.y + 1, coordinate.z);
-
-                    TileBlockBase til = m_WallsTilemap.GetTile<TileBlockBase>(new Vector3Int(coordinate.x, coordinate.y + 1, coordinate.z));
-                    if (til.BlockType == BlockType.TOP)
-                    {
-                        addTile = til;
-                        addCoord = new Vector3Int(coordinate.x, coordinate.y + 1, coordinate.z);
-
-                    }
-                }
-
-
+                TileBlockBase ore = m_OresTilemap.GetTile<TileBlockBase>(coordinate);
 
                 if (Singleton_SessionData.Instance.LastTileCoordinate != (Vector2Int)coordinate)
                 {
@@ -116,59 +84,40 @@ namespace DecayingEarth
                 Singleton_SessionData.Instance.UpdateLastTileCoordinate((Vector2Int)coordinate);
 
                 int i = 1;
-                if (ore == null || ore.MaxDurability < tile.MaxDurability) i = tile.DealDamage(damage, m_WallsTilemap.CellToWorld(coordinate),coordinate);
-                else i = ore.DealDamage(damage, m_WallsTilemap.CellToWorld(oreCoord),oreCoord);
+                if (ore == null || ore.MaxDurability < tile.MaxDurability) i = tile.DealDamage(damage, m_WallsTilemap.CellToWorld(coordinate), coordinate);
+                else i = ore.DealDamage(damage, m_WallsTilemap.CellToWorld(coordinate), coordinate);
 
                 if (i == 0)
                 {
                     StopAllCoroutines();
 
                     if (tile != null) UsefulBits.FixTilePosition(coordinate, m_WallsTilemap, tile);
-                    if (ore != null) UsefulBits.FixTilePosition(oreCoord, m_OresTilemap, ore);
-                    if (addTile != null) UsefulBits.FixTilePosition(addCoord, m_WallsTilemap, addTile);
+                    if (ore != null) UsefulBits.FixTilePosition(coordinate, m_OresTilemap, ore);
 
                     if (ore != null && ore.MaxDurability >= tile.MaxDurability)
                     {
-                        m_OresTilemap.SetTile(oreCoord, null);
-                        tile.DealDamage(1000000, m_WallsTilemap.CellToWorld(oreCoord),oreCoord);
+                        m_OresTilemap.SetTile(coordinate, null);
+                        tile.DealDamage(1000000, m_WallsTilemap.CellToWorld(coordinate), coordinate);
                     }
                     if (ore != null && ore.MaxDurability < tile.MaxDurability)
                     {
-                        ore.DealDamage(1000000, m_OresTilemap.CellToWorld(oreCoord),oreCoord);
-                        m_OresTilemap.SetTile(oreCoord, null);
+                        ore.DealDamage(1000000, m_OresTilemap.CellToWorld(coordinate), coordinate);
+                        m_OresTilemap.SetTile(coordinate, null);
                     }
 
-                    if (addTile != null) ParticleSpawner(m_WallsTilemap.CellToWorld(addCoord), addTile);
                     ParticleSpawner(m_WallsTilemap.CellToWorld(coordinate), tile);
                     m_WallsTilemap.SetTile(coordinate, null);
 
-                    if (tile.BlockType == BlockType.TOP) WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, tile, radius, false);
-                    if (tile.BlockType == BlockType.SIDE)
-                    {
-                        TileBlockBase adder = m_WallsTilemap.GetTile<TileBlockBase>(new Vector3Int(coordinate.x, coordinate.y + 2, coordinate.z));
-
-                        if (adder == null || adder.BlockType == BlockType.SIDE || adder.InvokeRule == false) WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, tile, radius, false);
-                        else WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y + 1, m_WallsTilemap, adder, radius, false);
-
-
-                    }
+                    WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, tile, radius, false);
                 }
-
                 else
                 {
                     int rdseed = Random.Range(0, 500);
                     if (tile != null) StartCoroutine(UsefulBits.TileShaker(coordinate, m_WallsTilemap, tile, m_BlockShakeTime, m_BlockShakeIntensity, m_BlockShakesPerSecond, rdseed));
-                    if (ore != null) StartCoroutine(UsefulBits.TileShaker(oreCoord, m_OresTilemap, ore, m_BlockShakeTime, m_BlockShakeIntensity, m_BlockShakesPerSecond, rdseed));
-                    if (addTile != null) StartCoroutine(UsefulBits.TileShaker(addCoord, m_WallsTilemap, addTile, m_BlockShakeTime, m_BlockShakeIntensity, m_BlockShakesPerSecond, rdseed));
-
+                    if (ore != null) StartCoroutine(UsefulBits.TileShaker(coordinate, m_OresTilemap, ore, m_BlockShakeTime, m_BlockShakeIntensity, m_BlockShakesPerSecond, rdseed));
                 }
-
                 return true;
             }
-
-            
-
-            
         }
 
         /// <summary>
@@ -187,17 +136,10 @@ namespace DecayingEarth
             float dist = Vector2.Distance(Camera.main.transform.position, pos);
             if (dist > maxDistance) { Debug.Log("Position:" + dist); return false; }
             Vector3Int coordinate = m_WallsTilemap.WorldToCell(pos);
-            TileBlockBase tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
-            if (tile != null && (tile.BlockType == BlockType.TOP || itemTile.InvokeRule == false)) return false;
+            TileBlockBase checkTile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
+            if (checkTile != null) return false;
 
             if (!CheckAvailablePlaceBySize(itemTile, m_WallsTilemap, coordinate)) return false;
-            
-
-            if (tile != null && tile.BlockType == BlockType.SIDE)
-            {
-                TileBlockBase bot = m_WallsTilemap.GetTile<TileBlockBase>(new Vector3Int(coordinate.x, coordinate.y - 1, coordinate.z));
-                if (bot != null && !bot.InvokeRule) return false;
-            }
 
             if (itemTile is TileBlockStorageChest) Singleton_GlobalChestController.Instance.AddInventory(coordinate);
             
@@ -223,23 +165,9 @@ namespace DecayingEarth
             }
             else Singleton_GridLibrary.Instance.FloorDetsTilemap.SetTile(coordinate, null);
 
-            TileBehaviourRule wallSideRule = Singleton_TileLibrary.Instance.ReturnWallSideRuleByTag(itemTile.Tag);
-            m_WallsTilemap.SetTile(coordinate, itemTile);
 
-            if (tile == null)
-            {
-                tile = m_WallsTilemap.GetTile<TileBlockBase>(coordinate);
-            }
-            else
-            {
-                tile = (TileBlockBase)wallSideRule.TileGroups[0].Tiles[0];
-            }
-            
-            
-            
             //Debug.Log(coordinate);
-
-            WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, tile, radius, true);
+            WorldShaper.EditWallsAroundPoint(coordinate.x, coordinate.y, m_WallsTilemap, itemTile, radius, true);
 
             return true;
         }

@@ -71,7 +71,7 @@ namespace DecayingEarth
                 CreatureSpawnParameters csp = m_ListOfCreatures[Random.Range(0, m_ListOfCreatures.Count)];
                 TileBlockBase tile = (TileBlockBase)Singleton_GridLibrary.Instance.FloorDetsTilemap.GetTile(Singleton_GridLibrary.Instance.FloorDetsTilemap.WorldToCell(pos));
 
-                if (csp.FloorDetsTag != "" && tile != null && tile.Tag != csp.FloorDetsTag)
+                if (csp.FloorDetsTag != "" && tile != null && tile.BlockTag != csp.FloorDetsTag)
                 {
                     i--;
                     continue;

@@ -13,9 +13,7 @@ namespace DecayingEarth
         [Header("Generation Rules")]
         public string m_WorldName;
         [Header("Main World Tiles")]
-        public TileBehaviourRule[] m_FloorRule;
-        public TileBehaviourRule[] m_WallFrontRule;
-        public TileBehaviourRule[] m_WallTopRule;
+        public TileGroup[] m_TileRule;
 
         /// <summary>
         /// X размер генерируемой пещеры
@@ -48,7 +46,7 @@ namespace DecayingEarth
         public int OreGenerationMultiplier;
 
         /// <summary>
-        /// Фичи генерации пола. 
+        /// Генерация особых пещер. 
         /// </summary>
         [Serializable]
         public struct FeatureSlot
@@ -56,7 +54,7 @@ namespace DecayingEarth
             /// <summary>
             /// Правило генерации
             /// </summary>
-            public TileBehaviourRule TileRule;
+            public TileGroup TileRule;
             /// <summary>
             /// Минимальное количество фичи для генерации
             /// </summary>
@@ -72,7 +70,7 @@ namespace DecayingEarth
         }
 
         /// <summary>
-        /// Дополнительные фичи генерации пола.
+        /// Генерация особых пещер.
         /// </summary>
         [Header("Features Generation")]
         public FeatureSlot[] m_Features;

@@ -7,7 +7,7 @@ namespace DecayingEarth
     [CreateAssetMenu]
     public class TileGroup : ScriptableObject
     {
-        public string GroupName;
+        public string BlockTag;
         public TileBase[] Tiles; 
     }
 }

@@ -98,7 +98,6 @@
     <Compile Include="Assets\Scripts\DataCollectors\Singleton_PrefabLibrary.cs" />
     <Compile Include="Assets\Scripts\Creatures\Player\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Settings\Pauser.cs" />
-    <Compile Include="Assets\Scripts\Generation\TileBehaviourRule.cs" />
     <Compile Include="Assets\Scripts\UI\InvEntryPoint.cs" />
     <Compile Include="Assets\Scripts\DataCollectors\Singleton_TileLibrary.cs" />
     <Compile Include="Assets\Scripts\Generation\TileBlockStorageChest.cs" />
