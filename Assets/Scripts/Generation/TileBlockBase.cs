@@ -59,6 +59,12 @@ namespace DecayingEarth
         /// </summary>
         public bool InvokeRule => m_InvokeRule;
 
+        [SerializeField] protected bool m_ConnectsOnlyToItself = false;
+        /// <summary>
+        /// Если истинно, будет вызывать правило только для тайлов с тем же тегом
+        /// </summary>
+        public bool ConnectsOnlyToItself => m_ConnectsOnlyToItself;
+
         [SerializeField] protected bool m_IgnoreRigidbody = false;
         /// <summary>
         /// Если True, пропускает проверку Rigidbody при установке.

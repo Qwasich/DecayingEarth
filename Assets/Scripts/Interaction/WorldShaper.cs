@@ -16,12 +16,12 @@ namespace DecayingEarth
         /// <param name="cavegen">≈сли указан - будет брать правила тайлов оттуда а не из библиотеки. ќЅя«ј“≈Ћ№Ќќ ƒЋя √≈Ќ≈–ј÷»» ¬ –≈ƒј “ќ–≈.</param>
         public static void PlaceEditedWallsAltRule(int x, int y, Tilemap wall, Singleton_CaveGenerator cavegen = null)
         {
-            TileBlockBase tile = wall.GetTile<TileBlockBase>(new Vector3Int(x, y, 0));
-            if (tile == null) return;
-            if (!tile.InvokeRule) return;
-            if (tile.BlockTag == "")
+            TileBlockBase tileCenter = wall.GetTile<TileBlockBase>(new Vector3Int(x, y, 0));
+            if (tileCenter == null) return;
+            if (!tileCenter.InvokeRule) return;
+            if (tileCenter.BlockTag == "")
             {
-                Debug.LogError("Tile " + tile.name +" has no tag set, block generation failure"); 
+                Debug.LogError("Tile " + tileCenter.name +" has no tag set, block generation failure"); 
                 return;
             }
 
@@ -30,7 +30,7 @@ namespace DecayingEarth
             {
                 for (int i = 0; i < cavegen.TileRule.Length; i++)
                 {
-                    if (tile.BlockTag == cavegen.TileRule[i].BlockTag)
+                    if (tileCenter.BlockTag == cavegen.TileRule[i].BlockTag)
                     {
                         tileGroup = cavegen.TileRule[i];
                         break;
@@ -40,12 +40,12 @@ namespace DecayingEarth
 
                 if (tileGroup == null)
                 {
-                    Debug.LogError("Proper Tile Rule isn't set for the tile tag " + tile.BlockTag + " on the latest used world generation settings."); return;
+                    Debug.LogError("Proper Tile Rule isn't set for the tile tag " + tileCenter.BlockTag + " on the latest used world generation settings."); return;
                 }
             }
             else
             {
-                tileGroup = Singleton_TileLibrary.Instance.ReturnTileGroupByTag(tile.BlockTag);
+                tileGroup = Singleton_TileLibrary.Instance.ReturnTileGroupByTag(tileCenter.BlockTag);
             }
 
             int lt = 0;
@@ -57,22 +57,23 @@ namespace DecayingEarth
             int d = 0;
             int rd = 0;
 
-            tile = wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y + 1));
-            if (tile != null && tile.InvokeRule) lt = 1;
-            tile = wall.GetTile<TileBlockBase>(new Vector3Int(x, y + 1));
-            if (tile != null && tile.InvokeRule) t = 1;
-            tile = wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y + 1));
-            if (tile != null && tile.InvokeRule) rt = 1;
-            tile = wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y));
-            if (tile != null && tile.InvokeRule) l = 1;
-            tile = wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y));
-            if (tile != null && tile.InvokeRule) r = 1;
-            tile = wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y - 1));
-            if (tile != null && tile.InvokeRule) ld = 1;
-            tile = wall.GetTile<TileBlockBase>(new Vector3Int(x, y - 1));
-            if (tile != null && tile.InvokeRule) d = 1;
-            tile = wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y - 1));
-            if (tile != null && tile.InvokeRule) rd = 1;
+            TileBlockBase tileCheck;
+            tileCheck = wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y + 1));
+            if (tileCheck != null && tileCheck.InvokeRule && ((!tileCenter.ConnectsOnlyToItself && !tileCheck.ConnectsOnlyToItself) || (tileCenter.ConnectsOnlyToItself && tileCenter.BlockTag == tileCheck.BlockTag))) lt = 1;
+            tileCheck = wall.GetTile<TileBlockBase>(new Vector3Int(x, y + 1));
+            if (tileCheck != null && tileCheck.InvokeRule && ((!tileCenter.ConnectsOnlyToItself && !tileCheck.ConnectsOnlyToItself) || (tileCenter.ConnectsOnlyToItself && tileCenter.BlockTag == tileCheck.BlockTag))) t = 1;
+            tileCheck = wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y + 1));
+            if (tileCheck != null && tileCheck.InvokeRule && ((!tileCenter.ConnectsOnlyToItself && !tileCheck.ConnectsOnlyToItself) || (tileCenter.ConnectsOnlyToItself && tileCenter.BlockTag == tileCheck.BlockTag))) rt = 1;
+            tileCheck = wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y));
+            if (tileCheck != null && tileCheck.InvokeRule && ((!tileCenter.ConnectsOnlyToItself && !tileCheck.ConnectsOnlyToItself) || (tileCenter.ConnectsOnlyToItself && tileCenter.BlockTag == tileCheck.BlockTag))) l = 1;
+            tileCheck = wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y));
+            if (tileCheck != null && tileCheck.InvokeRule && ((!tileCenter.ConnectsOnlyToItself && !tileCheck.ConnectsOnlyToItself) || (tileCenter.ConnectsOnlyToItself && tileCenter.BlockTag == tileCheck.BlockTag))) r = 1;
+            tileCheck = wall.GetTile<TileBlockBase>(new Vector3Int(x - 1, y - 1));
+            if (tileCheck != null && tileCheck.InvokeRule && ((!tileCenter.ConnectsOnlyToItself && !tileCheck.ConnectsOnlyToItself) || (tileCenter.ConnectsOnlyToItself && tileCenter.BlockTag == tileCheck.BlockTag))) ld = 1;
+            tileCheck = wall.GetTile<TileBlockBase>(new Vector3Int(x, y - 1));
+            if (tileCheck != null && tileCheck.InvokeRule && ((!tileCenter.ConnectsOnlyToItself && !tileCheck.ConnectsOnlyToItself) || (tileCenter.ConnectsOnlyToItself && tileCenter.BlockTag == tileCheck.BlockTag))) d = 1;
+            tileCheck = wall.GetTile<TileBlockBase>(new Vector3Int(x + 1, y - 1));
+            if (tileCheck != null && tileCheck.InvokeRule && ((!tileCenter.ConnectsOnlyToItself && !tileCheck.ConnectsOnlyToItself) || (tileCenter.ConnectsOnlyToItself && tileCenter.BlockTag == tileCheck.BlockTag))) rd = 1;
 
 
             //обычные стены
