@@ -190,7 +190,7 @@ namespace DecayingEarth
             if (tileGroup != null)
             {
                 Debug.Log("Tile Set");
-                tile = (TileBlockBase)tileGroup.Tiles[Random.Range(25, 33)];
+                tile = (TileBlockBase)tileGroup.Tiles[Random.Range(0, tileGroup.Tiles.Length)];
             }
 
             if(tile != null)

@@ -81,7 +81,7 @@ namespace DecayingEarth
             if (t == 0 && l == 1 && r == 0 && ld == 1 && d == 1) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[2]); return; }
 
             if (t == 1 && rt == 1 && l == 0 && r == 1 && d == 1 && rd == 1) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[3]); return; }
-            if (lt == 1 && t == 1 && rt == 1 && l == 1 && r == 1 && ld == 1 && d == 1 && rd == 1) return;
+            if (lt == 1 && t == 1 && rt == 1 && l == 1 && r == 1 && ld == 1 && d == 1 && rd == 1) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[4]); return; }
             if (lt == 1 && t == 1 && l == 1 && r == 0 && ld == 1 && d == 1) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[5]); return; }
 
             if (t == 1 && rt == 1 && l == 0 && r == 1 && d == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[6]); return; }
@@ -113,6 +113,35 @@ namespace DecayingEarth
 
             //Колонна
             if (t == 0 && l == 0 && r == 0 && d == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[24]); return; }
+
+            //Внешние особые углы
+            if (t == 0 && l == 1 && r == 1 && ld == 1 && d == 1 && rd == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[25]); return; }
+            if (t == 0 && l == 1 && r == 1 && ld == 0 && d == 1 && rd == 1) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[26]); return; }
+            if (t == 1 && rt == 1 && l == 0 && r == 1 && d == 1 && rd == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[27]); return; }
+            if (lt == 1 && t == 1 && l == 1 && r == 0 && ld == 0 && d == 1) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[28]); return; }
+            if (t == 1 && rt == 0 && l == 0 && r == 1 && d == 1 && rd == 1) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[29]); return; }
+            if (lt == 0 && t == 1 && l == 1 && r == 0 && ld == 1 && d == 1) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[30]); return; }
+            if (lt == 1 && t == 1 && rt == 0 && l == 1 && r == 1 && d == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[31]); return; }
+            if (lt == 0 && t == 1 && rt == 1 && l == 1 && r == 1 && d == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[32]); return; }
+
+            //Внутренние особые углы
+            if (lt == 1 && t == 1 && rt == 1 && l == 1 && r == 1 && ld == 1 && d == 1 && rd == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[33]); return; }
+            if (lt == 1 && t == 1 && rt == 1 && l == 1 && r == 1 && ld == 0 && d == 1 && rd == 1) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[34]); return; }
+            if (lt == 1 && t == 1 && rt == 0 && l == 1 && r == 1 && ld == 1 && d == 1 && rd == 1) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[35]); return; }
+            if (lt == 0 && t == 1 && rt == 1 && l == 1 && r == 1 && ld == 1 && d == 1 && rd == 1) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[36]); return; }
+
+            if (lt == 0 && t == 1 && rt == 0 && l == 1 && r == 1 && ld == 1 && d == 1 && rd == 1) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[37]); return; }
+            if (lt == 1 && t == 1 && rt == 0 && l == 1 && r == 1 && ld == 1 && d == 1 && rd == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[38]); return; }
+            if (lt == 0 && t == 1 && rt == 1 && l == 1 && r == 1 && ld == 0 && d == 1 && rd == 1) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[39]); return; }
+            if (lt == 1 && t == 1 && rt == 1 && l == 1 && r == 1 && ld == 0 && d == 1 && rd == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[40]); return; }
+
+            if (lt == 1 && t == 1 && rt == 0 && l == 1 && r == 1 && ld == 0 && d == 1 && rd == 1) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[41]); return; }
+            if (lt == 0 && t == 1 && rt == 1 && l == 1 && r == 1 && ld == 1 && d == 1 && rd == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[42]); return; }
+
+            if (lt == 0 && t == 1 && rt == 0 && l == 1 && r == 1 && ld == 0 && d == 1 && rd == 1) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[43]); return; }
+            if (lt == 0 && t == 1 && rt == 0 && l == 1 && r == 1 && ld == 1 && d == 1 && rd == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[44]); return; }
+            if (lt == 0 && t == 1 && rt == 1 && l == 1 && r == 1 && ld == 0 && d == 1 && rd == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[45]); return; }
+            if (lt == 1 && t == 1 && rt == 0 && l == 1 && r == 1 && ld == 0 && d == 1 && rd == 0) { wall.SetTile(new Vector3Int(x, y), tileGroup.Tiles[46]); return; }
         }
 
 

@@ -145,7 +145,7 @@ namespace DecayingEarth
             {
                 for (int j = 0 - m_YOffset; j < m_CaveYSize - m_YOffset; j++)
                 {
-                    floor.SetTile(new Vector3Int(i, j, 0), tileGroup.Tiles[Random.Range(25, 33)]);
+                    floor.SetTile(new Vector3Int(i, j, 0), tileGroup.Tiles[Random.Range(47, 55)]);
                 }
             }
         }
