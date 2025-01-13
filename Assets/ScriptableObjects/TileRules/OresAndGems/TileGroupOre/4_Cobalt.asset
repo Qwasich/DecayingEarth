@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f015be01b71f6542ab7a26724fc8998, type: 3}
+  m_Name: 4_Cobalt
+  m_EditorClassIdentifier: 
+  BlockTag: 
+  Tiles:
+  - {fileID: 11400000, guid: c42b8a67ba14e5b4a9ad3980d85e487a, type: 2}
+  - {fileID: 11400000, guid: baca03502b9b2d141b989b72416135b3, type: 2}
+  - {fileID: 11400000, guid: 6783713f983055145bcc63d70b03b482, type: 2}
+  - {fileID: 11400000, guid: 45fe27bf0dc33c442814ba7ec658f3ef, type: 2}
+  RarityMin: 4
+  RarityMax: 8
+  VeinSize: 5

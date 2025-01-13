@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f015be01b71f6542ab7a26724fc8998, type: 3}
+  m_Name: 8_Coal
+  m_EditorClassIdentifier: 
+  BlockTag: 
+  Tiles:
+  - {fileID: 11400000, guid: 6942149ae62de464989f8aefb3e9e23b, type: 2}
+  - {fileID: 11400000, guid: 91800487a62a20741a355203c56e5de7, type: 2}
+  - {fileID: 11400000, guid: 4185832840b0074439937f6e7ff84966, type: 2}
+  - {fileID: 11400000, guid: 3e05492aca253664cbe8bbe02001169c, type: 2}
+  RarityMin: 5
+  RarityMax: 10
+  VeinSize: 10

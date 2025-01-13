@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2d444ae0bdc3254faa43eaac5e433ee, type: 3}
+  m_Name: 16_IronCrossbow
+  m_EditorClassIdentifier: 
+  Name: Iron Crossbow
+  Icon: {fileID: 1509922710, guid: 9d65bb88fec10d549ab1d549bcb5ec68, type: 3}
+  m_MaxItemCount: 1
+  m_UseTimer: 0.7
+  m_Tooltip: 
+  m_StackDecreaseAfterUse: 0
+  m_HoldType: 2
+  m_SwingAngle: 90
+  m_ManaPerUse: 0
+  m_UseSound: {fileID: 8300000, guid: e0d1f701f10866f46803f5eeee2791cc, type: 3}
+  m_DamageType: 1
+  m_DealtDamage: 4
+  m_DoesWeaponSpriteDealsDamage: 0
+  m_Knockback: 1
+  m_UsesAmmo: 1
+  m_SelfProjectile: {fileID: 11400000, guid: 8dbb12ea49547f645a667d7f70a27aeb, type: 2}
