@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f015be01b71f6542ab7a26724fc8998, type: 3}
+  m_Name: 4_Ruby
+  m_EditorClassIdentifier: 
+  BlockTag: 
+  Tiles:
+  - {fileID: 11400000, guid: a4597327e4a09a3449bee312c458476c, type: 2}
+  - {fileID: 11400000, guid: 168324439084c544481abb19463693c6, type: 2}
+  - {fileID: 11400000, guid: 2984dee0ef22fec489f90ad49ab5be99, type: 2}
+  - {fileID: 11400000, guid: d2906cf4f8e777b4ea32d6a37a8930ad, type: 2}
+  RarityMin: 0
+  RarityMax: 3
+  VeinSize: 4

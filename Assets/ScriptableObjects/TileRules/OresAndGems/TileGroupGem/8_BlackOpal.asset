@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f015be01b71f6542ab7a26724fc8998, type: 3}
+  m_Name: 8_BlackOpal
+  m_EditorClassIdentifier: 
+  BlockTag: 
+  Tiles:
+  - {fileID: 11400000, guid: 00c8a7f5755787d49bd9d3b74029b8b0, type: 2}
+  - {fileID: 11400000, guid: 7ac57a5bce008b1498cc62cfe2075926, type: 2}
+  - {fileID: 11400000, guid: 64282e98860b55f459e4064b471b65d6, type: 2}
+  - {fileID: 11400000, guid: 1f172927b063b4346b74f3231e293f6d, type: 2}
+  RarityMin: 0
+  RarityMax: 1
+  VeinSize: 4

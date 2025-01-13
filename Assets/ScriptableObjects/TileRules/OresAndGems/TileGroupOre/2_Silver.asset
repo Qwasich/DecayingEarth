@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f015be01b71f6542ab7a26724fc8998, type: 3}
+  m_Name: 2_Silver
+  m_EditorClassIdentifier: 
+  BlockTag: 
+  Tiles:
+  - {fileID: 11400000, guid: 0ae24c3a5a725644d9989c72833a5251, type: 2}
+  - {fileID: 11400000, guid: 612781a786b80b2458147a0566570585, type: 2}
+  - {fileID: 11400000, guid: 28f09fa0a676f3b4088f18faa232570a, type: 2}
+  - {fileID: 11400000, guid: d7dffe82a49349e498774b92d95fe743, type: 2}
+  RarityMin: 5
+  RarityMax: 10
+  VeinSize: 6

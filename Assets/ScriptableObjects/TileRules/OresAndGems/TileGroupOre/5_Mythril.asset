@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f015be01b71f6542ab7a26724fc8998, type: 3}
+  m_Name: 5_Mythril
+  m_EditorClassIdentifier: 
+  BlockTag: 
+  Tiles:
+  - {fileID: 11400000, guid: 65d5a5ccd2ca11d4288ebf23db7fb45f, type: 2}
+  - {fileID: 11400000, guid: f06e43e279d11184bb2747724c490203, type: 2}
+  - {fileID: 11400000, guid: 942c7a456fdacf04d8aa09f1eafe5bb6, type: 2}
+  - {fileID: 11400000, guid: 34c780c8f9bb00748bdf398102e85073, type: 2}
+  RarityMin: 4
+  RarityMax: 8
+  VeinSize: 4

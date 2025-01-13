@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f015be01b71f6542ab7a26724fc8998, type: 3}
+  m_Name: 6_Adamantite
+  m_EditorClassIdentifier: 
+  BlockTag: 
+  Tiles:
+  - {fileID: 11400000, guid: 53886e777f2c35c4ebb22c8151c5533d, type: 2}
+  - {fileID: 11400000, guid: ab3458864206a764e9c5f566fc26b11a, type: 2}
+  - {fileID: 11400000, guid: 0ac25f40b473a9a43bbbee35706bf08f, type: 2}
+  - {fileID: 11400000, guid: 78e868c955f1140429413b847fe65771, type: 2}
+  RarityMin: 4
+  RarityMax: 8
+  VeinSize: 4

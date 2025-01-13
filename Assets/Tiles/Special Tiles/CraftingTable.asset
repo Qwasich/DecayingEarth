@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a46b55df18f93f43a72ccfdfb4d4cea, type: 3}
+  m_Name: CraftingTable
+  m_EditorClassIdentifier: 
+  m_Sprite: {fileID: 32961692, guid: c15af1b6ec9b43940964441461c84d47, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Transform:
+    e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  m_InstancedGameObject: {fileID: 0}
+  m_Flags: 1
+  m_ColliderType: 1
+  m_BlockType: 2
+  m_Tag: 
+  m_Durability: 4
+  m_Size: {x: 2, y: 1}
+  m_IsIndestructible: 0
+  m_InvokeRule: 0
+  m_IgnoreRigidbody: 0
+  m_Loot:
+  - {fileID: 11400000, guid: 4887fbd147bd57947a410bf94b916389, type: 2}
+  m_DamageSound: {fileID: 8300000, guid: 2241fc39c4a80074787d2131a2745450, type: 3}
+  m_DestroySound: {fileID: 8300000, guid: 8a83e90c63cd38b4ab088817027d713b, type: 3}
+  m_IgnoreAnimationSetup: 0
+  m_Animation: []
+  m_AnimationSpeed: 1
+  m_AnimationStartTime: 0
+  m_IsALightSource: 0
+  m_LightRange: 3
+  m_LightIntensity: 10
+  m_LightColor: {r: 0, g: 0, b: 0, a: 0}
+  m_SpotAngle: 110
+  m_WindowName: Crafting
+  m_Recepies:
+  - {fileID: 11400000, guid: 6d2863b5e73832647bb8c54a4dbba110, type: 2}
+  - {fileID: 11400000, guid: 21b728814b5712b40b48b99477e6faae, type: 2}
+  - {fileID: 11400000, guid: 005a6d36a2c315348a4d16b9f14a57cf, type: 2}
+  - {fileID: 11400000, guid: 7ef075b153f9f4947adae18541f59d7c, type: 2}
+  - {fileID: 11400000, guid: 91fd55068f6a4574f94d72a50b332d24, type: 2}
+  - {fileID: 11400000, guid: b516e471c9787b6488be8c56370863eb, type: 2}
+  - {fileID: 11400000, guid: 5b92621573ce7ef408e87a376bbfb74a, type: 2}
+  - {fileID: 11400000, guid: 9cd15eccf6453de4ea0a88c9272a30bd, type: 2}
+  - {fileID: 11400000, guid: 5057974dec1dfa64db286f8b7a3e474c, type: 2}
+  - {fileID: 11400000, guid: a23ba5aa1fef3be4bbbc35afd42b6030, type: 2}
+  - {fileID: 11400000, guid: 672b4025c2dd5b44ab50f721d400b0e6, type: 2}
+  - {fileID: 11400000, guid: 08fe938d171763c4e9fd16ec10361944, type: 2}
+  - {fileID: 11400000, guid: 7674d954440e0bc43b7142255e48d7a5, type: 2}
+  - {fileID: 11400000, guid: 193b05f194ff1514ca953dd9bca3a500, type: 2}
+  - {fileID: 11400000, guid: 4da7772a18970c74c885ab8f915a468a, type: 2}
+  - {fileID: 11400000, guid: 5f43dc0278c2eaf4fa7d9eff0ea2984e, type: 2}

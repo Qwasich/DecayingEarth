@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8210e8169fb3fb24981646560a19a62b, type: 3}
+  m_Name: BreakUsual
+  m_EditorClassIdentifier: 
+  GroupName: BreakUsual
+  Tiles:
+  - {fileID: 11400000, guid: 3dfa1130a2c2b2a4f828b7259507c52f, type: 2}
+  - {fileID: 11400000, guid: 0981eade2efd0ff488dde16533494f8c, type: 2}
+  - {fileID: 11400000, guid: 9f01fb854f0743749916ba08ced7e4bf, type: 2}
+  - {fileID: 11400000, guid: 1d7cacee42eaa804591bb357a41c7a94, type: 2}
+  - {fileID: 11400000, guid: e1db0214456589e4188b29f771863ee4, type: 2}
+  - {fileID: 11400000, guid: 1359252ba856f8044898d2323e94d90b, type: 2}
+  - {fileID: 11400000, guid: f6b5a7baf316c9f47a8c4f460e293020, type: 2}
+  - {fileID: 11400000, guid: 9f45784f0e96f164db8ce3cdd501d67f, type: 2}

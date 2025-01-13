@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f015be01b71f6542ab7a26724fc8998, type: 3}
+  m_Name: 0_Copper
+  m_EditorClassIdentifier: 
+  BlockTag: 
+  Tiles:
+  - {fileID: 11400000, guid: 7472db9c5c877b04c941c9653eb999e6, type: 2}
+  - {fileID: 11400000, guid: 10bae8024e7bcc94ab6e6d9d1aa39f96, type: 2}
+  - {fileID: 11400000, guid: 408cb27b8189ad94481c150028b62023, type: 2}
+  - {fileID: 11400000, guid: f51b19a23a34f914a9904ca8bfb6ca02, type: 2}
+  RarityMin: 4
+  RarityMax: 8
+  VeinSize: 8
